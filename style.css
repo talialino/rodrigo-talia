@@ -1,0 +1,497 @@
+/* =============================================================================
+   STYLE.CSS  —  Convite digital Rodrigo & Talia
+   -----------------------------------------------------------------------------
+   Organização:
+     1) Variáveis (cores da identidade visual, fontes)
+     2) Reset e base
+     3) App / telas (screens) e transição entre elas
+     4) Molduras das imagens do Canva (canva-frame) + hotspots
+     5) Textos da tela Welcome
+     6) Páginas criadas do zero (Gifts e Thank You)
+     7) Modal
+     8) Botões
+     9) Animações
+    10) Responsividade
+   ========================================================================== */
+
+
+/* ----------------------------------------------------------------------------
+   1) VARIÁVEIS  — a paleta segue o dourado da identidade visual do Canva.
+      >>> Para ajustar cores do projeto todo, altere aqui.
+---------------------------------------------------------------------------- */
+:root {
+  --gold:        #b08a3e;   /* dourado principal (títulos, destaques) */
+  --gold-soft:   #c9a25a;   /* dourado mais claro */
+  --gold-line:   #d8bd86;   /* linhas/bordas douradas */
+  --ink:         #3a3a3a;   /* texto escuro suave */
+  --ink-soft:    #6b6b6b;   /* texto secundário */
+  --bg:          #ffffff;   /* fundo branco */
+  --bg-warm:     #fbf8f2;   /* branco levemente quente (páginas novas) */
+  --card:        #ffffff;
+
+  --font-serif:  "Cormorant Garamond", "Times New Roman", serif;
+  --font-sans:   "Jost", "Segoe UI", system-ui, sans-serif;
+
+  --shadow-soft: 0 10px 30px rgba(120, 95, 40, 0.12);
+  --radius:      16px;
+
+  /* Largura máxima do "aparelho": o convite é mobile-first, então limitamos
+     a coluna para não esticar em telas grandes. */
+  --app-max: 480px;
+}
+
+
+/* ----------------------------------------------------------------------------
+   2) RESET E BASE
+---------------------------------------------------------------------------- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;          /* nunca permitir rolagem horizontal */
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--ink);
+  background: var(--bg-warm);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+img { display: block; max-width: 100%; }
+
+
+/* ----------------------------------------------------------------------------
+   3) APP / TELAS
+   O #app é a coluna central. Cada .screen ocupa o espaço e some/aparece.
+---------------------------------------------------------------------------- */
+#app {
+  max-width: var(--app-max);
+  min-height: 100dvh;          /* usa a altura visível real no mobile */
+  margin: 0 auto;
+  position: relative;
+  background: var(--bg);
+  box-shadow: 0 0 40px rgba(0,0,0,0.04);
+}
+
+/* Cada tela fica escondida por padrão... */
+.screen {
+  display: none;
+  min-height: 100dvh;
+  width: 100%;
+}
+
+/* ...e só a ativa aparece, com um fade suave de entrada. */
+.screen.is-active {
+  display: block;
+  animation: screenIn 0.55s ease both;
+}
+
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ----------------------------------------------------------------------------
+   4) MOLDURAS DO CANVA + HOTSPOTS
+   A imagem preenche 100% da largura. O contêiner mantém a proporção da imagem
+   via aspect-ratio, de modo que os hotspots (em %) fiquem sempre alinhados.
+---------------------------------------------------------------------------- */
+.canva-frame {
+  position: relative;
+  width: 100%;
+}
+
+/* Proporções reais das imagens (largura / altura):
+   welcome    = 1429 x 2000
+   details    = 1240 x 1748
+   navigation = 1240 x 1748  */
+.canva-frame--welcome    { aspect-ratio: 1429 / 2000; }
+.canva-frame--details    { aspect-ratio: 1240 / 1748; }
+.canva-frame--navigation { aspect-ratio: 1240 / 1748; }
+
+.canva-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* HOTSPOT: botão transparente posicionado por variáveis --x/--y/--w/--h (em %).
+   Definidas inline no HTML de cada botão. */
+.hotspot {
+  position: absolute;
+  left:   var(--x);
+  top:    var(--y);
+  width:  var(--w);
+  height: var(--h);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  border-radius: 10px;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+/* Feedback discreto ao tocar/passar o mouse (não descaracteriza a arte). */
+.hotspot:hover,
+.hotspot:focus-visible {
+  background: rgba(176, 138, 62, 0.08);
+  outline: none;
+}
+.hotspot:active { transform: scale(0.98); }
+
+
+/* ----------------------------------------------------------------------------
+   5) TEXTOS DA TELA WELCOME
+   Posicionados sobre a área branca central da imagem welcome.png.
+   Valores em % para acompanhar a imagem em qualquer tamanho.
+---------------------------------------------------------------------------- */
+.welcome-text {
+  position: absolute;
+  left: 11%;
+  right: 11%;
+  top: 35%;                 /* logo abaixo dos nomes RODRIGO & TALIA */
+  text-align: center;
+}
+
+.welcome-greeting {
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 6.5vw, 1.9rem);
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+/* Nome do convidado em destaque dourado. */
+.welcome-greeting .highlight {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.welcome-invite {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: clamp(0.82rem, 3.6vw, 1rem);
+  color: var(--ink-soft);
+  line-height: 1.65;
+  max-width: 34ch;
+  margin: 0 auto;
+}
+
+
+/* ----------------------------------------------------------------------------
+   6) PÁGINAS CRIADAS DO ZERO (Gifts e Thank You)
+   Replicam a identidade: branco quente, dourado, muito respiro, minimalista.
+---------------------------------------------------------------------------- */
+.page {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(216,189,134,0.10), transparent 40%),
+    radial-gradient(circle at 88% 92%, rgba(216,189,134,0.10), transparent 42%),
+    var(--bg-warm);
+}
+
+.page-inner {
+  padding: 2.6rem 1.4rem 3rem;
+}
+
+/* Cabeçalho das páginas */
+.page-header { text-align: center; margin-bottom: 2rem; }
+
+.page-title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(1.7rem, 8vw, 2.4rem);
+  color: var(--gold);
+  letter-spacing: 1px;
+  margin-bottom: 0.9rem;
+}
+
+/* Fio decorativo dourado sob o título */
+.page-title::after {
+  content: "";
+  display: block;
+  width: 54px;
+  height: 1px;
+  background: var(--gold-line);
+  margin: 0.9rem auto 0;
+}
+
+.page-text {
+  font-weight: 300;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  max-width: 36ch;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* Botão "voltar" no topo das páginas */
+.back-link {
+  background: transparent;
+  border: 0;
+  color: var(--gold);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  padding: 0.3rem 0;
+  margin-bottom: 1rem;
+}
+.back-link:hover { color: var(--gold-soft); }
+
+/* ---- Grade de presentes ---- */
+.gift-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* Card de presente (componente único reutilizado para todos os itens) */
+.gift-card {
+  background: var(--card);
+  border: 1px solid rgba(216,189,134,0.35);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.gift-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 34px rgba(120, 95, 40, 0.16);
+}
+
+.gift-card__img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #f2ece1;      /* cor de espera enquanto a imagem carrega */
+}
+
+.gift-card__body {
+  padding: 0.85rem 0.8rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  flex: 1;
+}
+
+.gift-card__name {
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.25;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estado "reservado" (opcional, aplicado via JS se você quiser marcar itens) */
+.gift-card.is-reserved { opacity: 0.55; }
+.gift-card.is-reserved .btn { pointer-events: none; }
+
+
+/* ---- Thank You ---- */
+.thankyou {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.6rem;
+  padding: 2rem 1.6rem 3rem;
+}
+.thankyou-ornament {
+  font-size: 2rem;
+  color: var(--gold-line);
+  margin-bottom: 0.4rem;
+}
+.thankyou-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 10vw, 2.8rem);
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+.thankyou-text {
+  font-weight: 300;
+  font-size: 1rem;
+  color: var(--ink-soft);
+  max-width: 30ch;
+}
+.thankyou-sign {
+  margin-top: 1.2rem;
+  font-weight: 300;
+  color: var(--ink-soft);
+}
+.thankyou-couple {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+
+
+/* ----------------------------------------------------------------------------
+   7) MODAL
+---------------------------------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(58, 45, 20, 0.35);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.4rem;
+  z-index: 1000;
+
+  /* escondido por padrão */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* aberto (classe adicionada por JS) */
+.modal-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  background: var(--bg);
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(60, 45, 15, 0.28);
+  max-width: 420px;
+  width: 100%;
+  padding: 2rem 1.6rem 1.7rem;
+  text-align: center;
+  border: 1px solid rgba(216,189,134,0.4);
+
+  /* animação de escala discreta */
+  transform: scale(0.92);
+  transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.modal-overlay.is-open .modal { transform: scale(1); }
+
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: 1.28rem;
+  font-weight: 600;
+  color: var(--gold);
+  line-height: 1.35;
+  margin-bottom: 1rem;
+}
+.modal-text {
+  font-weight: 300;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  margin-bottom: 1.6rem;
+}
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+
+/* ----------------------------------------------------------------------------
+   8) BOTÕES  (usados no modal e nos cards de presente)
+---------------------------------------------------------------------------- */
+.btn {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  letter-spacing: 0.6px;
+  padding: 0.85rem 1.1rem;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.2s ease, color 0.2s ease;
+  text-transform: uppercase;
+}
+.btn:active { transform: scale(0.97); }
+
+/* Preenchido dourado */
+.btn--primary {
+  background: var(--gold);
+  color: #fff;
+}
+.btn--primary:hover { background: var(--gold-soft); }
+
+/* Contorno / fantasma */
+.btn--ghost {
+  background: transparent;
+  color: var(--gold);
+  border-color: var(--gold-line);
+}
+.btn--ghost:hover { background: rgba(176,138,62,0.08); }
+
+/* Botão "Reservar" dentro do card (menor) */
+.btn--reserve {
+  font-size: 0.8rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 10px;
+}
+
+
+/* ----------------------------------------------------------------------------
+   9) ANIMAÇÕES utilitárias (aplicadas via classe no HTML)
+---------------------------------------------------------------------------- */
+.anim-fade-up  { animation: fadeUp 0.8s ease both; }
+.anim-scale-in { animation: scaleIn 0.7s cubic-bezier(0.2,0.8,0.2,1) both; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Entrada escalonada dos cards de presente (definida por JS via --i) */
+.gift-card {
+  animation: fadeUp 0.6s ease both;
+  animation-delay: calc(var(--i, 0) * 0.05s);
+}
+
+/* Respeita quem prefere menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* ----------------------------------------------------------------------------
+   10) RESPONSIVIDADE
+   Mobile-first. Ajustes para telas bem pequenas e para telas maiores.
+---------------------------------------------------------------------------- */
+
+/* Telas muito estreitas (ex.: 320px) */
+@media (max-width: 340px) {
+  .welcome-invite { font-size: 0.78rem; }
+  .gift-grid { gap: 0.7rem; }
+  .page-inner { padding: 2.2rem 1rem 2.6rem; }
+}
+
+/* A partir de tablets, o app mantém a largura de "aparelho" centralizado.
+   Como #app já tem max-width, o conteúdo não estica; apenas centraliza. */
+@media (min-width: 481px) {
+  body { background: var(--bg-warm); }
+}

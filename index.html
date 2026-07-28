@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#ffffff" />
+  <title>Rodrigo &amp; Talia — Convite de Casamento</title>
+
+  <!-- Descrição para compartilhamento -->
+  <meta name="description" content="Convite digital do casamento de Rodrigo & Talia." />
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Fonte elegante (opcional; se offline, o fallback do CSS assume) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+
+  <!-- ==========================================================================
+       APP  —  contêiner de todas as telas.
+       Cada <section class="screen"> é uma "página".
+       Somente a que tiver a classe .is-active fica visível (ver style.css).
+       A navegação entre elas é feita em script.js.
+
+       >>> COMO ADICIONAR UMA NOVA PÁGINA NO FUTURO:
+           1. Crie uma nova <section class="screen" id="screen-XXXX"> aqui.
+           2. Registre o id no objeto SCREENS dentro de script.js.
+           3. Aponte algum botão para ela com goTo('XXXX').
+       ====================================================================== -->
+  <main id="app">
+
+    <!-- ====================================================================
+         TELA 1 — WELCOME
+         Fundo = welcome.png (Canva). Sobre ela adicionamos apenas os textos
+         dinâmicos e uma área clicável transparente sobre o botão desenhado.
+         >>> Para trocar a imagem: assets/welcome.png
+         ==================================================================== -->
+    <section class="screen is-active" id="screen-welcome" data-screen="welcome">
+      <div class="canva-frame canva-frame--welcome">
+        <!-- Imagem base do Canva -->
+        <img class="canva-img" src="assets/welcome.png" alt="Convite de casamento de Rodrigo e Talia" />
+
+        <!-- Textos dinâmicos posicionados sobre a imagem.
+             O conteúdo é preenchido por script.js (nome do convidado etc.). -->
+        <div class="welcome-text anim-fade-up">
+          <p class="welcome-greeting">
+            <!-- Ex.: "Querida" -->
+            <span id="welcome-greeting"></span>
+            <!-- Nome em destaque dourado. Ex.: "Adriana," -->
+            <span id="welcome-name" class="highlight"></span>
+          </p>
+          <p class="welcome-invite" id="welcome-invite"></p>
+        </div>
+
+        <!-- Área clicável transparente EXATAMENTE sobre o botão do Canva.
+             Posição definida por CSS (variáveis --x/--y/--w/--h em %). -->
+        <button
+          class="hotspot"
+          type="button"
+          data-action="goto"
+          data-target="details"
+          aria-label="Abrir convite completo"
+          style="--x:34%; --y:64.5%; --w:31%; --h:10%;"></button>
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         TELA 2 — DETAILS  (data, local e três botões)
+         Fundo = details.png (Canva). Três hotspots sobre os botões.
+         >>> Para trocar a imagem: assets/details.png
+         ==================================================================== -->
+    <section class="screen" id="screen-details" data-screen="details">
+      <div class="canva-frame canva-frame--details">
+        <img class="canva-img" src="assets/details.png" alt="Data, horário e local da cerimônia" />
+
+        <!-- Botão: CONFIRMAR PRESENÇA  ->  abre CONFIG.links.rsvp -->
+        <button
+          class="hotspot"
+          type="button"
+          data-action="link"
+          data-link="rsvp"
+          aria-label="Confirmar presença"
+          style="--x:14%; --y:72%; --w:30%; --h:11%;"></button>
+
+        <!-- Botão: NOS PRESENTEAR  ->  abre a tela Navigation -->
+        <button
+          class="hotspot"
+          type="button"
+          data-action="goto"
+          data-target="navigation"
+          aria-label="Nos presentear"
+          style="--x:55%; --y:72%; --w:31%; --h:11%;"></button>
+
+        <!-- Botão: COMO CHEGAR  ->  abre CONFIG.links.uber -->
+        <button
+          class="hotspot"
+          type="button"
+          data-action="link"
+          data-link="uber"
+          aria-label="Como chegar"
+          style="--x:34%; --y:87%; --w:31%; --h:10%;"></button>
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         TELA 3 — NAVIGATION  (como deseja nos presentear)
+         Fundo = navigation.png (Canva). Dois hotspots sobre os cartões.
+         >>> Para trocar a imagem: assets/navigation.png
+         ==================================================================== -->
+    <section class="screen" id="screen-navigation" data-screen="navigation">
+      <div class="canva-frame canva-frame--navigation">
+
+        <img class="canva-img" src="assets/navigation.png" alt="Como deseja nos presentear" />
+
+        <!-- Seta "Voltar" desenhada na própria imagem  ->  volta para a tela Details -->
+        <button
+          class="hotspot"
+          type="button"
+          data-action="goto"
+          data-target="details"
+          aria-label="Voltar"
+          style="--x:4.3%; --y:1.7%; --w:25.7%; --h:6.3%;"></button>
+
+        <!-- Cartão: LISTA ONLINE  ->  abre CONFIG.links.onlineGiftList -->
+        <button
+          class="hotspot"
+          type="button"
+          data-action="link"
+          data-link="onlineGiftList"
+          aria-label="Lista de presentes online"
+          style="--x:28.3%; --y:39.2%; --w:43.3%; --h:13.6%;"></button>
+
+        <!-- Cartão: LEVAR UM PRESENTE  ->  abre o MODAL (não abre a lista direto) -->
+        <button
+          class="hotspot"
+          type="button"
+          data-action="open-modal"
+          aria-label="Levar um presente"
+          style="--x:28.3%; --y:61.5%; --w:43.3%; --h:13.6%;"></button>
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         TELA 4 — PHYSICAL GIFTS  (página criada do zero)
+         Não usa imagem de fundo do Canva: replica a identidade visual em CSS.
+         A lista de cards é gerada dinamicamente por script.js a partir de
+         CONFIG.physicalGifts.
+         ==================================================================== -->
+    <section class="screen page" id="screen-gifts" data-screen="gifts">
+      <div class="page-inner anim-fade-up">
+
+        <!-- Botão voltar (para a tela Navigation) -->
+        <button class="back-link" type="button" data-action="goto" data-target="navigation">
+          ← Voltar
+        </button>
+
+        <header class="page-header">
+          <h1 class="page-title">Presentes físicos</h1>
+          <p class="page-text">
+            Caso prefira nos presentear pessoalmente, selecionamos alguns itens
+            para o início da nossa vida a dois. Para evitar presentes repetidos,
+            basta clicar em “Reservar”. ❤️
+          </p>
+        </header>
+
+        <!-- Grade de presentes (preenchida por JS) -->
+        <div class="gift-grid" id="gift-grid"></div>
+
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         TELA 5 — THANK YOU  (página criada do zero)
+         ==================================================================== -->
+    <section class="screen page" id="screen-thankyou" data-screen="thankyou">
+      <div class="page-inner thankyou anim-scale-in">
+        <div class="thankyou-ornament" aria-hidden="true">❦</div>
+        <h1 class="thankyou-title">Obrigado!</h1>
+        <p class="thankyou-text">Sua presença já é um grande presente.</p>
+        <p class="thankyou-text">Estamos muito felizes por compartilhar esse momento com você.</p>
+        <p class="thankyou-sign">Com carinho,</p>
+        <p class="thankyou-couple" id="thankyou-couple"></p>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ==========================================================================
+       MODAL  —  aberto ao clicar em "Levar um Presente" (tela Navigation).
+       Fica fora do #app para sobrepor tudo. Controlado por script.js.
+       ====================================================================== -->
+  <div class="modal-overlay" id="modal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <h2 class="modal-title" id="modal-title">
+        Que alegria saber que você deseja nos presentear pessoalmente! 🤍
+      </h2>
+      <p class="modal-text">
+        Selecionamos alguns itens para o início da nossa vida a dois. Para evitar
+        presentes repetidos, pedimos que reserve o presente desejado antes da
+        compra. Basta clicar em <strong>Reservar</strong> e uma mensagem será
+        aberta automaticamente no WhatsApp.
+      </p>
+      <div class="modal-actions">
+        <!-- Principal: fecha o modal e vai para a página de presentes físicos -->
+        <button class="btn btn--primary" type="button" data-action="modal-confirm">
+          Ver Lista de Presentes
+        </button>
+        <!-- Secundário: apenas fecha o modal -->
+        <button class="btn btn--ghost" type="button" data-action="modal-close">
+          Voltar
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Configuração primeiro, depois a lógica -->
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
