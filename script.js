@@ -507,14 +507,17 @@
 
     /* Cada etapa entra numa marca de tempo; o CSS cuida do movimento.
        Os 600ms iniciais são de propósito: só a respiração do convite. */
+    /* A cascata é encadeada: cada peça começa a cair enquanto a anterior
+       ainda está caindo, sem pausas entre as etapas. Os atrasos finos
+       (fita -> laço -> flores) ficam no próprio CSS. */
     var timeline = [
       [600,  function () { intro.classList.add("p-crack"); }],   // 1: lacre trinca
-      [980,  function () { intro.classList.add("p-split"); }],   // 1: parte, levanta e cai
-      [1240, function () { intro.classList.add("p-untie"); }],   // 2 e 3: fita, laço, flores
-      [2600, function () { intro.classList.add("p-open"); }],    // 4 e 5: papel abre do meio
-      [3850, function () { intro.classList.add("p-reveal"); }],  // 6: foto ganha cor plena
-      [4450, function () { intro.classList.add("p-done"); }],    // a cena se apaga
-      [4900, function () { finishIntro(false); }]                // 7: a folha assume e o
+      [960,  function () { intro.classList.add("p-split"); }],   // 1: parte, levanta e cai
+      [1300, function () { intro.classList.add("p-untie"); }],   // 2 e 3: fita, laço, flores
+      [2850, function () { intro.classList.add("p-open"); }],    // 4 e 5: papel abre do meio
+      [4300, function () { intro.classList.add("p-reveal"); }],  // 6: foto ganha cor plena
+      [4950, function () { intro.classList.add("p-done"); }],    // a cena se apaga
+      [5400, function () { finishIntro(false); }]                // 7: a folha assume e o
                                                                  //    zoom começa junto
     ];
 

@@ -33,8 +33,9 @@ para 101%), a cena roda sozinha:
 
 1. o lacre trinca em quatro partes iguais, elas se soltam na diagonal,
    levantam poucos pixels e caem;
-2. a fita perde a tensão, o laço se desfaz e as pontas caem;
-3. as tulipas apenas acomodam alguns pixels — não caem nem giram;
+2. a fita perde a tensão e desce; o laço se desfaz logo atrás dela;
+3. as tulipas caem por último, tombando para a esquerda, como se tivessem
+   sido soltas junto com as fitas;
 4. o papel abre **a partir do meio**: cada peça está presa na sua borda
    externa, então quem se move é a borda do meio. A de cima sobe primeiro;
 5. a de baixo desce logo depois. A borda do meio é **puxada na direção de
@@ -48,7 +49,13 @@ para 101%), a cena roda sozinha:
 8. por fim aparece o indicador de navegação na base.
 
 Os tempos ficam na tabela `timeline` dentro de `script.js`; o movimento em si
-é CSS (seção 5 do `style.css`).
+é CSS (seção 5 do `style.css`). Os atrasos finos da cascata (fita → laço →
+flores) estão no próprio CSS, como `animation-delay`.
+
+As quedas usam tempo **linear** de propósito: a aceleração está escrita nos
+valores dos keyframes, com cada trecho andando mais que o anterior, como na
+gravidade. É o que evita aquele instante parado no começo que fazia as peças
+parecerem enganchadas antes de cair.
 
 Todas as peças moram dentro de `.env-stage`, um palco com a proporção exata do
 convite (768x1382, a mesma do `Rodrigo&Talia.png`) que cresce até cobrir a
