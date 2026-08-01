@@ -511,11 +511,11 @@
       [600,  function () { intro.classList.add("p-crack"); }],   // 1: lacre trinca
       [980,  function () { intro.classList.add("p-split"); }],   // 1: parte, levanta e cai
       [1240, function () { intro.classList.add("p-untie"); }],   // 2 e 3: fita, laço, flores
-      [2600, function () { intro.classList.add("p-open"); }],    // 4 e 5: papel se desdobra
-      [3850, function () { intro.classList.add("p-reveal"); }],  // 6: chiffon se dissolve (400ms)
-      [4250, function () { document.body.classList.add("reveal"); }], // foto viva + Ken Burns
-      [4300, function () { intro.classList.add("p-done"); }],    // a cena se apaga
-      [4750, function () { finishIntro(false); }]                // 7: entrega para as frases
+      [2600, function () { intro.classList.add("p-open"); }],    // 4 e 5: papel abre do meio
+      [3850, function () { intro.classList.add("p-reveal"); }],  // 6: foto ganha cor plena
+      [4400, function () { document.body.classList.add("reveal"); }], // Ken Burns na folha
+      [4450, function () { intro.classList.add("p-done"); }],    // a cena se apaga
+      [4900, function () { finishIntro(false); }]                // 7: entrega para as frases
     ];
 
     timeline.forEach(function (step) { setTimeout(step[1], step[0]); });

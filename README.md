@@ -9,14 +9,14 @@ GitHub Pages.
 
 ```
 /assets
-  envelope-top.png    papel do convite — folha de cima (abre para cima)
-  envelope-bottom.png papel do convite — folha de baixo (abre para baixo)
-  seal.png            lacre de cera (parte em duas metades na animação)
+  envelope-top.png    papel do convite — peça de cima (presa no topo)
+  envelope-bottom.png papel do convite — peça de baixo (presa na base)
+  seal.png            lacre de cera (parte em quatro na animação)
   bow.png             laço de cetim
   ribbon.png          fita horizontal
   flowers.png         tulipas
-  tag.png             etiqueta "Clique para abrir"
-  foto.jpeg           fotografia do casal (revelada ao abrir)
+  foto-chiffon.jpg    a foto com o chiffon embutido (gerada — ver "Assets")
+  foto.jpeg           fotografia do casal em cor plena (revelação)
   Rodrigo&Talia.png   arte de referência do convite fechado (não usada em tela)
   photo.png           recorte lateral da foto (não usado — ver "Assets" abaixo)
 config.js             ← ÚNICO arquivo a editar no dia a dia
@@ -27,16 +27,19 @@ script.js             lógica (linha do tempo da abertura, virada física, texto
 
 ## A abertura
 
-O convite aparece montado em camadas independentes. Depois de ~600ms de
-respiração (zoom de 100% para 101%), a cena roda sozinha:
+O convite aparece montado em camadas independentes, com a fotografia já
+visível ao fundo sob o chiffon. Depois de ~600ms de respiração (zoom de 100%
+para 101%), a cena roda sozinha:
 
-1. o lacre trinca, parte em duas metades, elas levantam e caem;
+1. o lacre trinca em quatro partes iguais, elas se soltam na diagonal,
+   levantam poucos pixels e caem;
 2. a fita perde a tensão, o laço se desfaz e as pontas caem;
 3. as tulipas apenas acomodam alguns pixels — não caem nem giram;
-4. a folha de cima dobra a partir da linha de baixo;
-5. a folha de baixo se desdobra para baixo;
-6. sob elas, uma camada branca translúcida (chiffon) se dissolve em ~400ms
-   e a fotografia ganha cor, com um Ken Burns bem lento;
+4. o papel abre **a partir do meio**: cada peça está presa na sua borda
+   externa, então quem se move é a borda do meio. A de cima sobe primeiro;
+5. a de baixo desce logo depois, ambas dobrando para trás;
+6. a fotografia em cor plena entra em fade sobre a versão com chiffon,
+   com um Ken Burns bem lento;
 7. ~700ms depois surgem as duas frases, em fade com leve deslocamento;
 8. por fim aparece o indicador de navegação na base.
 
@@ -46,11 +49,16 @@ nas regras `.piece--*` e `.seal` (seção 4).
 
 ## Assets
 
-Os PNGs entregues vinham com o quadriculado de transparência **gravado nos
-pixels** (canal alfa 100% opaco). Foram reprocessados para recuperar a
-transparência real antes de entrar no projeto. `photo.png` não foi usado: por
-ser uma fotografia, o mesmo tratamento a perfurava — e ela contém só a faixa
-lateral direita da imagem. A foto completa (`foto.jpeg`) é a usada na revelação.
+`foto-chiffon.jpg` é a fotografia com o véu já embutido no arquivo: desfoque
+leve mais branco quente a 45%, densidade medida por amostragem da água
+turquesa no convite original (`Rodrigo&Talia.png`). Como o véu é estático,
+ele aparece desde o primeiro quadro por baixo das peças e não custa nenhum
+filtro em tempo real no celular. Para regerar com outra densidade, basta
+mudar o valor no `fillStyle` e refazer o arquivo.
+
+`photo.png` não é usado: ele traz só a faixa lateral direita da imagem, com a
+metade esquerda vazia, então não cobre a tela inteira nem serve para a
+revelação em cor plena. A foto completa é a `foto.jpeg`.
 
 ## As 6 folhas
 

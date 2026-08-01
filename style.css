@@ -145,7 +145,11 @@ body {
   50%      { transform: scale(1.01); }
 }
 
-/* Fotografia do casal, no fundo de tudo */
+/* Fotografia do casal, no fundo de tudo.
+   A versão "--veu" já vem com o chiffon embutido no arquivo (branco quente
+   translúcido + leve desfoque, na densidade medida no convite original) e
+   fica visível desde o primeiro quadro, por baixo das peças do convite.
+   A versão "--cor" entra em fade na revelação. */
 .env-foto {
   position: absolute;
   inset: 0;
@@ -155,73 +159,25 @@ body {
   object-position: 50% 32%;
 }
 
-/* "Chiffon": branco translúcido com leve desfoque sobre a fotografia */
-.env-chiffon {
-  position: absolute;
-  inset: 0;
-  background: rgba(252, 250, 246, 0.82);
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
-}
+.env-foto--cor { opacity: 0; }
 
-/* ---- FOLHAS DE PAPEL -------------------------------------------------------
-   Cada folha recorta a metade que lhe cabe, mas a arte dentro dela é do
-   tamanho da cena inteira: assim a textura atravessa as duas sem emenda
-   enquanto o convite está fechado. A dobradiça fica na linha do corte.       */
+/* ---- PEÇAS DE PAPEL --------------------------------------------------------
+   Cada PNG entra inteiro, como uma peça solta. A dobradiça de cada um fica
+   na sua borda externa, então as duas se abrem A PARTIR DO MEIO: a de cima
+   sobe e a de baixo desce, cada uma dobrando para trás.                      */
 .leaf {
   position: absolute;
-  left: 0;
-  right: 0;
-  overflow: hidden;
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
-}
-
-.leaf-art {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  background-color: var(--paper-cream);
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 22% center;
-  display: block;
-}
-
-/* Sombra que ganha corpo conforme a folha dobra (profundidade do papel) */
-.leaf::after {
-  content: "";
-  position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(96, 78, 64, 0.34), rgba(96, 78, 64, 0));
-  opacity: 0;
-  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
-.leaf--top {
-  top: 0;
-  height: 52%;
-  transform-origin: 50% 100%;    /* dobra a partir da linha de baixo */
-  z-index: 3;
-}
-.leaf--top .leaf-art {
-  top: 0;
-  height: 192.31%;               /* 100 / 0.52 — cobre a cena toda */
-  background-image: url("assets/envelope-top.png");
-}
-.leaf--top::after { background: linear-gradient(0deg, rgba(96, 78, 64, 0.34), rgba(96, 78, 64, 0)); }
-
-.leaf--bottom {
-  top: 52%;
-  bottom: 0;
-  transform-origin: 50% 0;       /* dobra a partir da linha de cima */
-  z-index: 2;
-}
-.leaf--bottom .leaf-art {
-  top: -108.33%;                 /* alinha a arte com a folha de cima */
-  height: 208.33%;               /* 100 / 0.48 */
-  background-image: url("assets/envelope-bottom.png");
-}
+.leaf--top    { transform-origin: 50% 0;    z-index: 3; }  /* presa no topo   */
+.leaf--bottom { transform-origin: 50% 100%; z-index: 2; }  /* presa embaixo   */
 
 /* ---- ADORNOS ---------------------------------------------------------------
    Posições em % da cena, calibradas sobre o convite original.                */
@@ -232,14 +188,14 @@ body {
   will-change: transform;
 }
 
-.piece--flowers { left: 3.5%; top: 20.5%; width: 33%;  z-index: 4; }
+.piece--flowers { left: 1%;   top: 18%;   width: 38%;  z-index: 4; }
 .piece--ribbon  { left: -1%;  top: 49.5%; width: 102%; z-index: 6; }
-.piece--bow     { left: -1%;  top: 37%;   width: 34%;  z-index: 7; transform-origin: 62% 26%; }
-.piece--tag     { left: 27%;  top: 55%;   width: 26%;  z-index: 6; transform-origin: 50% 0%; }
+.piece--bow     { left: -1%;  top: 34%;   width: 36%;  z-index: 7; transform-origin: 62% 26%; }
 
 /* ---- LACRE DE CERA ---------------------------------------------------------
-   Duas cópias do mesmo PNG, cada uma recortada em metade por clip-path.
-   A linha do corte é irregular de propósito: cera partindo, não vidro.       */
+   Quatro cópias do mesmo PNG, cada uma recortada num quarto por clip-path.
+   Os quatro se encontram num ponto propositalmente fora do centro exato e as
+   linhas são levemente tortas: cera partindo, não vidro quebrando.           */
 .seal {
   position: absolute;
   left: 51%;
@@ -250,7 +206,7 @@ body {
   filter: drop-shadow(0 3px 7px rgba(85, 72, 63, 0.3));
 }
 
-.seal-half {
+.seal-q {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -258,8 +214,11 @@ body {
   backface-visibility: hidden;
 }
 
-.seal-half--l { clip-path: polygon(0 0, 53% 0, 46% 48%, 51% 100%, 0 100%); }
-.seal-half--r { clip-path: polygon(53% 0, 100% 0, 100% 100%, 51% 100%, 46% 48%); }
+/* Encontro dos quatro em 49% x 52%; bordas partilhadas, sem folga entre elas */
+.seal-q--no { clip-path: polygon(0 0, 52% 0, 49% 52%, 0 49%); }
+.seal-q--ne { clip-path: polygon(52% 0, 100% 0, 100% 48%, 49% 52%); }
+.seal-q--se { clip-path: polygon(49% 52%, 100% 48%, 100% 100%, 51% 100%); }
+.seal-q--so { clip-path: polygon(0 49%, 49% 52%, 51% 100%, 0 100%); }
 
 
 /* ----------------------------------------------------------------------------
@@ -273,46 +232,67 @@ body {
       (e "reveal" / "phrase" no <body>, para a foto e as frases)
 ---------------------------------------------------------------------------- */
 
-/* 5.1 — ETAPA 1: pequenas rachaduras. Um tremor curtíssimo, sem estardalhaço. */
-#intro.p-crack .seal-half--l { animation: trincaEsq 0.36s ease-out both; }
-#intro.p-crack .seal-half--r { animation: trincaDir 0.36s ease-out both; }
+/* 5.1 — ETAPA 1: pequenas rachaduras. Os quatro pedaços se afastam pouco mais
+   de um pixel, abrindo os fios das trincas. Tremor curto, sem estardalhaço. */
+#intro.p-crack .seal-q--no { animation: trincaNO 0.36s ease-out both; }
+#intro.p-crack .seal-q--ne { animation: trincaNE 0.36s ease-out both; }
+#intro.p-crack .seal-q--so { animation: trincaSO 0.36s ease-out both; }
+#intro.p-crack .seal-q--se { animation: trincaSE 0.36s ease-out both; }
 
-@keyframes trincaEsq {
-  0%   { transform: none; }
-  40%  { transform: translateX(-0.6px) rotate(-0.5deg); }
-  70%  { transform: translateX(-1.4px); }
-  100% { transform: translateX(-1.1px); }
+@keyframes trincaNO {
+  0% { transform: none; } 40% { transform: translate(-0.5px, -0.4px) rotate(-0.4deg); }
+  70% { transform: translate(-1.2px, -1px); } 100% { transform: translate(-1px, -0.8px); }
 }
-@keyframes trincaDir {
-  0%   { transform: none; }
-  40%  { transform: translateX(0.6px) rotate(0.5deg); }
-  70%  { transform: translateX(1.4px); }
-  100% { transform: translateX(1.1px); }
+@keyframes trincaNE {
+  0% { transform: none; } 40% { transform: translate(0.5px, -0.4px) rotate(0.4deg); }
+  70% { transform: translate(1.2px, -1px); } 100% { transform: translate(1px, -0.8px); }
+}
+@keyframes trincaSO {
+  0% { transform: none; } 40% { transform: translate(-0.5px, 0.4px) rotate(0.4deg); }
+  70% { transform: translate(-1.2px, 1px); } 100% { transform: translate(-1px, 0.8px); }
+}
+@keyframes trincaSE {
+  0% { transform: none; } 40% { transform: translate(0.5px, 0.4px) rotate(-0.4deg); }
+  70% { transform: translate(1.2px, 1px); } 100% { transform: translate(1px, 0.8px); }
 }
 
-/* 5.2 — ETAPA 1 (parte 2): as metades se separam, sobem poucos pixels e caem.
-   Cera é pesada: sobe pouco, gira pouco e desce com aceleração suave. */
-#intro.p-split .seal-half--l { animation: caiEsq 1s cubic-bezier(0.4, 0, 0.55, 1) forwards; }
-#intro.p-split .seal-half--r { animation: caiDir 1s cubic-bezier(0.4, 0, 0.55, 1) forwards; }
+/* 5.2 — ETAPA 1 (parte 2): os quatro pedaços se soltam na diagonal, sobem
+   poucos pixels e caem. Cera é pesada: sobe pouco, gira pouco, desce macio.
+   Os de baixo partem na frente, como acontece quando o lacre se rompe. */
+#intro.p-split .seal-q--no { animation: caiNO 1s cubic-bezier(0.4, 0, 0.55, 1) 0.06s forwards; }
+#intro.p-split .seal-q--ne { animation: caiNE 1s cubic-bezier(0.4, 0, 0.55, 1) 0.1s forwards; }
+#intro.p-split .seal-q--so { animation: caiSO 1s cubic-bezier(0.4, 0, 0.55, 1) forwards; }
+#intro.p-split .seal-q--se { animation: caiSE 1s cubic-bezier(0.4, 0, 0.55, 1) 0.03s forwards; }
 
-@keyframes caiEsq {
-  0%   { transform: translateX(-1.1px); opacity: 1; }
-  18%  { transform: translate(-4px, -5px) rotate(-3deg); opacity: 1; }   /* levanta */
-  55%  { transform: translate(-7px, 14px) rotate(-8deg); opacity: 1; }
-  100% { transform: translate(-10px, 46px) rotate(-13deg); opacity: 0; }
+@keyframes caiNO {
+  0%   { transform: translate(-1px, -0.8px); opacity: 1; }
+  18%  { transform: translate(-5px, -7px) rotate(-4deg); }        /* levanta */
+  55%  { transform: translate(-8px, 12px) rotate(-9deg); opacity: 1; }
+  100% { transform: translate(-12px, 44px) rotate(-15deg); opacity: 0; }
 }
-@keyframes caiDir {
-  0%   { transform: translateX(1.1px); opacity: 1; }
-  18%  { transform: translate(4px, -4px) rotate(2.5deg); opacity: 1; }
-  55%  { transform: translate(7px, 15px) rotate(7deg); opacity: 1; }
-  100% { transform: translate(10px, 48px) rotate(12deg); opacity: 0; }
+@keyframes caiNE {
+  0%   { transform: translate(1px, -0.8px); opacity: 1; }
+  18%  { transform: translate(5px, -6px) rotate(3.5deg); }
+  55%  { transform: translate(8px, 13px) rotate(8deg); opacity: 1; }
+  100% { transform: translate(12px, 46px) rotate(14deg); opacity: 0; }
+}
+@keyframes caiSO {
+  0%   { transform: translate(-1px, 0.8px); opacity: 1; }
+  18%  { transform: translate(-4px, -3px) rotate(2deg); }
+  55%  { transform: translate(-7px, 16px) rotate(6deg); opacity: 1; }
+  100% { transform: translate(-10px, 50px) rotate(11deg); opacity: 0; }
+}
+@keyframes caiSE {
+  0%   { transform: translate(1px, 0.8px); opacity: 1; }
+  18%  { transform: translate(4px, -3px) rotate(-2deg); }
+  55%  { transform: translate(7px, 17px) rotate(-6deg); opacity: 1; }
+  100% { transform: translate(10px, 52px) rotate(-12deg); opacity: 0; }
 }
 
 /* 5.3 — ETAPA 2: a fita perde a tensão e o laço se desfaz.
    O laço gira em torno do nó, afrouxa, escorrega e só então cai. */
 #intro.p-untie .piece--bow    { animation: desatar 1.5s cubic-bezier(0.36, 0, 0.5, 1) forwards; }
 #intro.p-untie .piece--ribbon { animation: fitaCede 1.5s cubic-bezier(0.36, 0, 0.5, 1) forwards; }
-#intro.p-untie .piece--tag    { animation: etiquetaCai 1.5s cubic-bezier(0.4, 0, 0.55, 1) forwards; }
 /* ETAPA 3: as flores só acomodam alguns pixels — não caem, não giram. */
 #intro.p-untie .piece--flowers { animation: floresAcomodam 1.5s cubic-bezier(0.33, 0, 0.4, 1) forwards; }
 
@@ -331,44 +311,31 @@ body {
   100% { transform: translateY(30%) rotate(-1.6deg); opacity: 0; }
 }
 
-@keyframes etiquetaCai {
-  0%   { transform: none; opacity: 1; }
-  25%  { transform: rotate(3deg) translateY(1%); }        /* balança no cordão */
-  55%  { transform: rotate(-4deg) translateY(9%); opacity: 1; }
-  100% { transform: rotate(-9deg) translateY(42%); opacity: 0; }
-}
-
 @keyframes floresAcomodam {
   0%   { transform: none; }
   45%  { transform: translate(-0.5%, 0.7%); }
   100% { transform: translate(-0.3%, 1.1%); }
 }
 
-/* 5.4 — ETAPAS 4 e 5: o papel se desdobra.
-   A folha de cima dobra a partir da linha de baixo; a de baixo desce logo
-   depois. Devagar e sem giro no centro — papel grosso, artesanal. */
-#intro.p-open .leaf--top      { animation: abreCima 1s cubic-bezier(0.38, 0, 0.32, 1) forwards; }
-#intro.p-open .leaf--top::after  { animation: sombraDobra 1s ease-in forwards; }
-#intro.p-open .leaf--bottom   { animation: abreBaixo 1.05s cubic-bezier(0.38, 0, 0.32, 1) 0.18s forwards; }
-#intro.p-open .leaf--bottom::after { animation: sombraDobra 1.05s ease-in 0.18s forwards; }
+/* 5.4 — ETAPAS 4 e 5: o papel se abre A PARTIR DO MEIO.
+   Cada peça está presa na sua borda externa, então a borda que fica no meio
+   é a que se move: a de cima sobe, a de baixo desce, ambas dobrando para
+   trás. A de cima começa primeiro. Devagar — papel grosso, artesanal. */
+#intro.p-open .leaf--top    { animation: abreCima 1s cubic-bezier(0.38, 0, 0.32, 1) forwards; }
+#intro.p-open .leaf--bottom { animation: abreBaixo 1.05s cubic-bezier(0.38, 0, 0.32, 1) 0.18s forwards; }
 
-/* As flores estão apoiadas na folha de cima: saem junto com ela. */
+/* As flores estão apoiadas na peça de cima: saem junto com ela. */
 #intro.p-open .piece--flowers { animation: floresSaem 0.85s cubic-bezier(0.4, 0, 0.6, 1) forwards; }
 
 @keyframes abreCima {
   0%   { transform: rotateX(0deg); opacity: 1; }
   62%  { opacity: 1; }
-  100% { transform: rotateX(-112deg); opacity: 0; }
+  100% { transform: rotateX(-108deg); opacity: 0; }
 }
 @keyframes abreBaixo {
   0%   { transform: rotateX(0deg); opacity: 1; }
   62%  { opacity: 1; }
   100% { transform: rotateX(104deg); opacity: 0; }
-}
-@keyframes sombraDobra {
-  0%   { opacity: 0; }
-  35%  { opacity: 0.55; }
-  100% { opacity: 0.95; }
 }
 @keyframes floresSaem {
   0%   { transform: translate(-0.3%, 1.1%); opacity: 1; }
@@ -376,12 +343,12 @@ body {
   100% { transform: translate(-1.5%, -7%) rotate(-2deg); opacity: 0; }
 }
 
-/* 5.5 — ETAPA 6: o chiffon se dissolve em ~400ms e a foto ganha cor. */
-#intro.p-reveal .env-chiffon { animation: chiffonSai 0.4s ease-out forwards; }
+/* 5.5 — ETAPA 6: a foto em cor plena entra por cima da versão com chiffon. */
+#intro.p-reveal .env-foto--cor { animation: fotoGanhaCor 0.55s ease-out forwards; }
 
-@keyframes chiffonSai {
-  from { opacity: 1; }
-  to   { opacity: 0; }
+@keyframes fotoGanhaCor {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* Ao final a cena inteira se apaga, entregando a folha da fotografia */

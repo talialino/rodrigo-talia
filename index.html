@@ -10,13 +10,13 @@
   <meta name="description" content="Convite digital do casamento de Rodrigo & Talia — 30 de Setembro de 2026." />
 
   <!-- Pré-carregamento das peças do convite e da fotografia -->
+  <link rel="preload" as="image" href="assets/foto-chiffon.jpg" />
   <link rel="preload" as="image" href="assets/envelope-top.png" />
   <link rel="preload" as="image" href="assets/envelope-bottom.png" />
   <link rel="preload" as="image" href="assets/seal.png" />
   <link rel="preload" as="image" href="assets/bow.png" />
   <link rel="preload" as="image" href="assets/ribbon.png" />
   <link rel="preload" as="image" href="assets/flowers.png" />
-  <link rel="preload" as="image" href="assets/tag.png" />
   <link rel="preload" as="image" href="assets/foto.jpeg" />
 
   <!-- Estilos -->
@@ -47,25 +47,27 @@
     <div id="intro" aria-hidden="true">
       <div class="env">
 
-        <!-- Fotografia do casal: revelada quando o papel se abre -->
-        <img class="env-foto" src="assets/foto.jpeg" alt="" />
-        <!-- Camada de "chiffon": branco translúcido que se dissolve -->
-        <div class="env-chiffon"></div>
+        <!-- Fotografia com o chiffon já embutido (assets/foto-chiffon.jpg):
+             fica visível desde o início, por baixo das peças do convite. -->
+        <img class="env-foto env-foto--veu" src="assets/foto-chiffon.jpg" alt="" />
+        <!-- A mesma foto em cor plena: entra em fade na revelação. -->
+        <img class="env-foto env-foto--cor" src="assets/foto.jpeg" alt="" />
 
-        <!-- ---- PAPEL: duas folhas que se abrem para cima e para baixo ---- -->
-        <div class="leaf leaf--top"><span class="leaf-art"></span></div>
-        <div class="leaf leaf--bottom"><span class="leaf-art"></span></div>
+        <!-- ---- PAPEL: duas peças soltas, cada uma presa na sua borda ---- -->
+        <img class="leaf leaf--top"    src="assets/envelope-top.png"    alt="" />
+        <img class="leaf leaf--bottom" src="assets/envelope-bottom.png" alt="" />
 
         <!-- ---- ADORNOS ---- -->
         <img class="piece piece--flowers" src="assets/flowers.png" alt="" />
         <img class="piece piece--ribbon"  src="assets/ribbon.png"  alt="" />
         <img class="piece piece--bow"     src="assets/bow.png"     alt="" />
-        <img class="piece piece--tag"     src="assets/tag.png"     alt="" />
 
-        <!-- Lacre: duas metades do mesmo PNG, recortadas por clip-path -->
+        <!-- Lacre: quatro cópias do mesmo PNG, cada uma recortada num quarto -->
         <div class="seal">
-          <img class="seal-half seal-half--l" src="assets/seal.png" alt="" />
-          <img class="seal-half seal-half--r" src="assets/seal.png" alt="" />
+          <img class="seal-q seal-q--ne" src="assets/seal.png" alt="" />
+          <img class="seal-q seal-q--no" src="assets/seal.png" alt="" />
+          <img class="seal-q seal-q--se" src="assets/seal.png" alt="" />
+          <img class="seal-q seal-q--so" src="assets/seal.png" alt="" />
         </div>
       </div>
     </div>
