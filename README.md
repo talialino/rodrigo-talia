@@ -37,15 +37,24 @@ para 101%), a cena roda sozinha:
 3. as tulipas apenas acomodam alguns pixels — não caem nem giram;
 4. o papel abre **a partir do meio**: cada peça está presa na sua borda
    externa, então quem se move é a borda do meio. A de cima sobe primeiro;
-5. a de baixo desce logo depois, ambas dobrando para trás;
+5. a de baixo desce logo depois, ambas dobrando **para a frente**, na
+   direção de quem olha;
 6. a fotografia em cor plena entra em fade sobre a versão com chiffon,
    com um Ken Burns bem lento;
 7. ~700ms depois surgem as duas frases, em fade com leve deslocamento;
 8. por fim aparece o indicador de navegação na base.
 
 Os tempos ficam na tabela `timeline` dentro de `script.js`; o movimento em si
-é CSS (seção 5 do `style.css`). As posições de cada peça sobre o convite estão
-nas regras `.piece--*` e `.seal` (seção 4).
+é CSS (seção 5 do `style.css`).
+
+Todas as peças moram dentro de `.env-stage`, um palco com a proporção exata do
+convite (768x1382, a mesma do `Rodrigo&Talia.png`) que cresce até cobrir a
+tela. Como cada peça é posicionada em % **do palco**, laço, fita, lacre e
+flores continuam encaixados em qualquer aparelho — em telas mais estreitas o
+conjunto inteiro sangra junto, sem se desalinhar. O palco é ancorado à
+esquerda de propósito: a sobra vai para a direita, onde o papel é transparente
+e só aparece a fotografia, preservando o laço e as flores. As posições em
+`.piece--*` e `.seal` foram medidas sobre o convite impresso.
 
 ## Assets
 

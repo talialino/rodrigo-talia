@@ -156,22 +156,40 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 32%;
+  /* deslocado para que o casal caia na faixa que fica à mostra ao lado do
+     papel, como no convite impresso — e continue bem enquadrado em tela cheia */
+  object-position: 32% 30%;
 }
 
 .env-foto--cor { opacity: 0; }
 
+/* ---- PALCO -----------------------------------------------------------------
+   Reproduz a proporção do convite (768 x 1382, a mesma do Rodrigo&Talia.png)
+   e cresce até cobrir a tela. Como TUDO mora aqui dentro e é posicionado em %
+   do palco, as peças nunca se desencontram: numa tela mais estreita o palco
+   sangra para os lados em bloco, com o conjunto inteiro. */
+.env-stage {
+  position: absolute;
+  left: 0;                 /* ancorado à esquerda: o laço e as flores, que
+                              moram nessa borda, nunca são cortados. A sobra
+                              vai para a direita, onde o papel é transparente
+                              e só aparece a fotografia. */
+  top: 50%;
+  transform: translateY(-50%);
+  width: max(100%, calc(100dvh * 768 / 1382));
+  aspect-ratio: 768 / 1382;
+}
+
 /* ---- PEÇAS DE PAPEL --------------------------------------------------------
-   Cada PNG entra inteiro, como uma peça solta. A dobradiça de cada um fica
-   na sua borda externa, então as duas se abrem A PARTIR DO MEIO: a de cima
-   sobe e a de baixo desce, cada uma dobrando para trás.                      */
+   Cada PNG entra inteiro, como uma peça solta, na proporção do palco (sem
+   corte nem distorção). A dobradiça fica na borda externa de cada um, então
+   as duas se abrem A PARTIR DO MEIO, dobrando para a frente.                 */
 .leaf {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: 50% 50%;
   backface-visibility: hidden;
   will-change: transform;
 }
@@ -188,9 +206,12 @@ body {
   will-change: transform;
 }
 
-.piece--flowers { left: 1%;   top: 18%;   width: 38%;  z-index: 4; }
-.piece--ribbon  { left: -1%;  top: 49.5%; width: 102%; z-index: 6; }
-.piece--bow     { left: -1%;  top: 34%;   width: 36%;  z-index: 7; transform-origin: 62% 26%; }
+/* Posições medidas sobre o convite impresso (Rodrigo&Talia.png), que tem a
+   mesma proporção do palco. A fita cobre a largura inteira, o lacre fica
+   centrado em 58% x 55,6% e o laço tem o nó na altura da fita. */
+.piece--flowers { left: -8%;  top: 25%;   width: 46%;  z-index: 4; }
+.piece--ribbon  { left: 0;    top: 53.2%; width: 100%; z-index: 6; }
+.piece--bow     { left: -10%; top: 43.1%; width: 46%;  z-index: 7; transform-origin: 50% 27%; }
 
 /* ---- LACRE DE CERA ---------------------------------------------------------
    Quatro cópias do mesmo PNG, cada uma recortada num quarto por clip-path.
@@ -198,9 +219,9 @@ body {
    linhas são levemente tortas: cera partindo, não vidro quebrando.           */
 .seal {
   position: absolute;
-  left: 51%;
-  top: 45.5%;
-  width: 16%;
+  left: 51.4%;                 /* centro medido: 58% x 55,6% do convite */
+  top: 51.6%;
+  width: 13.2%;
   aspect-ratio: 662 / 717;
   z-index: 8;
   filter: drop-shadow(0 3px 7px rgba(85, 72, 63, 0.3));
@@ -319,8 +340,9 @@ body {
 
 /* 5.4 — ETAPAS 4 e 5: o papel se abre A PARTIR DO MEIO.
    Cada peça está presa na sua borda externa, então a borda que fica no meio
-   é a que se move: a de cima sobe, a de baixo desce, ambas dobrando para
-   trás. A de cima começa primeiro. Devagar — papel grosso, artesanal. */
+   é a que se move: a de cima sobe, a de baixo desce, ambas dobrando PARA A
+   FRENTE (na direção de quem olha). A de cima começa primeiro. Devagar —
+   papel grosso, artesanal. */
 #intro.p-open .leaf--top    { animation: abreCima 1s cubic-bezier(0.38, 0, 0.32, 1) forwards; }
 #intro.p-open .leaf--bottom { animation: abreBaixo 1.05s cubic-bezier(0.38, 0, 0.32, 1) 0.18s forwards; }
 
@@ -329,13 +351,13 @@ body {
 
 @keyframes abreCima {
   0%   { transform: rotateX(0deg); opacity: 1; }
-  62%  { opacity: 1; }
-  100% { transform: rotateX(-108deg); opacity: 0; }
+  58%  { opacity: 1; }
+  100% { transform: rotateX(96deg); opacity: 0; }     /* dobra para a frente */
 }
 @keyframes abreBaixo {
   0%   { transform: rotateX(0deg); opacity: 1; }
-  62%  { opacity: 1; }
-  100% { transform: rotateX(104deg); opacity: 0; }
+  58%  { opacity: 1; }
+  100% { transform: rotateX(-94deg); opacity: 0; }    /* dobra para a frente */
 }
 @keyframes floresSaem {
   0%   { transform: translate(-0.3%, 1.1%); opacity: 1; }
