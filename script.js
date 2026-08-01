@@ -505,13 +505,17 @@
 
     if (REDUCED) { finishIntro(true); return; }
 
+    /* Cada etapa entra numa marca de tempo; o CSS cuida do movimento.
+       Os 600ms iniciais são de propósito: só a respiração do convite. */
     var timeline = [
-      [500,  function () { intro.classList.add("p-shine"); }],        // brilho no selo
-      [1250, function () { intro.classList.add("p-seal"); }],         // selo rompe e cai
-      [1650, function () { intro.classList.add("p-bow"); }],          // laço perde tensão e cai
-      [2250, function () { intro.classList.add("p-open"); }],         // aba abre, papel sobe
-      [2650, function () { document.body.classList.add("reveal"); }], // foto ganha cor + Ken Burns
-      [3550, function () { finishIntro(false); }]                     // fim da cena
+      [600,  function () { intro.classList.add("p-crack"); }],   // 1: lacre trinca
+      [980,  function () { intro.classList.add("p-split"); }],   // 1: parte, levanta e cai
+      [1240, function () { intro.classList.add("p-untie"); }],   // 2 e 3: fita, laço, flores
+      [2600, function () { intro.classList.add("p-open"); }],    // 4 e 5: papel se desdobra
+      [3850, function () { intro.classList.add("p-reveal"); }],  // 6: chiffon se dissolve (400ms)
+      [4250, function () { document.body.classList.add("reveal"); }], // foto viva + Ken Burns
+      [4300, function () { intro.classList.add("p-done"); }],    // a cena se apaga
+      [4750, function () { finishIntro(false); }]                // 7: entrega para as frases
     ];
 
     timeline.forEach(function (step) { setTimeout(step[1], step[0]); });
@@ -523,10 +527,10 @@
     document.body.classList.add("reveal");
     navLocked = false;
 
-    // A frase surge ~1s depois de restar apenas a fotografia
+    // ETAPA 7: ~700ms depois de a fotografia estar inteira, vêm as frases
     setTimeout(function () {
       document.body.classList.add("phrase");
-    }, skipped ? 150 : 1000);
+    }, skipped ? 150 : 700);
   }
 
   /* --------------------------------------------------------------------------

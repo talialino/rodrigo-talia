@@ -1,15 +1,15 @@
 /* =============================================================================
    STYLE.CSS  —  Convite digital Rodrigo & Talia
    -----------------------------------------------------------------------------
-   Identidade extraída do envelope oficial (assets/Rodrigo&Talia.png):
-   papel branco quente, cetim champagne, selo rosé metálico, tulipas com
-   pontas rosadas, acabamento artesanal.
+   Identidade extraída do convite físico: papel creme em alto-relevo, cetim
+   champagne, lacre de cera, tulipas com pontas rosadas, acabamento artesanal.
+   As cores foram amostradas dos próprios PNGs em /assets.
 
    Organização:
-     1) Variáveis (paleta do envelope, fontes, texturas)
+     1) Variáveis (paleta do convite, fontes, texturas)
      2) Reset e base
      3) App-frame (coluna do convite) e fundo de mesa no desktop
-     4) INTRO — cena do envelope + camadas do selo e do laço
+     4) INTRO — o convite montado em camadas (papel, adornos, lacre)
      5) Linha do tempo da abertura (keyframes + classes p-*)
      6) BOOK — folhas, virada de página física e sombreados
      7) Indicadores laterais ("existe outra folha")
@@ -35,10 +35,14 @@
   --champagne-deep:  #c2a87f;  /* cetim na sombra                            */
   --gold-matte:      #b39b76;  /* dourado fosco (linhas, nunca amarelo)      */
 
-  /* Rosé */
-  --rose-metal:  #b76e79;   /* rosé metálico do selo                         */
+  /* Rosé — amostrado das tulipas e do lacre do convite */
+  --rose-metal:  #b76e79;   /* rosé metálico do lacre                        */
   --rose-deep:   #9c5560;   /* rosé na sombra                                */
-  --rose-blush:  #e9cfc9;   /* rosé blush (tulipas)                          */
+  --rose-tulip:  #df908b;   /* rosa das pontas das tulipas                   */
+  --rose-blush:  #e1b6a5;   /* rosa suave das pétalas                        */
+
+  /* Papel creme do convite (amostrado de envelope-top.png) */
+  --paper-cream: #eee4de;
 
   /* Tinta */
   --ink:      #55483f;      /* cinza quente escuro                           */
@@ -125,169 +129,267 @@ body {
   background: var(--paper);
 }
 
-.env-frame {
+/* Palco da cena. A perspectiva faz o papel dobrar como folha de verdade. */
+.env {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: max(100%, calc(100dvh * (524 / 942)));
-  aspect-ratio: var(--env-ratio);
-  transform-origin: 50% 20%;
+  inset: 0;
+  perspective: 1100px;
+  perspective-origin: 50% 50%;
+  transform-origin: 50% 50%;
+  /* respiração: 100% -> 101%, contínua e quase imperceptível */
+  animation: respirar 5.4s ease-in-out infinite;
 }
 
-.env-base {
+@keyframes respirar {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.01); }
+}
+
+/* Fotografia do casal, no fundo de tudo */
+.env-foto {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: 50% 32%;
 }
 
-/* Papel interno — surge e sobe alguns pixels quando a aba abre */
-.env-paper {
-  position: absolute;
-  left: 8%;
-  right: 8%;
-  top: 12%;
-  height: 70%;
-  background: linear-gradient(180deg, var(--paper-bright), var(--paper));
-  border-radius: 10px;
-  box-shadow: 0 -8px 30px rgba(85, 72, 63, 0.14);
-  opacity: 0;
-}
-
-/* LAÇO + FITAS — recorte da própria imagem do envelope.
-   Região medida: x 0–38%, y 44–88% do envelope. */
-.env-bow {
-  position: absolute;
-  left: 0;
-  top: 44%;
-  width: 38%;
-  height: 44%;
-  background-image: url("assets/Rodrigo&Talia.png");
-  background-size: 263.16% 227.28%;
-  background-position: 0% 78.6%;
-  background-repeat: no-repeat;
-  /* Máscara suave para as bordas do recorte se fundirem ao envelope */
-  -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent 98%);
-          mask-image: radial-gradient(closest-side, #000 55%, transparent 98%);
-  transform-origin: 60% 35%;      /* gira em torno do nó do laço */
-}
-
-/* SELO ROSÉ — recorte circular da própria imagem.
-   Centro medido: 58.2% x 56.3%; diâmetro ~16.4% da largura. */
-.env-seal {
-  position: absolute;
-  left: 49.2%;
-  top: 51.3%;
-  width: 18%;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  overflow: hidden;
-  background-image: url("assets/Rodrigo&Talia.png");
-  background-size: 555.6% auto;
-  background-position: 60% 57%;
-  background-repeat: no-repeat;
-  filter: drop-shadow(0 3px 6px rgba(85, 72, 63, 0.25));
-}
-
-/* Brilho metálico que percorre o selo */
-.env-seal-shine {
-  position: absolute;
-  inset: -30%;
-  background: linear-gradient(115deg,
-    transparent 38%,
-    rgba(255, 244, 235, 0.0) 44%,
-    rgba(255, 244, 235, 0.85) 50%,
-    rgba(255, 244, 235, 0.0) 56%,
-    transparent 62%);
-  transform: translateX(-120%);
-  opacity: 0;
-}
-
-/* Véu de luz da transição para a fotografia */
-.env-veil {
+/* "Chiffon": branco translúcido com leve desfoque sobre a fotografia */
+.env-chiffon {
   position: absolute;
   inset: 0;
-  background: var(--paper-bright);
+  background: rgba(252, 250, 246, 0.82);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+
+/* ---- FOLHAS DE PAPEL -------------------------------------------------------
+   Cada folha recorta a metade que lhe cabe, mas a arte dentro dela é do
+   tamanho da cena inteira: assim a textura atravessa as duas sem emenda
+   enquanto o convite está fechado. A dobradiça fica na linha do corte.       */
+.leaf {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.leaf-art {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background-color: var(--paper-cream);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 22% center;
+  display: block;
+}
+
+/* Sombra que ganha corpo conforme a folha dobra (profundidade do papel) */
+.leaf::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(96, 78, 64, 0.34), rgba(96, 78, 64, 0));
   opacity: 0;
   pointer-events: none;
 }
 
+.leaf--top {
+  top: 0;
+  height: 52%;
+  transform-origin: 50% 100%;    /* dobra a partir da linha de baixo */
+  z-index: 3;
+}
+.leaf--top .leaf-art {
+  top: 0;
+  height: 192.31%;               /* 100 / 0.52 — cobre a cena toda */
+  background-image: url("assets/envelope-top.png");
+}
+.leaf--top::after { background: linear-gradient(0deg, rgba(96, 78, 64, 0.34), rgba(96, 78, 64, 0)); }
+
+.leaf--bottom {
+  top: 52%;
+  bottom: 0;
+  transform-origin: 50% 0;       /* dobra a partir da linha de cima */
+  z-index: 2;
+}
+.leaf--bottom .leaf-art {
+  top: -108.33%;                 /* alinha a arte com a folha de cima */
+  height: 208.33%;               /* 100 / 0.48 */
+  background-image: url("assets/envelope-bottom.png");
+}
+
+/* ---- ADORNOS ---------------------------------------------------------------
+   Posições em % da cena, calibradas sobre o convite original.                */
+.piece {
+  position: absolute;
+  z-index: 5;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.piece--flowers { left: 3.5%; top: 20.5%; width: 33%;  z-index: 4; }
+.piece--ribbon  { left: -1%;  top: 49.5%; width: 102%; z-index: 6; }
+.piece--bow     { left: -1%;  top: 37%;   width: 34%;  z-index: 7; transform-origin: 62% 26%; }
+.piece--tag     { left: 27%;  top: 55%;   width: 26%;  z-index: 6; transform-origin: 50% 0%; }
+
+/* ---- LACRE DE CERA ---------------------------------------------------------
+   Duas cópias do mesmo PNG, cada uma recortada em metade por clip-path.
+   A linha do corte é irregular de propósito: cera partindo, não vidro.       */
+.seal {
+  position: absolute;
+  left: 51%;
+  top: 45.5%;
+  width: 16%;
+  aspect-ratio: 662 / 717;
+  z-index: 8;
+  filter: drop-shadow(0 3px 7px rgba(85, 72, 63, 0.3));
+}
+
+.seal-half {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.seal-half--l { clip-path: polygon(0 0, 53% 0, 46% 48%, 51% 100%, 0 100%); }
+.seal-half--r { clip-path: polygon(53% 0, 100% 0, 100% 100%, 51% 100%, 46% 48%); }
+
 
 /* ----------------------------------------------------------------------------
    5) LINHA DO TEMPO DA ABERTURA
-      script.js adiciona classes ao #intro na ordem:
-      p-shine -> p-seal -> p-bow -> p-open  (e "reveal"/"phrase" no <body>)
+      script.js acrescenta as classes ao #intro nesta ordem:
+        p-crack  -> lacre trinca
+        p-split  -> lacre parte em dois, levanta e cai
+        p-untie  -> fita perde tensão, laço se desfaz; flores acomodam
+        p-open   -> folha de cima dobra para cima; a de baixo se desdobra
+        p-reveal -> o chiffon se dissolve e a fotografia aparece
+      (e "reveal" / "phrase" no <body>, para a foto e as frases)
 ---------------------------------------------------------------------------- */
 
-/* 5.1 — brilho percorre o selo */
-#intro.p-shine .env-seal-shine { animation: sealShine 0.9s ease-in-out forwards; }
+/* 5.1 — ETAPA 1: pequenas rachaduras. Um tremor curtíssimo, sem estardalhaço. */
+#intro.p-crack .seal-half--l { animation: trincaEsq 0.36s ease-out both; }
+#intro.p-crack .seal-half--r { animation: trincaDir 0.36s ease-out both; }
 
-@keyframes sealShine {
-  0%   { opacity: 0; transform: translateX(-120%); }
-  15%  { opacity: 1; }
-  85%  { opacity: 1; }
-  100% { opacity: 0; transform: translateX(120%); }
-}
-
-/* 5.2 — o selo rompe: um "pop" físico no lugar (a queda acontece junto
-   com a abertura do envelope, para o recorte e a imagem base nunca se
-   separarem visivelmente). */
-#intro.p-seal .env-seal { animation: sealCrack 0.7s cubic-bezier(0.34, 1.4, 0.64, 1); }
-
-@keyframes sealCrack {
+@keyframes trincaEsq {
   0%   { transform: none; }
-  35%  { transform: scale(1.08) rotate(3deg) translateY(-2px); }   /* rompe  */
-  70%  { transform: scale(0.99) rotate(-1deg) translateY(1px); }   /* assenta */
-  100% { transform: none; }
+  40%  { transform: translateX(-0.6px) rotate(-0.5deg); }
+  70%  { transform: translateX(-1.4px); }
+  100% { transform: translateX(-1.1px); }
 }
-
-/* 5.3 — o laço perde a tensão: balanço curto em torno do nó */
-#intro.p-bow .env-bow { animation: bowLoosen 0.9s cubic-bezier(0.4, 0, 0.5, 1); }
-
-@keyframes bowLoosen {
+@keyframes trincaDir {
   0%   { transform: none; }
-  30%  { transform: rotate(-2.2deg) translateY(3px); }    /* uma ponta cede   */
-  65%  { transform: rotate(1.4deg) translate(1%, 5px); }  /* a outra acompanha */
-  100% { transform: none; }
+  40%  { transform: translateX(0.6px) rotate(0.5deg); }
+  70%  { transform: translateX(1.4px); }
+  100% { transform: translateX(1.1px); }
 }
 
-/* 5.4 — a aba abre para cima, o papel interno sobe, o envelope se dissolve;
-   SELO e FITAS caem de verdade agora, cobertos pelo fade global. */
-#intro.p-open .env-frame { animation: envOpen 1.25s cubic-bezier(0.55, 0, 0.4, 1) forwards; }
-#intro.p-open .env-seal  { animation: sealFall 0.9s cubic-bezier(0.5, 0, 0.7, 1) forwards; }
-#intro.p-open .env-bow   { animation: bowFall 1.1s cubic-bezier(0.45, 0, 0.6, 1) forwards; }
-#intro.p-open .env-paper { animation: paperRise 1.05s cubic-bezier(0.4, 0, 0.4, 1) forwards; }
-#intro.p-open .env-veil  { animation: veilGlow 1.25s ease-in-out forwards; }
+/* 5.2 — ETAPA 1 (parte 2): as metades se separam, sobem poucos pixels e caem.
+   Cera é pesada: sobe pouco, gira pouco e desce com aceleração suave. */
+#intro.p-split .seal-half--l { animation: caiEsq 1s cubic-bezier(0.4, 0, 0.55, 1) forwards; }
+#intro.p-split .seal-half--r { animation: caiDir 1s cubic-bezier(0.4, 0, 0.55, 1) forwards; }
 
-@keyframes envOpen {
-  0%   { transform: translate(-50%, -50%) perspective(1400px) rotateX(0deg) scale(1); opacity: 1; }
-  45%  { transform: translate(-50%, -51.5%) perspective(1400px) rotateX(9deg) scale(1.03); opacity: 1; }
-  100% { transform: translate(-50%, -56%)   perspective(1400px) rotateX(14deg) scale(1.08); opacity: 0; }
+@keyframes caiEsq {
+  0%   { transform: translateX(-1.1px); opacity: 1; }
+  18%  { transform: translate(-4px, -5px) rotate(-3deg); opacity: 1; }   /* levanta */
+  55%  { transform: translate(-7px, 14px) rotate(-8deg); opacity: 1; }
+  100% { transform: translate(-10px, 46px) rotate(-13deg); opacity: 0; }
+}
+@keyframes caiDir {
+  0%   { transform: translateX(1.1px); opacity: 1; }
+  18%  { transform: translate(4px, -4px) rotate(2.5deg); opacity: 1; }
+  55%  { transform: translate(7px, 15px) rotate(7deg); opacity: 1; }
+  100% { transform: translate(10px, 48px) rotate(12deg); opacity: 0; }
 }
 
-@keyframes sealFall {
+/* 5.3 — ETAPA 2: a fita perde a tensão e o laço se desfaz.
+   O laço gira em torno do nó, afrouxa, escorrega e só então cai. */
+#intro.p-untie .piece--bow    { animation: desatar 1.5s cubic-bezier(0.36, 0, 0.5, 1) forwards; }
+#intro.p-untie .piece--ribbon { animation: fitaCede 1.5s cubic-bezier(0.36, 0, 0.5, 1) forwards; }
+#intro.p-untie .piece--tag    { animation: etiquetaCai 1.5s cubic-bezier(0.4, 0, 0.55, 1) forwards; }
+/* ETAPA 3: as flores só acomodam alguns pixels — não caem, não giram. */
+#intro.p-untie .piece--flowers { animation: floresAcomodam 1.5s cubic-bezier(0.33, 0, 0.4, 1) forwards; }
+
+@keyframes desatar {
   0%   { transform: none; opacity: 1; }
-  45%  { transform: translateY(18px) rotate(-8deg); opacity: 1; }
-  100% { transform: translateY(52px) rotate(-14deg) scale(0.97); opacity: 0; }
+  18%  { transform: rotate(-2deg) translateY(0.6%); }                  /* perde tensão */
+  40%  { transform: rotate(-4.5deg) translate(-1.5%, 3%) scaleY(0.97); } /* alças escorregam */
+  65%  { transform: rotate(-7deg) translate(-3%, 12%) scaleY(0.94); opacity: 1; }
+  100% { transform: rotate(-11deg) translate(-5%, 46%) scaleY(0.9); opacity: 0; }
 }
 
-@keyframes bowFall {
+@keyframes fitaCede {
   0%   { transform: none; opacity: 1; }
-  40%  { transform: rotate(-4deg) translate(-1%, 12%); opacity: 1; }
-  100% { transform: rotate(-12deg) translate(-4%, 55%); opacity: 0; }
+  22%  { transform: translateY(0.5%) scaleX(0.995); }
+  50%  { transform: translateY(2.5%) rotate(-0.7deg); opacity: 1; }
+  100% { transform: translateY(30%) rotate(-1.6deg); opacity: 0; }
 }
 
-@keyframes paperRise {
-  0%   { opacity: 0; transform: translateY(14px); }
-  35%  { opacity: 1; }
-  100% { opacity: 0; transform: translateY(-26px); }
+@keyframes etiquetaCai {
+  0%   { transform: none; opacity: 1; }
+  25%  { transform: rotate(3deg) translateY(1%); }        /* balança no cordão */
+  55%  { transform: rotate(-4deg) translateY(9%); opacity: 1; }
+  100% { transform: rotate(-9deg) translateY(42%); opacity: 0; }
 }
 
-@keyframes veilGlow {
+@keyframes floresAcomodam {
+  0%   { transform: none; }
+  45%  { transform: translate(-0.5%, 0.7%); }
+  100% { transform: translate(-0.3%, 1.1%); }
+}
+
+/* 5.4 — ETAPAS 4 e 5: o papel se desdobra.
+   A folha de cima dobra a partir da linha de baixo; a de baixo desce logo
+   depois. Devagar e sem giro no centro — papel grosso, artesanal. */
+#intro.p-open .leaf--top      { animation: abreCima 1s cubic-bezier(0.38, 0, 0.32, 1) forwards; }
+#intro.p-open .leaf--top::after  { animation: sombraDobra 1s ease-in forwards; }
+#intro.p-open .leaf--bottom   { animation: abreBaixo 1.05s cubic-bezier(0.38, 0, 0.32, 1) 0.18s forwards; }
+#intro.p-open .leaf--bottom::after { animation: sombraDobra 1.05s ease-in 0.18s forwards; }
+
+/* As flores estão apoiadas na folha de cima: saem junto com ela. */
+#intro.p-open .piece--flowers { animation: floresSaem 0.85s cubic-bezier(0.4, 0, 0.6, 1) forwards; }
+
+@keyframes abreCima {
+  0%   { transform: rotateX(0deg); opacity: 1; }
+  62%  { opacity: 1; }
+  100% { transform: rotateX(-112deg); opacity: 0; }
+}
+@keyframes abreBaixo {
+  0%   { transform: rotateX(0deg); opacity: 1; }
+  62%  { opacity: 1; }
+  100% { transform: rotateX(104deg); opacity: 0; }
+}
+@keyframes sombraDobra {
   0%   { opacity: 0; }
-  55%  { opacity: 0.9; }
-  100% { opacity: 0; }
+  35%  { opacity: 0.55; }
+  100% { opacity: 0.95; }
+}
+@keyframes floresSaem {
+  0%   { transform: translate(-0.3%, 1.1%); opacity: 1; }
+  45%  { opacity: 0.85; }
+  100% { transform: translate(-1.5%, -7%) rotate(-2deg); opacity: 0; }
+}
+
+/* 5.5 — ETAPA 6: o chiffon se dissolve em ~400ms e a foto ganha cor. */
+#intro.p-reveal .env-chiffon { animation: chiffonSai 0.4s ease-out forwards; }
+
+@keyframes chiffonSai {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* Ao final a cena inteira se apaga, entregando a folha da fotografia */
+#intro.p-done { animation: cenaSai 0.45s ease-out forwards; }
+
+@keyframes cenaSai {
+  from { opacity: 1; }
+  to   { opacity: 0; }
 }
 
 
@@ -326,6 +428,22 @@ body {
     var(--paper);
 }
 
+/* Relevo do papel do convite: a mesma textura em alto-relevo do envelope,
+   bem suave, para as folhas internas parecerem o mesmo papel artesanal. */
+.sheet--paper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("assets/envelope-top.png");
+  background-size: 300% auto;      /* amplia para mostrar só o miolo do papel */
+  background-position: 8% 18%;     /* longe da borda em arco */
+  background-repeat: no-repeat;
+  opacity: 0.42;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 0;
+}
+
 /* Lombada: sombra fina junto à borda esquerda, como caderno costurado */
 .sheet--paper::before {
   content: "";
@@ -334,6 +452,7 @@ body {
   width: 26px;
   background: linear-gradient(90deg, rgba(85, 72, 63, 0.07), transparent);
   pointer-events: none;
+  z-index: 1;
 }
 
 /* Sombreado dinâmico da virada (opacidade controlada por script.js) */
@@ -521,7 +640,7 @@ body.reveal .photo-veil { opacity: 0; }
 }
 
 body.phrase .opening-phrase > * { opacity: 1; transform: none; }
-body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.55s; }
+body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
 
 .phrase-script {
   font-family: var(--font-script);
@@ -545,6 +664,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.55s; }
 ---------------------------------------------------------------------------- */
 .sheet-inner {
   position: relative;
+  z-index: 2;                   /* acima do relevo do papel */
   height: 100%;
   padding: clamp(2rem, 7dvh, 3.4rem) 1.9rem 2.2rem;
   display: flex;
@@ -592,7 +712,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.55s; }
   width: 46px;
   height: 1px;
   margin: 0.85rem auto 0;
-  background: linear-gradient(90deg, transparent, var(--rose-metal), transparent);
+  background: linear-gradient(90deg, transparent, var(--rose-tulip), transparent);
 }
 
 .sheet-text {
@@ -622,7 +742,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.55s; }
   background: linear-gradient(105deg,
     var(--rose-deep) 0%,
     var(--rose-metal) 30%,
-    #e6b7ae 50%,
+    var(--rose-blush) 50%,
     var(--rose-metal) 70%,
     var(--rose-deep) 100%);
   background-size: 220% 100%;
@@ -646,7 +766,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.55s; }
 .tulip-ornament .t-leaf    { stroke: var(--champagne); }
 .tulip-ornament .t-petal-l,
 .tulip-ornament .t-petal-r { stroke: var(--rose-blush); }
-.tulip-ornament .t-petal-c { stroke: var(--rose-metal); }
+.tulip-ornament .t-petal-c { stroke: var(--rose-tulip); }
 
 /* Welcome (Folha 2) */
 .welcome-greeting {
@@ -836,7 +956,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.55s; }
   width: 26px;
   height: 1px;
   transform: translateX(-50%);
-  background: linear-gradient(90deg, transparent, var(--rose-metal), transparent);
+  background: linear-gradient(90deg, transparent, var(--rose-tulip), transparent);
   opacity: 0.7;
 }
 

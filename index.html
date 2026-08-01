@@ -9,8 +9,14 @@
   <!-- Descrição para compartilhamento -->
   <meta name="description" content="Convite digital do casamento de Rodrigo & Talia — 30 de Setembro de 2026." />
 
-  <!-- Pré-carregamento das imagens principais (envelope e fotografia) -->
-  <link rel="preload" as="image" href="assets/Rodrigo%26Talia.png" />
+  <!-- Pré-carregamento das peças do convite e da fotografia -->
+  <link rel="preload" as="image" href="assets/envelope-top.png" />
+  <link rel="preload" as="image" href="assets/envelope-bottom.png" />
+  <link rel="preload" as="image" href="assets/seal.png" />
+  <link rel="preload" as="image" href="assets/bow.png" />
+  <link rel="preload" as="image" href="assets/ribbon.png" />
+  <link rel="preload" as="image" href="assets/flowers.png" />
+  <link rel="preload" as="image" href="assets/tag.png" />
   <link rel="preload" as="image" href="assets/foto.jpeg" />
 
   <!-- Estilos -->
@@ -32,31 +38,36 @@
   <div id="app-frame">
 
     <!-- ======================================================================
-         INTRO — CENA DO ENVELOPE (animação cinematográfica de abertura)
-         O envelope é a imagem oficial assets/Rodrigo&Talia.png.
-         O SELO e o LAÇO são camadas que recortam a MESMA imagem (via
-         background-position calibrado em style.css) para poderem se soltar
-         e cair de forma independente. Toda a linha do tempo é regida por
-         script.js (~3,5s) e esta cena é removida do DOM ao terminar.
+         INTRO — ABERTURA DO CONVITE
+         Cada peça é um PNG independente (assets/), empilhado em camadas para
+         poder se mover sozinho. A ordem abaixo é a ordem de profundidade:
+         fotografia no fundo, papel por cima, e os adornos acima de tudo.
+         A linha do tempo fica em script.js; a cena sai do DOM ao terminar.
          ====================================================================== -->
     <div id="intro" aria-hidden="true">
-      <div class="env-frame">
-        <img class="env-base" src="assets/Rodrigo%26Talia.png" alt="" />
+      <div class="env">
 
-        <!-- Papel interno que "sobe alguns pixels" quando a aba abre -->
-        <div class="env-paper"></div>
+        <!-- Fotografia do casal: revelada quando o papel se abre -->
+        <img class="env-foto" src="assets/foto.jpeg" alt="" />
+        <!-- Camada de "chiffon": branco translúcido que se dissolve -->
+        <div class="env-chiffon"></div>
 
-        <!-- Laço + fitas (camada recortada do envelope) -->
-        <div class="env-bow"></div>
+        <!-- ---- PAPEL: duas folhas que se abrem para cima e para baixo ---- -->
+        <div class="leaf leaf--top"><span class="leaf-art"></span></div>
+        <div class="leaf leaf--bottom"><span class="leaf-art"></span></div>
 
-        <!-- Selo rosé metálico (camada recortada do envelope) -->
-        <div class="env-seal">
-          <span class="env-seal-shine"></span>
+        <!-- ---- ADORNOS ---- -->
+        <img class="piece piece--flowers" src="assets/flowers.png" alt="" />
+        <img class="piece piece--ribbon"  src="assets/ribbon.png"  alt="" />
+        <img class="piece piece--bow"     src="assets/bow.png"     alt="" />
+        <img class="piece piece--tag"     src="assets/tag.png"     alt="" />
+
+        <!-- Lacre: duas metades do mesmo PNG, recortadas por clip-path -->
+        <div class="seal">
+          <img class="seal-half seal-half--l" src="assets/seal.png" alt="" />
+          <img class="seal-half seal-half--r" src="assets/seal.png" alt="" />
         </div>
       </div>
-
-      <!-- Véu de luz usado na transição envelope -> fotografia -->
-      <div class="env-veil"></div>
     </div>
 
 
@@ -84,8 +95,8 @@
         </div>
 
         <div class="opening-phrase">
-          <p class="phrase-script">Se você está aqui..</p>
-          <p class="phrase-body">Sua presença faz parte da nossa história.</p>
+          <p class="phrase-script">Se você chegou até aqui...</p>
+          <p class="phrase-body">...é porque faz parte da nossa história.</p>
         </div>
       </section>
 
