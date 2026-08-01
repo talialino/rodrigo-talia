@@ -133,8 +133,6 @@ body {
 .env {
   position: absolute;
   inset: 0;
-  perspective: 1100px;
-  perspective-origin: 50% 50%;
   transform-origin: 50% 50%;
   /* respiração: 100% -> 101%, contínua e quase imperceptível */
   animation: respirar 5.4s ease-in-out infinite;
@@ -156,9 +154,10 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* deslocado para que o casal caia na faixa que fica à mostra ao lado do
-     papel, como no convite impresso — e continue bem enquadrado em tela cheia */
-  object-position: 32% 30%;
+  /* MESMO enquadramento da folha da fotografia (.photo). É o que faz a
+     passagem da animação para a folha ser imperceptível: a imagem não
+     desliza, só continua. */
+  object-position: 50% 32%;
 }
 
 .env-foto--cor { opacity: 0; }
@@ -178,6 +177,13 @@ body {
   transform: translateY(-50%);
   width: max(100%, calc(100dvh * 768 / 1382));
   aspect-ratio: 768 / 1382;
+  /* A perspectiva precisa morar AQUI: ela só vale para os filhos diretos, e
+     as folhas do papel são filhas do palco. Sem isso a dobra vira um simples
+     achatamento, sem profundidade e sem direção. */
+  /* Distância generosa: a folha é quase da altura da tela, então uma
+     perspectiva curta a faria "estourar" na câmera ao abrir. */
+  perspective: 2300px;
+  perspective-origin: 50% 50%;
 }
 
 /* ---- PEÇAS DE PAPEL --------------------------------------------------------
@@ -349,15 +355,17 @@ body {
 /* As flores estão apoiadas na peça de cima: saem junto com ela. */
 #intro.p-open .piece--flowers { animation: floresSaem 0.85s cubic-bezier(0.4, 0, 0.6, 1) forwards; }
 
+/* A borda do meio é PUXADA na direção de quem olha, como quem levanta a
+   aba de um envelope de verdade — nunca empurrada para dentro do papel. */
 @keyframes abreCima {
   0%   { transform: rotateX(0deg); opacity: 1; }
-  58%  { opacity: 1; }
-  100% { transform: rotateX(96deg); opacity: 0; }     /* dobra para a frente */
+  45%  { opacity: 1; }
+  100% { transform: rotateX(76deg); opacity: 0; }
 }
 @keyframes abreBaixo {
   0%   { transform: rotateX(0deg); opacity: 1; }
-  58%  { opacity: 1; }
-  100% { transform: rotateX(-94deg); opacity: 0; }    /* dobra para a frente */
+  45%  { opacity: 1; }
+  100% { transform: rotateX(-74deg); opacity: 0; }
 }
 @keyframes floresSaem {
   0%   { transform: translate(-0.3%, 1.1%); opacity: 1; }
@@ -581,16 +589,9 @@ body.reveal .photo {
   to   { transform: scale(1.07) translateY(-1.2%); }
 }
 
-/* Véu branco inicial — a fotografia "ganha cor" lentamente */
-.photo-veil {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(253, 251, 247, 0.98), rgba(253, 251, 247, 0.85));
-  opacity: 1;
-  transition: opacity 1.4s ease-out;
-}
-
-body.reveal .photo-veil { opacity: 0; }
+/* Esta folha não tem véu próprio: quando ela assume, a fotografia já veio
+   colorida da animação. Qualquer branco aqui faria a foto "desbotar" de novo
+   logo depois de já ter ganhado cor. */
 
 /* Degradê branco extremamente suave: dissolve a base da fotografia e fica
    bem forte embaixo, onde a frase é lida. */

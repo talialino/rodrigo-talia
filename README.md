@@ -37,10 +37,13 @@ para 101%), a cena roda sozinha:
 3. as tulipas apenas acomodam alguns pixels — não caem nem giram;
 4. o papel abre **a partir do meio**: cada peça está presa na sua borda
    externa, então quem se move é a borda do meio. A de cima sobe primeiro;
-5. a de baixo desce logo depois, ambas dobrando **para a frente**, na
-   direção de quem olha;
-6. a fotografia em cor plena entra em fade sobre a versão com chiffon,
-   com um Ken Burns bem lento;
+5. a de baixo desce logo depois. A borda do meio é **puxada na direção de
+   quem olha**, como quem levanta a aba de um envelope de verdade — nunca
+   empurrada para dentro do papel;
+6. a fotografia em cor plena entra em fade sobre a versão com chiffon. A
+   folha da capa usa o mesmo enquadramento e não tem véu próprio, então a
+   passagem é imperceptível: a imagem não desliza nem desbota, só continua,
+   e o zoom lento começa aí;
 7. ~700ms depois surgem as duas frases, em fade com leve deslocamento;
 8. por fim aparece o indicador de navegação na base.
 

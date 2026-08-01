@@ -513,9 +513,9 @@
       [1240, function () { intro.classList.add("p-untie"); }],   // 2 e 3: fita, laço, flores
       [2600, function () { intro.classList.add("p-open"); }],    // 4 e 5: papel abre do meio
       [3850, function () { intro.classList.add("p-reveal"); }],  // 6: foto ganha cor plena
-      [4400, function () { document.body.classList.add("reveal"); }], // Ken Burns na folha
       [4450, function () { intro.classList.add("p-done"); }],    // a cena se apaga
-      [4900, function () { finishIntro(false); }]                // 7: entrega para as frases
+      [4900, function () { finishIntro(false); }]                // 7: a folha assume e o
+                                                                 //    zoom começa junto
     ];
 
     timeline.forEach(function (step) { setTimeout(step[1], step[0]); });
