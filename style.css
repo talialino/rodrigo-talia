@@ -394,10 +394,55 @@ body {
   50%      { opacity: 1;    transform: translateY(-50%) rotate(45deg) translate(3px, -3px); }
 }
 
-/* Na folha da fotografia a seta fica clara para não sumir sobre a imagem */
+/* ----------------------------------------------------------------------------
+   7.1) INDICADOR DA FOLHA DA FOTOGRAFIA
+   Primeira interação do convidado: em vez da seta lateral discreta, o
+   indicador vai para a base (na parte mais clara do degradê) acompanhado
+   de uma instrução curta, ensinando como navegar pelo livreto.
+---------------------------------------------------------------------------- */
+.sheet--photo .cue--next {
+  top: auto;
+  right: auto;
+  left: 50%;
+  bottom: 2.2%;
+  transform: translateX(-50%);
+  width: auto;
+  height: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  /* surge junto com a frase, não durante a animação de abertura */
+  opacity: 0;
+  transition: opacity 1s ease 1.6s;
+}
+
+body.phrase .sheet--photo .cue--next { opacity: 1; }
+
+/* A seta passa a ficar em linha com o texto (e não mais absoluta) */
 .sheet--photo .cue--next::after {
-  border-color: rgba(255, 252, 246, 0.95);
-  filter: drop-shadow(0 1px 3px rgba(60, 46, 38, 0.5));
+  position: static;
+  width: 8px;
+  height: 8px;
+  border-color: var(--rose-metal);
+  transform: rotate(45deg);
+  animation: cueNudge 2.8s ease-in-out infinite;
+}
+
+.cue-label {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.66rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--rose-metal);
+  white-space: nowrap;
+  text-shadow: 0 0 12px rgba(247, 243, 236, 0.95), 0 0 5px rgba(247, 243, 236, 0.9);
+}
+
+@keyframes cueNudge {
+  0%, 100% { opacity: 0.55; transform: rotate(45deg) translate(0, 0); }
+  50%      { opacity: 1;    transform: rotate(45deg) translate(2px, -2px); }
 }
 
 
@@ -444,23 +489,29 @@ body.reveal .photo-veil { opacity: 0; }
 .photo-fade {
   position: absolute;
   inset: auto 0 0 0;
-  height: 58%;
+  height: 55%;
   background: linear-gradient(180deg,
     transparent 0%,
-    rgba(247, 243, 236, 0.30) 22%,
-    rgba(247, 243, 236, 0.72) 42%,
-    rgba(247, 243, 236, 0.95) 55%,
-    var(--paper) 62%,
+    rgba(247, 243, 236, 0.28) 30%,
+    rgba(247, 243, 236, 0.72) 58%,
+    rgba(247, 243, 236, 0.94) 78%,
     var(--paper) 100%);
   pointer-events: none;
 }
 
-/* Frase de abertura — bem junto à base, onde o degradê é mais forte. */
+/* Frase de abertura — o mais baixo possível, deixando na base apenas o
+   espaço do indicador de navegação. */
 .opening-phrase {
   position: absolute;
-  inset: auto 10% 5.5% 10%;
+  inset: auto 10% 7.5% 10%;
   text-align: center;
   z-index: 5;
+  /* Halo difuso na cor do papel: dá legibilidade rente às letras sem
+     cobrir a fotografia com uma faixa branca. */
+  text-shadow:
+    0 0 18px rgba(247, 243, 236, 0.95),
+    0 0 8px rgba(247, 243, 236, 0.9),
+    0 0 3px rgba(247, 243, 236, 0.8);
 }
 
 .opening-phrase > * {

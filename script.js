@@ -319,6 +319,16 @@
         next.type = "button";
         next.setAttribute("aria-label", "Próxima folha");
         next.addEventListener("click", function () { turn(1); });
+
+        // Na folha da fotografia (primeira interação) a seta vai para a
+        // base com uma instrução de como navegar. O CSS cuida da posição.
+        if (sheet.classList.contains("sheet--photo")) {
+          var label = document.createElement("span");
+          label.className = "cue-label";
+          label.textContent = "Deslize ou toque para continuar";
+          next.appendChild(label);
+        }
+
         sheet.appendChild(next);
       }
 
