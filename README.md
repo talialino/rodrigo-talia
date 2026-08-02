@@ -33,10 +33,10 @@ para 101%), a cena roda sozinha:
 
 1. o lacre trinca em quatro partes iguais, elas se soltam na diagonal,
    levantam poucos pixels e caem;
-2. a fita perde a tensão e desce, com o laço se desfazendo logo atrás;
-3. as tulipas tombam para a esquerda, como se tivessem sido soltas junto
-   com as fitas. As três caem quase juntas — a defasagem é de menos de
-   0,2s, o bastante para não parecerem sincronizadas;
+2. a fita e o laço, que estão amarrados um no outro, caem juntos e à mesma
+   velocidade — o nó acompanha a linha da fita o tempo todo;
+3. as tulipas tombam para a esquerda logo atrás (0,15s), como se tivessem
+   sido soltas junto com as fitas;
 4. o papel abre **a partir do meio**: cada peça está presa na sua borda
    externa, então quem se move é a borda do meio. A de cima sobe primeiro;
 5. a de baixo desce logo depois. A borda do meio é **puxada na direção de
@@ -58,6 +58,12 @@ As quedas usam tempo **linear** de propósito: a aceleração está escrita nos
 valores dos keyframes, com cada trecho andando mais que o anterior, como na
 gravidade. É o que evita aquele instante parado no começo que fazia as peças
 parecerem enganchadas antes de cair.
+
+Um detalhe que engana ao mexer nesses valores: `translateY` em porcentagem é
+relativo à altura **do próprio elemento**. A fita tem 5,43% da altura do
+palco e o laço tem 46%, então a fita precisa de 8,47x o valor do laço para
+percorrer os mesmos pixels. Por isso os números dela parecem
+desproporcionais nos keyframes.
 
 Todas as peças moram dentro de `.env-stage`, um palco com a proporção exata do
 convite (768x1382, a mesma do `Rodrigo&Talia.png`) que cresce até cobrir a
