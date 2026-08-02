@@ -33,9 +33,10 @@ para 101%), a cena roda sozinha:
 
 1. o lacre trinca em quatro partes iguais, elas se soltam na diagonal,
    levantam poucos pixels e caem;
-2. a fita perde a tensão e desce; o laço se desfaz logo atrás dela;
-3. as tulipas caem por último, tombando para a esquerda, como se tivessem
-   sido soltas junto com as fitas;
+2. a fita perde a tensão e desce, com o laço se desfazendo logo atrás;
+3. as tulipas tombam para a esquerda, como se tivessem sido soltas junto
+   com as fitas. As três caem quase juntas — a defasagem é de menos de
+   0,2s, o bastante para não parecerem sincronizadas;
 4. o papel abre **a partir do meio**: cada peça está presa na sua borda
    externa, então quem se move é a borda do meio. A de cima sobe primeiro;
 5. a de baixo desce logo depois. A borda do meio é **puxada na direção de
@@ -50,7 +51,8 @@ para 101%), a cena roda sozinha:
 
 Os tempos ficam na tabela `timeline` dentro de `script.js`; o movimento em si
 é CSS (seção 5 do `style.css`). Os atrasos finos da cascata (fita → laço →
-flores) estão no próprio CSS, como `animation-delay`.
+flores) estão no próprio CSS, como `animation-delay`. A cena inteira dura
+cerca de 4,8s até a folha da fotografia assumir.
 
 As quedas usam tempo **linear** de propósito: a aceleração está escrita nos
 valores dos keyframes, com cada trecho andando mais que o anterior, como na

@@ -287,10 +287,10 @@ body {
 /* 5.2 — ETAPA 1 (parte 2): os quatro pedaços se soltam na diagonal, sobem
    poucos pixels e caem. Cera é pesada: sobe pouco, gira pouco, desce macio.
    Os de baixo partem na frente, como acontece quando o lacre se rompe. */
-#intro.p-split .seal-q--no { animation: caiNO 1.15s linear 0.06s forwards; }
-#intro.p-split .seal-q--ne { animation: caiNE 1.15s linear 0.1s forwards; }
-#intro.p-split .seal-q--so { animation: caiSO 1.15s linear forwards; }
-#intro.p-split .seal-q--se { animation: caiSE 1.15s linear 0.03s forwards; }
+#intro.p-split .seal-q--no { animation: caiNO 0.95s linear 0.05s forwards; }
+#intro.p-split .seal-q--ne { animation: caiNE 0.95s linear 0.08s forwards; }
+#intro.p-split .seal-q--so { animation: caiSO 0.95s linear forwards; }
+#intro.p-split .seal-q--se { animation: caiSE 0.95s linear 0.03s forwards; }
 
 @keyframes caiNO {
   0%   { transform: translate(-1px, -0.8px); opacity: 1; }
@@ -322,16 +322,16 @@ body {
 }
 
 /* 5.3 — ETAPAS 2 e 3: a fita cede, o laço se desfaz e as flores caem.
-   A cascata é progressiva: a fita parte primeiro, o laço logo atrás e as
-   flores só depois que a fita já saiu de cena.
+   As três partem quase juntas — a defasagem é de menos de 0,2s, o bastante
+   para não parecerem sincronizadas, sem virar uma fila de espera.
 
    O tempo é LINEAR de propósito. A aceleração está escrita nos próprios
    valores dos keyframes (cada trecho anda mais que o anterior, como na
    gravidade). Assim o movimento nasce já descendo, sem aquele instante
    parado no começo que fazia o laço parecer enganchado. */
-#intro.p-untie .piece--ribbon  { animation: fitaCede 1.55s linear forwards; }
-#intro.p-untie .piece--bow     { animation: desatar 1.7s linear 0.1s forwards; }
-#intro.p-untie .piece--flowers { animation: floresCaem 1.7s linear 0.75s forwards; }
+#intro.p-untie .piece--ribbon  { animation: fitaCede 1.1s linear forwards; }
+#intro.p-untie .piece--bow     { animation: desatar 1.15s linear 0.09s forwards; }
+#intro.p-untie .piece--flowers { animation: floresCaem 1.2s linear 0.2s forwards; }
 
 @keyframes fitaCede {
   0%   { transform: translateY(0)    rotate(0deg);    opacity: 1; }
@@ -367,8 +367,8 @@ body {
    é a que se move: a de cima sobe, a de baixo desce, ambas dobrando PARA A
    FRENTE (na direção de quem olha). A de cima começa primeiro. Devagar —
    papel grosso, artesanal. */
-#intro.p-open .leaf--top    { animation: abreCima 1.25s linear forwards; }
-#intro.p-open .leaf--bottom { animation: abreBaixo 1.3s linear 0.22s forwards; }
+#intro.p-open .leaf--top    { animation: abreCima 1.1s linear forwards; }
+#intro.p-open .leaf--bottom { animation: abreBaixo 1.15s linear 0.18s forwards; }
 
 /* A borda do meio é PUXADA na direção de quem olha, como quem levanta a
    aba de um envelope de verdade — nunca empurrada para dentro do papel.
