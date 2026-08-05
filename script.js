@@ -80,10 +80,14 @@
     var phone = (CONFIG.social && CONFIG.social.whatsapp && CONFIG.social.whatsapp.phone)
       ? CONFIG.social.whatsapp.phone.replace(/\D/g, "") : "";
 
-    // Mensagem: usa a do presente ou monta uma padrão com o nome.
+    // Itens com mais de uma unidade são UM presente só: a mensagem avisa
+    // a quantidade para não haver dúvida de quem leva o quê.
+    var quantas = (gift.qty && gift.qty > 1) ? " (" + gift.qty + " unidades)" : "";
+
     var message = (gift.reservationMessage && gift.reservationMessage.trim())
       ? gift.reservationMessage.trim()
-      : 'Olá Rodrigo e Talia! Gostaria de reservar o presente "' + gift.name + '" da lista de casamento. ❤️';
+      : 'Olá Rodrigo e Talia! Gostaria de reservar o presente "' + gift.name + '"' +
+        quantas + ' da lista de casamento. ❤️';
 
     return "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
   }
@@ -92,45 +96,117 @@
     var grid = document.getElementById("gift-grid");
     if (!grid || !Array.isArray(CONFIG.physicalGifts)) return;
 
-    CONFIG.physicalGifts.forEach(function (gift) {
-      var card = document.createElement("article");
+    CONFIG.physicalGifts.forEach(function (gift, index) {
+      // A linha inteira é tocável e abre a ficha do presente
+      var card = document.createElement("button");
       card.className = "gift-card";
+      card.type = "button";
+      card.style.setProperty("--i", index);   // atraso da entrada em cascata
 
-      // Foto do item (com reserva elegante caso o link falte ou falhe)
-      var media = document.createElement("div");
+      // Foto do item (com selo neutro elegante caso o link falte ou falhe)
+      var media = document.createElement("span");
       media.className = "gift-card__media";
       if (gift.image && gift.image.trim()) {
         var img = document.createElement("img");
         img.className = "gift-card__img";
         img.loading = "lazy";
-        img.alt = gift.name;
+        img.alt = "";
         img.src = gift.image.trim();
         img.addEventListener("error", function () { img.remove(); });
         media.appendChild(img);
       }
 
-      var name = document.createElement("h3");
+      var num = document.createElement("span");
+      num.className = "gift-card__num";
+      num.setAttribute("aria-hidden", "true");
+      num.textContent = (index < 9 ? "0" : "") + (index + 1) + ".";
+
+      var corpo = document.createElement("span");
+      corpo.className = "gift-card__body";
+
+      if (gift.brand && gift.brand.trim()) {
+        var brand = document.createElement("span");
+        brand.className = "gift-card__brand";
+        brand.textContent = gift.brand.trim();
+        corpo.appendChild(brand);
+      }
+
+      var name = document.createElement("span");
       name.className = "gift-card__name";
       name.textContent = gift.name;
+      corpo.appendChild(name);
 
-      var btn = document.createElement("button");
-      btn.className = "btn btn--card";
-      btn.type = "button";
-      btn.textContent = "Reservar";
-      btn.addEventListener("click", function () {
-        var phone = (CONFIG.social && CONFIG.social.whatsapp && CONFIG.social.whatsapp.phone) || "";
-        if (!phone.trim()) {
-          alert("O número de WhatsApp ainda não foi configurado. 🙂");
-          return;
-        }
-        window.open(buildWhatsAppLink(gift), "_blank", "noopener");
-      });
+      // Etiqueta de quantidade, no espírito da etiqueta do envelope
+      if (gift.qty && gift.qty > 1) {
+        var qty = document.createElement("span");
+        qty.className = "gift-tag";
+        qty.textContent = "Quantidade " + gift.qty;
+        corpo.appendChild(qty);
+      }
+
+      var pista = document.createElement("span");
+      pista.className = "gift-card__cta";
+      pista.appendChild(document.createTextNode("Reservar"));
+      pista.appendChild(criarSeta());
+      corpo.appendChild(pista);
+
+      card.addEventListener("click", function () { abrirFichaPresente(gift); });
 
       card.appendChild(media);
-      card.appendChild(name);
-      card.appendChild(btn);
+      card.appendChild(num);
+      card.appendChild(corpo);
       grid.appendChild(card);
     });
+  }
+
+  /* Ficha do presente: mostra o item e leva ao WhatsApp com a mensagem pronta */
+  function abrirFichaPresente(gift) {
+    var ficha = document.getElementById("gift-card-modal");
+    if (!ficha) return;
+
+    var media = document.getElementById("gift-modal-media");
+    media.innerHTML = "";
+    if (gift.image && gift.image.trim()) {
+      var img = document.createElement("img");
+      img.alt = "";
+      img.src = gift.image.trim();
+      img.addEventListener("error", function () { img.remove(); });
+      media.appendChild(img);
+    }
+
+    var marca = document.getElementById("gift-modal-brand");
+    marca.textContent = (gift.brand || "").trim();
+    marca.hidden = !marca.textContent;
+
+    document.getElementById("gift-modal-name").textContent = gift.name;
+
+    var qty = document.getElementById("gift-modal-qty");
+    if (gift.qty && gift.qty > 1) {
+      qty.textContent = "Quantidade " + gift.qty;
+      qty.hidden = false;
+    } else {
+      qty.hidden = true;
+    }
+
+    var botao = document.getElementById("gift-modal-reserve");
+    botao.onclick = function () {
+      var phone = (CONFIG.social && CONFIG.social.whatsapp && CONFIG.social.whatsapp.phone) || "";
+      if (!phone.trim()) {
+        alert("O número de WhatsApp ainda não foi configurado. 🙂");
+        return;
+      }
+      window.open(buildWhatsAppLink(gift), "_blank", "noopener");
+    };
+
+    abrirFicha(ficha);
+  }
+
+  /* Setinha fina que desliza no hover — usada nos botões impressos. */
+  function criarSeta() {
+    var seta = document.createElement("span");
+    seta.className = "btn-arrow";
+    seta.setAttribute("aria-hidden", "true");
+    return seta;
   }
 
   /* Abre link externo em nova aba (o livreto permanece na mesma folha). */
@@ -146,6 +222,7 @@
   /* --------------------------------------------------------------------------
      3) BOOK — estado e virada de folha
   -------------------------------------------------------------------------- */
+  var book = document.getElementById("book");
   var SHEETS = Array.prototype.slice.call(document.querySelectorAll(".sheet"));
   var current = 0;
   var busy = false;          // bloqueia gestos durante uma virada
@@ -161,28 +238,30 @@
   }
 
   /* --------------------------------------------------------------------------
-     CAMINHO DA SETA (avançar)
-     A folha "presente" pula a lista física: quem só passa a página vai
-     direto ao agradecimento. A lista física só é aberta por quem toca em
-     "Levar um Presente Físico" — e de lá a seta segue para o agradecimento.
+     CAMINHO DA FOLHA (avançar)
+     A folha "presente" pula a lista física: quem só vira a página vai direto
+     ao agradecimento. A lista só é aberta por quem toca em "Presente Físico"
+     — e de lá a virada segue para o agradecimento.
 
-         capa → welcome → manual → presente ─┬─(seta)──────────→ final
-                                             └─(botão)→ lista ─→ final
+       capa → welcome → manual → interações → presente ─┬─(virar)────→ final
+                                                        └─(botão)→ lista → final
   -------------------------------------------------------------------------- */
   var FLOW_NEXT = {};
   (function buildFlow() {
-    var capa     = indexOf("capa");
-    var welcome  = indexOf("welcome");
-    var manual   = indexOf("manual");
-    var presente = indexOf("presente");
-    var lista    = indexOf("lista");
-    var final    = indexOf("final");
+    var capa       = indexOf("capa");
+    var welcome    = indexOf("welcome");
+    var manual     = indexOf("manual");
+    var interacoes = indexOf("interacoes");
+    var presente   = indexOf("presente");
+    var lista      = indexOf("lista");
+    var final      = indexOf("final");
 
-    FLOW_NEXT[capa]     = welcome;
-    FLOW_NEXT[welcome]  = manual;
-    FLOW_NEXT[manual]   = presente;
-    FLOW_NEXT[presente] = final;   // a seta pula a lista
-    FLOW_NEXT[lista]    = final;
+    FLOW_NEXT[capa]       = welcome;
+    FLOW_NEXT[welcome]    = manual;
+    FLOW_NEXT[manual]     = interacoes;
+    FLOW_NEXT[interacoes] = presente;
+    FLOW_NEXT[presente]   = final;   // a virada pula a lista
+    FLOW_NEXT[lista]      = final;
     // "final" não tem próxima: fica fora do mapa
   })();
 
@@ -195,18 +274,90 @@
     return history.length ? history[history.length - 1] : -1;
   }
 
-  var TURN_MS = 720;
-  var TURN_EASE = "cubic-bezier(0.62, 0.02, 0.34, 1)";
-  var TURN_ANGLE = -105;     // ângulo final da folha que sai (graus)
-  var SHADE_MAX = 0.55;      // opacidade máxima do sombreado na virada
+  /* --------------------------------------------------------------------------
+     A VIRADA DA FOLHA
+     A folha não gira como uma porta: ela é DOBRADA pelo canto de baixo à
+     direita, como papel de verdade. A mecânica é uma só, com um número:
 
-  function rotY(deg) { return "rotateY(" + deg + "deg)"; }
+        p = 0  ->  a orelhinha em repouso, esperando ser puxada
+        p = 1  ->  a dobra atravessou a folha inteira e a página virou
+
+     Desse número saem três coisas em sincronia:
+       · o recorte diagonal da folha (clip-path), que vai comendo a página
+         de baixo-direita para cima-esquerda e revelando a próxima;
+       · a aba dobrada (.peel-flap), o triângulo de papel virado do avesso;
+       · a sombra que a aba projeta sobre a página de baixo.
+  -------------------------------------------------------------------------- */
+  var TURN_MS = 760;
+  var PEEL_REST = 56;        // tamanho da orelhinha em repouso (px)
+  var SHADE_MAX = 0.4;       // opacidade máxima da sombra da dobra
+  var peelFlap = null;
 
   function shadeOf(sheet) { return sheet.querySelector(".sheet-shade"); }
 
-  function setShade(sheet, angle) {
-    var el = shadeOf(sheet);
-    if (el) el.style.opacity = String(Math.min(Math.abs(angle) / 90, 1) * SHADE_MAX);
+  /* Quanto a dobra precisa crescer para comer a folha toda: a diagonal do
+     corte tem inclinação de 45°, então some largura + altura. */
+  function peelMax() {
+    var b = book.getBoundingClientRect();
+    return b.width + b.height + 40;
+  }
+
+  var peelCast = null;
+
+  function ensureFlap() {
+    if (peelFlap) return peelFlap;
+    peelFlap = document.createElement("div");
+    peelFlap.className = "peel-flap";
+    peelFlap.setAttribute("aria-hidden", "true");
+    book.appendChild(peelFlap);
+
+    // A sombra que a aba levantada projeta sobre a página revelada. Vive do
+    // outro lado do vinco e dura mais que a aba: é ela que sustenta a leitura
+    // de "papel erguido" depois que a aba já se dissolveu.
+    peelCast = document.createElement("div");
+    peelCast.className = "peel-cast";
+    peelCast.setAttribute("aria-hidden", "true");
+    book.appendChild(peelCast);
+    return peelFlap;
+  }
+
+  /* Põe a folha num ponto da dobra. p vai de 0 (repouso) a 1 (virada). */
+  function applyPeel(sheet, p) {
+    /* O crescimento não é linear de propósito. Para engolir a folha inteira a
+       dobra precisa medir largura + altura; num avanço linear ela viraria um
+       triângulo gigante logo no começo do gesto. Com a curva, o trecho bonito
+       — a orelha pequena, com vinco e sombra — dura a maior parte do caminho,
+       e a varredura final acontece rápido. */
+    var px = PEEL_REST + Math.pow(p, 1.55) * (peelMax() - PEEL_REST);
+    sheet.style.setProperty("--peel", px + "px");
+
+    var f = ensureFlap();
+    f.style.display = "block";
+    f.style.width = px + "px";
+    f.style.height = px + "px";
+    // a aba se desfaz cedo: crescida demais, vira um vazio chapado
+    f.style.opacity = String(p > 0.18 ? Math.max(0, 1 - (p - 0.18) / 0.3) : 1);
+
+    peelCast.style.display = "block";
+    peelCast.style.width = px + "px";
+    peelCast.style.height = px + "px";
+    peelCast.style.opacity = String(p > 0.5 ? Math.max(0, 1 - (p - 0.5) / 0.35) : 1);
+
+    var sh = shadeOf(sheet);
+    if (sh) sh.style.opacity = String(Math.min(p * 1.5, 1) * SHADE_MAX);
+  }
+
+  /* Devolve a folha em cena ao repouso — só quem tem próxima ganha orelha. */
+  function restPeel() {
+    var s = SHEETS[current];
+    if (!s) return;
+    if (FLOW_NEXT[current] === undefined || REDUCED) {
+      s.style.setProperty("--peel", "0px");
+      if (peelFlap) peelFlap.style.display = "none";
+      if (peelCast) peelCast.style.display = "none";
+      return;
+    }
+    applyPeel(s, 0);
   }
 
   /* Deixa apenas a folha "i" visível e limpa qualquer resíduo de animação.
@@ -219,12 +370,15 @@
     SHEETS.forEach(function (s, k) {
       s.style.visibility = (k === i) ? "visible" : "hidden";
       s.style.zIndex = (k === i) ? "2" : "1";
-      s.style.transform = "";
+      s.style.removeProperty("--peel");
+      // marca a folha em cena: o CSS usa isso para as entradas em cascata
+      s.classList.toggle("is-current", k === i);
       var sh = shadeOf(s);
       if (sh) sh.style.opacity = "0";
     });
     current = i;
     busy = false;
+    restPeel();
     syncCues();
     saveState();
   }
@@ -236,31 +390,18 @@
     } catch (e) { /* modo privado */ }
   }
 
-  /* Anima uma folha entre dois ângulos (Web Animations API). */
-  function animateTurn(sheet, fromDeg, toDeg, done) {
-    var duration = TURN_MS * (Math.abs(toDeg - fromDeg) / Math.abs(TURN_ANGLE));
-    duration = Math.max(180, duration);
-
-    var anim = sheet.animate(
-      [{ transform: rotY(fromDeg) }, { transform: rotY(toDeg) }],
-      { duration: duration, easing: TURN_EASE, fill: "forwards" }
-    );
-
-    // Sombreado acompanha o ângulo durante a animação
-    var start = performance.now();
-    var running = true;
+  /* Leva a dobra de um ponto a outro. Desacelera no fim, como papel que
+     assenta — nunca para de repente. */
+  function animatePeel(sheet, from, to, done) {
+    var dur = Math.max(240, TURN_MS * Math.abs(to - from));
+    var t0 = performance.now();
     (function tick(now) {
-      if (!running) return;
-      var t = Math.min((now - start) / duration, 1);
-      setShade(sheet, fromDeg + (toDeg - fromDeg) * t);
+      var t = Math.min((now - t0) / dur, 1);
+      var e = 1 - Math.pow(1 - t, 3);          // easeOutCubic
+      applyPeel(sheet, from + (to - from) * e);
       if (t < 1) requestAnimationFrame(tick);
-    })(start);
-
-    anim.onfinish = function () {
-      running = false;
-      anim.cancel();       // remove o "fill" — settle() assume o estado final
-      done();
-    };
+      else done();
+    })(t0);
   }
 
   /* Vira até uma folha específica. dir = +1 (avançar) | -1 (voltar). */
@@ -279,16 +420,16 @@
     tgt.style.visibility = "visible";
 
     if (dir > 0) {
-      // A folha atual gira para fora, revelando a próxima por baixo
+      // A folha atual é dobrada pelo canto até desaparecer, revelando a próxima
       cur.style.zIndex = "3";
       tgt.style.zIndex = "2";
-      animateTurn(cur, 0, TURN_ANGLE, function () { settle(target, dir); });
+      animatePeel(cur, 0, 1, function () { settle(target, dir); });
     } else {
-      // A folha anterior retorna girando por cima da atual
+      // A folha anterior volta a se desdobrar por cima da atual
       tgt.style.zIndex = "3";
       cur.style.zIndex = "2";
-      tgt.style.transform = rotY(TURN_ANGLE);
-      animateTurn(tgt, TURN_ANGLE, 0, function () { settle(target, dir); });
+      applyPeel(tgt, 1);
+      animatePeel(tgt, 1, 0, function () { settle(target, dir); });
     }
   }
 
@@ -312,27 +453,24 @@
       shade.className = "sheet-shade";
       sheet.appendChild(shade);
 
-      // Seta de avançar: só onde o fluxo tem uma próxima folha
+      // O canto: área para pegar a dobra + o convite discreto "PUXE".
+      // Só existe onde o fluxo tem uma próxima folha.
       if (FLOW_NEXT[i] !== undefined) {
-        var next = document.createElement("button");
-        next.className = "cue cue--next";
-        next.type = "button";
-        next.setAttribute("aria-label", "Próxima folha");
-        next.addEventListener("click", function () { turn(1); });
+        var grab = document.createElement("button");
+        grab.className = "peel-grab";
+        grab.type = "button";
+        grab.setAttribute("aria-label", "Virar a folha");
+        grab.addEventListener("click", function () { turn(1); });
+        sheet.appendChild(grab);
 
-        // Na folha da fotografia (primeira interação) a seta vai para a
-        // base com uma instrução de como navegar. O CSS cuida da posição.
-        if (sheet.classList.contains("sheet--photo")) {
-          var label = document.createElement("span");
-          label.className = "cue-label";
-          label.textContent = "Deslize ou toque para continuar";
-          next.appendChild(label);
-        }
-
-        sheet.appendChild(next);
+        var label = document.createElement("span");
+        label.className = "peel-label";
+        label.setAttribute("aria-hidden", "true");
+        label.innerHTML = 'Puxe <span class="peel-label-arrow"></span>';
+        sheet.appendChild(label);
       }
 
-      // Seta de voltar: existe em todas menos a capa; syncCues decide se
+      // Voltar: um filete discreto na lateral esquerda. syncCues decide se
       // aparece (depende de haver caminho de volta no histórico).
       if (i > 0) {
         var prev = document.createElement("button");
@@ -345,7 +483,7 @@
     });
   }
 
-  /* Mostra a seta de voltar apenas quando existe folha anterior no histórico. */
+  /* Mostra o retorno apenas quando existe folha anterior no histórico. */
   function syncCues() {
     var sheet = SHEETS[current];
     if (!sheet) return;
@@ -360,71 +498,79 @@
   var suppressClick = false;
 
   function setupGestures() {
-    var book = document.getElementById("book");
     var drag = null;
 
     book.addEventListener("pointerdown", function (e) {
       if (busy || navLocked || REDUCED) return;
       drag = {
         x0: e.clientX, y0: e.clientY,
-        dx: 0, angle: null, active: false, dir: 0, sheet: null,
+        dx: 0, dy: 0, p: null, active: false, dir: 0, sheet: null,
+        canto: !!(e.target.closest && e.target.closest(".peel-grab")),
         lastX: e.clientX, lastT: performance.now(), vx: 0,
         raf: 0
       };
+      // Pegar pela orelha já é intenção declarada: começa a dobrar na hora.
+      if (drag.canto) ativar(1, e);
     });
+
+    /* Prepara as duas folhas envolvidas e passa a comandar a dobra. */
+    function ativar(dir, e) {
+      var target = targetFor(dir);
+      if (target < 0) { drag = null; return false; }
+
+      drag.active = true;
+      drag.dir = dir;
+      drag.target = target;
+
+      if (dir > 0) {
+        drag.sheet = SHEETS[current];             // a atual é quem dobra
+        SHEETS[current].style.zIndex = "3";
+        SHEETS[target].style.visibility = "visible";
+        SHEETS[target].style.zIndex = "2";
+      } else {
+        drag.sheet = SHEETS[target];              // a anterior se desdobra
+        SHEETS[target].style.visibility = "visible";
+        SHEETS[target].style.zIndex = "3";
+        applyPeel(drag.sheet, 1);
+      }
+      try { book.setPointerCapture(e.pointerId); } catch (err) { /* ok */ }
+      return true;
+    }
 
     book.addEventListener("pointermove", function (e) {
       if (!drag) return;
       var dx = e.clientX - drag.x0;
       var dy = e.clientY - drag.y0;
 
-      // Define a intenção: horizontal vira a folha, vertical deixa rolar
+      // Sem ser pelo canto: horizontal vira a folha, vertical deixa rolar
       if (!drag.active) {
         if (Math.abs(dx) < 14 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
-        var dir = dx < 0 ? 1 : -1;
-        var target = targetFor(dir);
-        if (target < 0) { drag = null; return; }
-
-        drag.active = true;
-        drag.dir = dir;
-        drag.target = target;
-        if (dir > 0) {
-          drag.sheet = SHEETS[current];
-          SHEETS[current].style.zIndex = "3";
-          SHEETS[target].style.visibility = "visible";
-          SHEETS[target].style.zIndex = "2";
-        } else {
-          drag.sheet = SHEETS[target];
-          SHEETS[target].style.visibility = "visible";
-          SHEETS[target].style.zIndex = "3";
-        }
-        try { book.setPointerCapture(e.pointerId); } catch (err) { /* ok */ }
+        if (!ativar(dx < 0 ? 1 : -1, e)) return;
       }
 
-      // Velocidade (para completar a virada num "flick" rápido)
       var now = performance.now();
       drag.vx = (e.clientX - drag.lastX) / Math.max(now - drag.lastT, 1);
       drag.lastX = e.clientX;
       drag.lastT = now;
       drag.dx = dx;
+      drag.dy = dy;
 
-      // Pré-visualização física via requestAnimationFrame (sem sobrecarga)
       if (!drag.raf) {
         drag.raf = requestAnimationFrame(function () {
           if (!drag || !drag.sheet) return;
           drag.raf = 0;
           var w = book.clientWidth;
-          var angle;
+          var p;
           if (drag.dir > 0) {
-            // avançar: 0 -> -95 conforme arrasta para a esquerda
-            angle = Math.max(Math.min(drag.dx / w, 0) * 95, -95);
+            // Puxando pelo canto, o movimento é diagonal: esquerda E para
+            // cima somam. No deslize comum, só a horizontal conta.
+            var avanco = drag.canto ? (-drag.dx - drag.dy * 0.6) : -drag.dx;
+            p = Math.max(0, Math.min(avanco / (w * 0.85), 1));
           } else {
-            // voltar: -105 -> 0 conforme arrasta para a direita
-            angle = TURN_ANGLE + Math.min(Math.max(drag.dx / w, 0) * 105, 105);
+            p = 1 - Math.max(0, Math.min(drag.dx / (w * 0.7), 1));
           }
-          drag.sheet.style.transform = rotY(angle);
-          setShade(drag.sheet, angle);
-          drag.angle = angle;
+          applyPeel(drag.sheet, p);
+          drag.p = p;
         });
       }
     });
@@ -436,23 +582,21 @@
       if (!d.active || !d.sheet) return;
 
       busy = true;
-      var w = book.clientWidth;
       var target = d.target;
-      var arrastou = Math.abs(d.dx) > w * 0.24;
+      var p = (d.p !== null) ? d.p : (d.dir > 0 ? 0 : 1);
       var flick = (d.dir > 0 && d.vx < -0.45) || (d.dir < 0 && d.vx > 0.45);
-      var complete = arrastou || flick;
-      var from = (d.angle !== null) ? d.angle : (d.dir > 0 ? 0 : TURN_ANGLE);
+      // basta passar de um terço da folha: o papel completa o resto sozinho
+      var complete = p > 0.33 || flick;
 
-      // Suprime o clique fantasma logo após o arrasto
       suppressClick = true;
       setTimeout(function () { suppressClick = false; }, 320);
 
       if (d.dir > 0) {
-        animateTurn(d.sheet, from, complete ? TURN_ANGLE : 0, function () {
+        animatePeel(d.sheet, p, complete ? 1 : 0, function () {
           settle(complete ? target : current, complete ? d.dir : 0);
         });
       } else {
-        animateTurn(d.sheet, from, complete ? 0 : TURN_ANGLE, function () {
+        animatePeel(d.sheet, p, complete ? 0 : 1, function () {
           settle(complete ? target : current, complete ? d.dir : 0);
         });
       }
@@ -460,6 +604,9 @@
 
     book.addEventListener("pointerup", endDrag);
     book.addEventListener("pointercancel", endDrag);
+
+    // A dobra em repouso depende do tamanho do livreto
+    window.addEventListener("resize", function () { if (!busy) restPeel(); });
   }
 
   document.addEventListener("click", function (e) {
@@ -478,6 +625,8 @@
         case "prev": turn(-1); break;
         case "goto": goToSheet(el.dataset.target); break;
         case "link": openExternal((CONFIG.links || {})[el.dataset.link]); break;
+        case "countdown": abrirFicha(document.getElementById("countdown-card")); break;
+        case "card-close": fecharFicha(); break;
         case "instagram":
           openExternal(CONFIG.social && CONFIG.social.instagram);
           break;
@@ -490,10 +639,75 @@
 
     // Teclado (desktop): setas viram as folhas
     document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && fichaAberta) { fecharFicha(); return; }
+      if (fichaAberta) return;
       if (e.key === "ArrowRight") turn(1);
       if (e.key === "ArrowLeft") turn(-1);
     });
   }
+
+  /* --------------------------------------------------------------------------
+     3.4) FICHAS — o cartão que pousa sobre a folha
+     Serve tanto para a contagem regressiva quanto para a reserva do presente.
+  -------------------------------------------------------------------------- */
+  var fichaAberta = null;
+
+  function abrirFicha(el) {
+    if (!el) return;
+    fichaAberta = el;
+    el.classList.add("is-open");
+    el.setAttribute("aria-hidden", "false");
+    if (el.id === "countdown-card") atualizarContagem();
+  }
+
+  function fecharFicha() {
+    if (!fichaAberta) return;
+    fichaAberta.classList.remove("is-open");
+    fichaAberta.setAttribute("aria-hidden", "true");
+    fichaAberta = null;
+  }
+
+  /* Fecha ao tocar fora do cartão */
+  function setupFichas() {
+    document.querySelectorAll(".card-overlay").forEach(function (ov) {
+      ov.addEventListener("click", function (e) {
+        if (e.target === ov) fecharFicha();
+      });
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     3.5) CONTAGEM REGRESSIVA
+     Lê CONFIG.event.datetime e atualiza de minuto em minuto enquanto a
+     ficha estiver aberta.
+  -------------------------------------------------------------------------- */
+  function atualizarContagem() {
+    var alvo = new Date((CONFIG.event && CONFIG.event.datetime) || "");
+    var linha = document.getElementById("count-row");
+    if (!linha || isNaN(alvo.getTime())) return;
+
+    var falta = alvo.getTime() - Date.now();
+    var passou = falta <= 0;
+    if (passou) falta = 0;
+
+    var minutosTotais = Math.floor(falta / 60000);
+    var dias = Math.floor(minutosTotais / 1440);
+    var horas = Math.floor((minutosTotais % 1440) / 60);
+    var minutos = minutosTotais % 60;
+
+    var valores = { dias: dias, horas: horas, minutos: minutos };
+    linha.querySelectorAll("[data-count]").forEach(function (el) {
+      var v = valores[el.getAttribute("data-count")];
+      el.textContent = (v < 10 ? "0" : "") + v;
+    });
+
+    var titulo = document.getElementById("countdown-title");
+    if (titulo) titulo.textContent = passou ? "Chegou o grande dia" : "Faltam";
+  }
+
+  setInterval(function () {
+    if (fichaAberta && fichaAberta.id === "countdown-card") atualizarContagem();
+  }, 30000);
 
   /* --------------------------------------------------------------------------
      4) INTRO — linha do tempo da abertura do envelope (~3,5s)
@@ -516,9 +730,9 @@
       [940,  function () { intro.classList.add("p-split"); }],   // 1: parte, levanta e cai
       [1250, function () { intro.classList.add("p-untie"); }],   // 2 e 3: fita, laço, flores
       [2350, function () { intro.classList.add("p-open"); }],    // 4 e 5: papel abre do meio
-      [3650, function () { intro.classList.add("p-reveal"); }],  // 6: foto ganha cor plena
-      [4300, function () { intro.classList.add("p-done"); }],    // a cena se apaga
-      [4750, function () { finishIntro(false); }]                // 7: a folha assume e o
+      [3950, function () { intro.classList.add("p-reveal"); }],  // 6: foto ganha cor plena
+      [4600, function () { intro.classList.add("p-done"); }],    // a cena se apaga
+      [5050, function () { finishIntro(false); }]                // 7: a folha assume e o
                                                                  //    zoom começa junto
     ];
 
@@ -546,6 +760,7 @@
     buildSheetChrome();
     setupGestures();
     setupActions();
+    setupFichas();
 
     // Restaura folha e caminho de volta (ex.: recarregou depois de um link)
     var saved = 0;

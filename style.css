@@ -375,7 +375,8 @@ body {
    FRENTE (na direção de quem olha). A de cima começa primeiro. Devagar —
    papel grosso, artesanal. */
 #intro.p-open .leaf--top    { animation: abreCima 1.1s linear forwards; }
-#intro.p-open .leaf--bottom { animation: abreBaixo 1.15s linear 0.18s forwards; }
+/* a de baixo espera a de cima chegar à metade da dobra antes de partir */
+#intro.p-open .leaf--bottom { animation: abreBaixo 1.15s linear 0.55s forwards; }
 
 /* A borda do meio é PUXADA na direção de quem olha, como quem levanta a
    aba de um envelope de verdade — nunca empurrada para dentro do papel.
@@ -413,11 +414,26 @@ body {
 
 
 /* ----------------------------------------------------------------------------
-   6) BOOK — FOLHAS E VIRADA FÍSICA
-      A profundidade vem do perspective no #book; cada folha gira em torno
-      da lombada (borda esquerda). O sombreado da virada (.sheet-shade) é
-      injetado por script.js e sincronizado com o ângulo.
+   6) LIVRETO — FOLHAS, PAPEL E VIRADA
+      A partir daqui é o miolo editorial do convite. A regra que rege tudo:
+      nada de caixas. O que organiza a página é o espaço em branco, o filete
+      fino e a hierarquia tipográfica — como num convite impresso.
 ---------------------------------------------------------------------------- */
+
+/* Tokens de acabamento usados só no miolo — paleta blush/terracota quente,
+   como o flatlay das referências (mesa clara, luz de fim de tarde). */
+:root {
+  --ivory:       #fbf7f1;   /* marfim do papel algodão                       */
+  --ivory-deep:  #f5efe6;   /* marfim na base da folha                       */
+  --sand:        #f1e4d6;   /* mesa clara, luz de tarde                      */
+  --sand-deep:   #e8d3bf;   /* mesa na sombra                                */
+  --blush-wash:  #f3ddd2;   /* blush suave (canto quente)                    */
+  --terracotta:  #e7c2ab;   /* pôr do sol da Ribeira, discreto               */
+  --hair:        rgba(194, 168, 127, 0.42);   /* filete de repouso           */
+  --hair-strong: rgba(194, 168, 127, 0.78);   /* filete em destaque          */
+  --lento:       cubic-bezier(0.22, 0.61, 0.36, 1);  /* easing de luxo       */
+}
+
 #book {
   position: absolute;
   inset: 0;
@@ -436,49 +452,96 @@ body {
   touch-action: pan-y;            /* vertical = rolagem interna; horizontal = virar */
 }
 
-/* Papel das folhas: branco quente + ruído artesanal + iluminação suave,
-   sem brasões nem desenhos repetitivos. */
+/* Mesa clara, luz quente de fim de tarde — a mesma superfície das
+   referências (blush/terracota, nunca papel branco frio). */
 .sheet--paper {
   background:
     var(--paper-noise),
-    radial-gradient(130% 80% at 50% 0%, rgba(255, 252, 246, 0.85), transparent 55%),
-    radial-gradient(100% 60% at 50% 108%, rgba(220, 201, 171, 0.18), transparent 60%),
-    radial-gradient(80% 60% at 8% 92%, rgba(233, 207, 201, 0.14), transparent 55%),
-    var(--paper);
+    radial-gradient(120% 70% at 22% -10%, #fffaf4, transparent 58%),
+    radial-gradient(90% 60% at 100% 8%, var(--blush-wash), transparent 60%),
+    radial-gradient(85% 55% at 6% 100%, var(--terracotta), transparent 62%),
+    linear-gradient(155deg, var(--sand) 0%, var(--ivory) 46%, var(--sand-deep) 100%);
 }
 
-/* Relevo do papel do convite: a mesma textura em alto-relevo do envelope,
-   bem suave, para as folhas internas parecerem o mesmo papel artesanal. */
+/* Sombra de folhas — a luz batendo através de uma planta, presente em toda
+   referência. É só CSS: manchas macias e desalinhadas, sem repetição
+   perceptível, numa faixa diagonal que nunca cobre o centro da leitura. */
 .sheet--paper::after {
   content: "";
   position: absolute;
-  inset: 0;
-  background-image: url("assets/envelope-top.png");
-  background-size: 300% auto;      /* amplia para mostrar só o miolo do papel */
-  background-position: 8% 18%;     /* longe da borda em arco */
-  background-repeat: no-repeat;
-  opacity: 0.42;
+  inset: -10%;
+  background:
+    radial-gradient(11% 20% at 14% 10%, rgba(74, 66, 50, 0.16), transparent 70%),
+    radial-gradient(8% 16% at 22% 16%, rgba(74, 66, 50, 0.14), transparent 70%),
+    radial-gradient(13% 24% at 10% 24%, rgba(74, 66, 50, 0.13), transparent 70%),
+    radial-gradient(9% 18% at 28% 30%, rgba(74, 66, 50, 0.12), transparent 70%),
+    radial-gradient(10% 20% at 16% 38%, rgba(74, 66, 50, 0.1), transparent 70%),
+    radial-gradient(14% 26% at 6% 50%, rgba(74, 66, 50, 0.11), transparent 70%);
+  filter: blur(13px);
+  transform: rotate(-11deg);
   mix-blend-mode: multiply;
+  opacity: 0.55;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
 }
 
-/* Lombada: sombra fina junto à borda esquerda, como caderno costurado */
+/* Lombada: um fio de sombra na dobra, como caderno costurado à mão */
 .sheet--paper::before {
   content: "";
   position: absolute;
   inset: 0 auto 0 0;
-  width: 26px;
-  background: linear-gradient(90deg, rgba(85, 72, 63, 0.07), transparent);
+  width: 30px;
+  background: linear-gradient(90deg, rgba(85, 72, 63, 0.055), transparent);
   pointer-events: none;
   z-index: 1;
+}
+
+/* ---- FUNDO DECORATIVO ------------------------------------------------------
+   Tulipas nos cantos (nítidas, como um flatlay fotografado — não um blur de
+   fundo) e uma vinheta quente que fecha a página. Nada disso compete com o
+   texto: é só profundidade e moldura.                                       */
+.paper-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.paper-bg::before {
+  content: "";
+  position: absolute;
+  inset: -4%;
+  background-image: url("assets/flowers.png"), url("assets/flowers.png");
+  background-repeat: no-repeat, no-repeat;
+  background-position: -10% -4%, 112% 106%;
+  background-size: 46% auto, 38% auto;
+  filter: blur(1.5px) saturate(1.05);
+  opacity: 0.85;
+  animation: floraRespira 16s ease-in-out infinite;
+}
+
+/* Vinheta quente: a luz cai nas bordas, o centro fica limpo para o texto */
+.paper-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 84% at 50% 44%,
+    transparent 38%,
+    rgba(251, 244, 234, 0.55) 74%,
+    rgba(255, 253, 249, 0.9) 100%);
+}
+
+@keyframes floraRespira {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  50%      { transform: scale(1.035) translate(-5px, 4px); }
 }
 
 /* Sombreado dinâmico da virada (opacidade controlada por script.js) */
 .sheet-shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(100deg, rgba(60, 46, 38, 0.5), rgba(60, 46, 38, 0.12) 60%, transparent);
+  background: linear-gradient(100deg, rgba(60, 46, 38, 0.46), rgba(60, 46, 38, 0.1) 60%, transparent);
   opacity: 0;
   pointer-events: none;
   z-index: 30;
@@ -486,20 +549,146 @@ body {
 
 
 /* ----------------------------------------------------------------------------
-   7) INDICADORES LATERAIS — "existe outra folha"
-      Seta extremamente discreta em traço champagne, com pulso suave.
-      Também são áreas de toque (injetadas por script.js).
+   6.1) ENTRADAS EM CASCATA
+   script.js marca a folha em cena com .is-current. Cada elemento .anim sobe
+   um fio e ganha opacidade, na ordem do seu --d. É o que dá a sensação de
+   página sendo composta diante do leitor.
 ---------------------------------------------------------------------------- */
+.anim { opacity: 0; }
+
+.sheet.is-current .anim {
+  animation: entraFolha 0.95s var(--lento) both;
+  animation-delay: calc(var(--d, 0) * 95ms + 130ms);
+}
+
+@keyframes entraFolha {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+
+/* ----------------------------------------------------------------------------
+   7) A DOBRA DO CANTO — a navegação inteira do livreto
+   Cada folha tem uma orelhinha embaixo à direita. Ela não é enfeite: é a
+   alça. Puxando (ou deslizando), a folha vai sendo dobrada na diagonal e a
+   próxima aparece por baixo.
+
+   O recorte é feito com clip-path na própria folha; a aba dobrada é uma
+   peça à parte (.peel-flap), fora do recorte, para poder aparecer por cima.
+---------------------------------------------------------------------------- */
+.sheet {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--peel, 0px)),
+    calc(100% - var(--peel, 0px)) 100%,
+    0 100%
+  );
+}
+
+/* A aba: o triângulo de papel virado do avesso, no canto de baixo à direita */
+.peel-flap {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: none;
+  z-index: 20;
+  pointer-events: none;
+  /* fica só a metade de cima do quadrado: o triângulo da dobra */
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  background:
+    linear-gradient(135deg,
+      rgba(255, 253, 249, 0.35) 0%,
+      var(--paper-cream) 26%,
+      #f3ece0 62%,
+      #e9dfd0 100%);
+  box-shadow: -1px -1px 0 rgba(194, 168, 127, 0.35) inset;
+  filter: drop-shadow(-5px -5px 9px rgba(96, 78, 64, 0.2));
+}
+
+/* Área de pega: generosa para o dedo, invisível para o olho */
+.peel-grab {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 108px;
+  height: 108px;
+  z-index: 24;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;          /* o gesto aqui é sempre a dobra */
+}
+
+/* O convite discreto ao lado da dobra */
+.peel-label {
+  position: absolute;
+  right: 74px;
+  bottom: 26px;
+  z-index: 22;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-matte);
+  pointer-events: none;
+  white-space: nowrap;
+  animation: puxeRespira 3.4s ease-in-out infinite;
+}
+
+.peel-label-arrow {
+  position: relative;
+  width: 15px;
+  height: 1px;
+  background: var(--gold-matte);
+}
+.peel-label-arrow::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-top: 1px solid var(--gold-matte);
+  border-right: 1px solid var(--gold-matte);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+@keyframes puxeRespira {
+  0%, 100% { opacity: 0.5; transform: translateX(0); }
+  50%      { opacity: 0.95; transform: translateX(-4px); }
+}
+
+/* Na folha da fotografia o convite aparece junto com a frase, não antes */
+.sheet--photo .peel-label,
+.sheet--photo .peel-grab { opacity: 0; transition: opacity 1s ease 1.6s; }
+body.phrase .sheet--photo .peel-label,
+body.phrase .sheet--photo .peel-grab { opacity: 1; }
+
+/* Sobre a fotografia o rótulo precisa de um halo para se sustentar */
+.sheet--photo .peel-label {
+  color: var(--rose-metal);
+  text-shadow: 0 0 12px rgba(247, 243, 236, 0.95), 0 0 5px rgba(247, 243, 236, 0.9);
+}
+.sheet--photo .peel-label-arrow,
+.sheet--photo .peel-label-arrow::after { background-color: var(--rose-metal); border-color: var(--rose-metal); }
+
+/* Voltar: um filete discreto na lateral esquerda */
 .cue {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 52px;
+  width: 46px;
   height: 84px;
   border: 0;
   background: transparent;
   cursor: pointer;
-  z-index: 25;
+  z-index: 24;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -507,81 +696,20 @@ body {
   content: "";
   position: absolute;
   top: 50%;
-  width: 13px;
-  height: 13px;
-  border-top: 1.5px solid var(--champagne-deep);
-  border-right: 1.5px solid var(--champagne-deep);
-}
-
-.cue--next { right: 2px; }
-.cue--next::after {
-  right: 18px;
-  transform: translateY(-50%) rotate(45deg);
-  animation: cuePulseNext 2.8s ease-in-out infinite;
+  width: 11px;
+  height: 11px;
+  border-top: 1px solid var(--champagne-deep);
+  border-right: 1px solid var(--champagne-deep);
 }
 
 .cue--prev { left: 2px; }
 .cue--prev::after {
-  left: 18px;
+  left: 16px;
   transform: translateY(-50%) rotate(-135deg);
-  opacity: 0.55;
+  opacity: 0.45;
+  transition: opacity 0.4s var(--lento), transform 0.4s var(--lento);
 }
-
-@keyframes cuePulseNext {
-  0%, 100% { opacity: 0.45; transform: translateY(-50%) rotate(45deg) translate(0, 0); }
-  50%      { opacity: 1;    transform: translateY(-50%) rotate(45deg) translate(3px, -3px); }
-}
-
-/* ----------------------------------------------------------------------------
-   7.1) INDICADOR DA FOLHA DA FOTOGRAFIA
-   Primeira interação do convidado: em vez da seta lateral discreta, o
-   indicador vai para a base (na parte mais clara do degradê) acompanhado
-   de uma instrução curta, ensinando como navegar pelo livreto.
----------------------------------------------------------------------------- */
-.sheet--photo .cue--next {
-  top: auto;
-  right: auto;
-  left: 50%;
-  bottom: 2.2%;
-  transform: translateX(-50%);
-  width: auto;
-  height: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.6rem;
-  /* surge junto com a frase, não durante a animação de abertura */
-  opacity: 0;
-  transition: opacity 1s ease 1.6s;
-}
-
-body.phrase .sheet--photo .cue--next { opacity: 1; }
-
-/* A seta passa a ficar em linha com o texto (e não mais absoluta) */
-.sheet--photo .cue--next::after {
-  position: static;
-  width: 8px;
-  height: 8px;
-  border-color: var(--rose-metal);
-  transform: rotate(45deg);
-  animation: cueNudge 2.8s ease-in-out infinite;
-}
-
-.cue-label {
-  font-family: var(--font-sans);
-  font-weight: 300;
-  font-size: 0.66rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--rose-metal);
-  white-space: nowrap;
-  text-shadow: 0 0 12px rgba(247, 243, 236, 0.95), 0 0 5px rgba(247, 243, 236, 0.9);
-}
-
-@keyframes cueNudge {
-  0%, 100% { opacity: 0.55; transform: rotate(45deg) translate(0, 0); }
-  50%      { opacity: 1;    transform: rotate(45deg) translate(2px, -2px); }
-}
+.cue--prev:hover::after { opacity: 0.9; transform: translateY(-50%) rotate(-135deg) translate(2px, -2px); }
 
 
 /* ----------------------------------------------------------------------------
@@ -589,21 +717,18 @@ body.phrase .sheet--photo .cue--next { opacity: 1; }
 ---------------------------------------------------------------------------- */
 .sheet--photo { background: var(--paper); }
 
-.photo-wrap {
-  position: absolute;
-  inset: 0;
-}
+.photo-wrap { position: absolute; inset: 0; }
 
 .photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 32%;       /* mantém os rostos em destaque */
+  object-position: 50% 32%;
 }
 
-/* Ken Burns muito suave — ativado junto com a revelação */
+/* Ken Burns muito lento — começa quando esta folha assume */
 body.reveal .photo {
-  animation: kenburns 11s cubic-bezier(0.2, 0, 0.6, 1) forwards;
+  animation: kenburns 12s cubic-bezier(0.2, 0, 0.6, 1) forwards;
 }
 
 @keyframes kenburns {
@@ -612,11 +737,9 @@ body.reveal .photo {
 }
 
 /* Esta folha não tem véu próprio: quando ela assume, a fotografia já veio
-   colorida da animação. Qualquer branco aqui faria a foto "desbotar" de novo
-   logo depois de já ter ganhado cor. */
+   colorida da animação. */
 
-/* Degradê branco extremamente suave: dissolve a base da fotografia e fica
-   bem forte embaixo, onde a frase é lida. */
+/* Degradê branco na base, onde a frase é lida */
 .photo-fade {
   position: absolute;
   inset: auto 0 0 0;
@@ -630,15 +753,11 @@ body.reveal .photo {
   pointer-events: none;
 }
 
-/* Frase de abertura — o mais baixo possível, deixando na base apenas o
-   espaço do indicador de navegação. */
 .opening-phrase {
   position: absolute;
   inset: auto 10% 7.5% 10%;
   text-align: center;
   z-index: 5;
-  /* Halo difuso na cor do papel: dá legibilidade rente às letras sem
-     cobrir a fotografia com uma faixa branca. */
   text-shadow:
     0 0 18px rgba(247, 243, 236, 0.95),
     0 0 8px rgba(247, 243, 236, 0.9),
@@ -672,13 +791,13 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
 
 
 /* ----------------------------------------------------------------------------
-   9) FOLHAS DE PAPEL — tipografia e blocos
+   9) FOLHAS DE PAPEL — COMPOSIÇÃO EDITORIAL
 ---------------------------------------------------------------------------- */
 .sheet-inner {
   position: relative;
-  z-index: 2;                   /* acima do relevo do papel */
+  z-index: 2;
   height: 100%;
-  padding: clamp(2rem, 7dvh, 3.4rem) 1.9rem 2.2rem;
+  padding: clamp(2.2rem, 8dvh, 3.6rem) clamp(1.9rem, 8vw, 2.6rem) 2.4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -688,68 +807,126 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
 
 .sheet-inner--center { justify-content: center; }
 
-/* Folha com rolagem interna (lista de presentes) */
+/* Folha com rolagem interna (o catálogo) — sem barra à vista */
 .sheet-inner--scroll {
   justify-content: flex-start;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.sheet-inner--scroll::-webkit-scrollbar { width: 0; height: 0; }
+
+/* ---- FILETES ----------------------------------------------------------- */
+.rule { flex: none; }
+
+.rule--thin {
+  width: 100%;
+  max-width: 180px;
+  height: 1px;
+  margin: 1.5rem auto;
+  background: linear-gradient(90deg, transparent, var(--hair-strong) 22%, var(--hair-strong) 78%, transparent);
+  animation: brilhoFilete 7s ease-in-out infinite;
 }
 
-.sheet-header { margin-bottom: 1.4rem; }
+.rule--tiny {
+  width: 44px;
+  height: 1px;
+  margin: 1.5rem auto;
+  background: linear-gradient(90deg, transparent, var(--rose-tulip), transparent);
+}
+
+/* Filete com a tulipa no meio: assinatura de abertura e de fecho */
+.rule--crest {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  max-width: 210px;
+  margin-bottom: 2.1rem;
+}
+.rule-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hair-strong));
+  animation: brilhoFilete 7s ease-in-out infinite;
+}
+.rule-line:last-child { background: linear-gradient(90deg, var(--hair-strong), transparent); }
+
+.rule-mark { flex: none; line-height: 0; }
+.rule-mark svg { width: 21px; height: 29px; }
+.rule-mark path { fill: none; stroke-width: 1.5; stroke-linecap: round; }
+.rule-mark .t-stem    { stroke: var(--champagne-deep); }
+.rule-mark .t-leaf    { stroke: var(--champagne); }
+.rule-mark .t-petal-l,
+.rule-mark .t-petal-r { stroke: var(--rose-blush); }
+.rule-mark .t-petal-c { stroke: var(--rose-tulip); }
+
+@keyframes brilhoFilete {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 1; }
+}
+
+/* ---- CABEÇALHOS -------------------------------------------------------- */
+.sheet-header { margin-bottom: 2rem; width: 100%; }
 
 .eyebrow {
   font-family: var(--font-sans);
-  font-weight: 400;
-  font-size: 0.72rem;
-  letter-spacing: 4px;
+  font-weight: 300;
+  font-size: 0.6rem;
+  letter-spacing: 0.44em;
   text-transform: uppercase;
-  color: var(--champagne-deep);
-  margin-bottom: 0.55rem;
+  color: var(--gold-matte);
+  margin-bottom: 1rem;
+  padding-left: 0.44em;           /* compensa o tracking à direita */
 }
 
 .sheet-title {
   font-family: var(--font-serif);
-  font-weight: 500;
-  font-size: clamp(1.75rem, 8vw, 2.3rem);
-  line-height: 1.18;
+  font-weight: 400;
+  font-size: clamp(1.95rem, 9vw, 2.5rem);
+  line-height: 1.14;
+  letter-spacing: 0.012em;
   color: var(--ink);
-  letter-spacing: 0.5px;
-}
-
-/* Fio decorativo sob o título */
-.sheet-title::after {
-  content: "";
-  display: block;
-  width: 46px;
-  height: 1px;
-  margin: 0.85rem auto 0;
-  background: linear-gradient(90deg, transparent, var(--rose-tulip), transparent);
 }
 
 .sheet-text {
+  font-weight: 300;
+  font-size: 0.84rem;
+  line-height: 1.95;
+  letter-spacing: 0.015em;
+  color: var(--ink-soft);
+  max-width: 33ch;
+  margin: 0 auto;
+}
+.sheet-text em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.02em;
+  color: var(--rose-deep);
+}
+
+.sheet-note {
   margin-top: 0.9rem;
   font-weight: 300;
-  font-size: 0.92rem;
-  color: var(--ink-soft);
-  max-width: 34ch;
-  margin-inline: auto;
-  line-height: 1.7;
+  font-size: 0.63rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--champagne-deep);
 }
 
-/* Micro-instrução de interação (ex.: "Toque na opção desejada") */
 .sheet-hint {
-  margin-top: 0.85rem;
+  margin-top: 1rem;
   font-family: var(--font-sans);
   font-weight: 300;
-  font-size: 0.74rem;
-  letter-spacing: 2.2px;
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--rose-metal);
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
-/* Nome em rosé metálico com leve brilho que percorre o texto */
+/* Nome do convidado / do casal em rosé metálico com brilho que atravessa */
 .name-rose {
   background: linear-gradient(105deg,
     var(--rose-deep) 0%,
@@ -761,7 +938,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   -webkit-background-clip: text;
           background-clip: text;
   color: transparent;
-  animation: roseShimmer 6.5s ease-in-out infinite;
+  animation: roseShimmer 7s ease-in-out infinite;
 }
 
 @keyframes roseShimmer {
@@ -769,370 +946,357 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   50%      { background-position: 100% 0; }
 }
 
-/* Ornamento de tulipa (traço fino, identidade do envelope) */
-.tulip-ornament { width: 44px; margin-bottom: 1.1rem; }
-.tulip-ornament--small { width: 36px; }
-.tulip-ornament svg { width: 100%; height: auto; }
-.tulip-ornament path { stroke-width: 1.6; fill: none; stroke-linecap: round; }
-.tulip-ornament .t-stem    { stroke: var(--champagne-deep); }
-.tulip-ornament .t-leaf    { stroke: var(--champagne); }
-.tulip-ornament .t-petal-l,
-.tulip-ornament .t-petal-r { stroke: var(--rose-blush); }
-.tulip-ornament .t-petal-c { stroke: var(--rose-tulip); }
 
-/* Welcome (Folha 2) */
-.welcome-greeting {
-  font-family: var(--font-serif);
-  font-size: clamp(1.35rem, 6.4vw, 1.8rem);
-  font-weight: 500;
-  margin-bottom: 1rem;
-}
+/* ----------------------------------------------------------------------------
+   9.1) FOLHA 2 — CAPA EDITORIAL (Welcome)
+---------------------------------------------------------------------------- */
+.sheet-inner--cover { justify-content: center; }
 
-.welcome-greeting .name-rose {
-  font-family: var(--font-script);
-  font-size: clamp(2rem, 9.5vw, 2.7rem);
-  font-weight: 400;
-  display: inline-block;
-  padding-left: 0.35rem;
-}
-
-.welcome-invite {
+.cover-greeting {
+  font-family: var(--font-sans);
   font-weight: 300;
-  font-size: clamp(0.9rem, 3.9vw, 1rem);
+  font-size: 0.64rem;
+  letter-spacing: 0.44em;
+  text-transform: uppercase;
   color: var(--ink-soft);
-  line-height: 1.75;
-  max-width: 32ch;
+  padding-left: 0.44em;
 }
 
-.hairline {
-  width: 120px;
-  height: 1px;
-  margin: 1.6rem auto;
-  background: linear-gradient(90deg, transparent, var(--champagne-deep), transparent);
+.cover-name {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 13vw, 3.5rem);
+  line-height: 1.06;
+  margin-top: 0.55rem;
+  padding: 0 0.08em 0.12em;       /* respiro para as hastes da manuscrita */
 }
 
-.event-block { line-height: 1.4; }
+.cover-invite {
+  font-weight: 300;
+  font-size: 0.85rem;
+  line-height: 2.05;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  max-width: 29ch;
+  margin: 0 auto;
+}
+
+.cover-event { margin-top: 2.4rem; }
 
 .event-date {
   font-family: var(--font-serif);
-  font-size: clamp(1.25rem, 5.6vw, 1.55rem);
-  font-weight: 600;
-  letter-spacing: 1px;
+  font-weight: 500;
+  font-size: clamp(1.45rem, 6.8vw, 1.85rem);
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  line-height: 1.25;
 }
 
 .event-time {
   font-family: var(--font-serif);
-  font-size: clamp(1.05rem, 4.6vw, 1.25rem);
+  font-style: italic;
+  font-size: 1.02rem;
   color: var(--rose-metal);
-  margin-top: 0.15rem;
+  margin-top: 0.25rem;
 }
 
 .event-venue {
   font-family: var(--font-sans);
   font-weight: 300;
-  letter-spacing: 2.5px;
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  font-size: 0.82rem;
   color: var(--ink-soft);
-  margin-top: 0.7rem;
+  padding-left: 0.28em;
 }
 
 .event-address {
   font-weight: 300;
-  font-size: 0.78rem;
-  color: var(--ink-soft);
-  max-width: 30ch;
-  margin: 0.45rem auto 0;
-  line-height: 1.55;
+  font-size: 0.7rem;
+  line-height: 1.7;
+  color: var(--champagne-deep);
+  max-width: 28ch;
+  margin: 0.7rem auto 0;
 }
 
-/* Manual do Convidado (Folha 3) — instruções com desenhos em traço fino,
-   em duas colunas para caber inteiro na tela junto com os botões. */
+
+/* ----------------------------------------------------------------------------
+   9.2) FOLHA 3 — MANUAL DO CONVIDADO
+   Ícones em traço fino, sem moldura. Duas colunas, muito ar entre elas.
+---------------------------------------------------------------------------- */
 .manual-list {
   list-style: none;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 0.7rem;
-  row-gap: 0.95rem;
+  column-gap: 1.1rem;
+  row-gap: 1.5rem;
   width: 100%;
-  max-width: 330px;
-  margin-bottom: 1.4rem;
+  max-width: 320px;
+  margin-bottom: 2.2rem;
 }
 
 .manual-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   text-align: center;
 }
 
-.manual-icon {
-  flex-shrink: 0;
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(194, 168, 127, 0.45);
-  border-radius: 50%;
-  background: linear-gradient(180deg, var(--paper-bright), #f3ebde);
-}
-
-.manual-icon svg { width: 23px; height: 23px; }
+.manual-icon { line-height: 0; }
+.manual-icon svg { width: 27px; height: 27px; }
 
 .manual-icon .mi-line,
 .manual-icon .mi-rose {
   fill: none;
-  stroke-width: 1.7;
+  stroke-width: 1.25;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-
 .manual-icon .mi-line { stroke: var(--champagne-deep); }
-.manual-icon .mi-rose { stroke: var(--rose-metal); }
+.manual-icon .mi-rose { stroke: var(--rose-tulip); }
 
 .manual-text {
   font-family: var(--font-serif);
   font-size: 0.93rem;
   font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0.012em;
   color: var(--ink);
-  line-height: 1.3;
-  letter-spacing: 0.2px;
   max-width: 15ch;
 }
 
 
 /* ----------------------------------------------------------------------------
-   10) BOTÕES PREMIUM
-       Contorno champagne, leve brilho metálico, detalhe rosé, hover delicado.
+   10) BOTÕES IMPRESSOS
+   Nenhuma caixa. Texto em versalete espaçado sobre um filete de repouso;
+   no toque, um filete dourado cresce do centro e a seta desliza.
 ---------------------------------------------------------------------------- */
-.btn-stack {
+.actions {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
   width: 100%;
-  max-width: 300px;
+  max-width: 290px;
 }
 
-/* Folha 3: duas ações secundárias lado a lado + ação principal larga.
-   Economiza uma linha inteira de altura, mantendo os três botões visíveis
-   sem rolagem mesmo nas telas mais baixas. */
-.btn-stack--duo {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.55rem;
-  max-width: 320px;
-}
-
-.btn-stack--duo .btn {
-  padding: 0.68rem 0.45rem;
-  font-size: 0.68rem;
-  letter-spacing: 1.4px;
-  line-height: 1.35;
-}
-
-.btn-stack--duo .btn--wide {
-  grid-column: 1 / -1;
-  padding: 0.78rem 1rem;
-  font-size: 0.78rem;
-  letter-spacing: 2.6px;
-}
-
-/* Nos botões pequenos o fio rosé decorativo sairia junto do texto */
-.btn-stack--duo .btn:not(.btn--wide)::after { display: none; }
+.actions--single { max-width: 200px; margin-top: 2.2rem; }
 
 .btn {
   position: relative;
-  overflow: hidden;
-  padding: 0.85rem 1.4rem;
-  border: 1px solid var(--champagne-deep);
-  border-radius: 3px;
-  background: linear-gradient(180deg, var(--paper-bright), #f2e9db);
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.95rem 0.1rem 0.9rem;
+  background: none;
+  border: 0;
   font-family: var(--font-sans);
-  font-weight: 400;
-  font-size: 0.82rem;
-  letter-spacing: 3px;
+  font-weight: 300;
+  font-size: 0.71rem;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--ink);
   cursor: pointer;
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  text-align: left;
+  transition: color 0.4s var(--lento);
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Fio rosé sutil na base do botão */
-.btn::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 6px;
-  width: 26px;
-  height: 1px;
-  transform: translateX(-50%);
-  background: linear-gradient(90deg, transparent, var(--rose-tulip), transparent);
-  opacity: 0.7;
-}
-
-/* Brilho metálico que percorre o botão no hover/focus */
+/* filete de repouso */
 .btn::before {
   content: "";
   position: absolute;
-  inset: 0;
-  background: linear-gradient(110deg,
-    transparent 30%,
-    rgba(255, 250, 242, 0.75) 48%,
-    rgba(233, 207, 201, 0.35) 52%,
-    transparent 70%);
-  transform: translateX(-130%);
-  transition: transform 0.7s ease;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: var(--hair);
 }
 
-.btn:hover, .btn:focus-visible {
-  transform: translateY(-1px);
-  border-color: var(--rose-metal);
-  box-shadow: 0 8px 22px rgba(183, 110, 121, 0.14);
-  outline: none;
+/* filete dourado que se abre do centro */
+.btn::after {
+  content: "";
+  position: absolute;
+  left: 50%; right: 50%; bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent, var(--gold-matte) 16%, var(--rose-tulip) 50%, var(--gold-matte) 84%, transparent);
+  transition: left 0.6s var(--lento), right 0.6s var(--lento);
 }
 
-.btn:hover::before, .btn:focus-visible::before { transform: translateX(130%); }
+.btn:hover, .btn:focus-visible { color: var(--rose-deep); outline: none; }
+.btn:hover::after, .btn:focus-visible::after { left: 0; right: 0; }
 
-.btn:active { transform: translateY(0); }
+/* Seta fina que desliza */
+.btn-arrow {
+  position: relative;
+  flex: none;
+  width: 17px;
+  height: 1px;
+  background: var(--gold-matte);
+  transition: transform 0.5s var(--lento);
+}
+.btn-arrow::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-top: 1px solid var(--gold-matte);
+  border-right: 1px solid var(--gold-matte);
+  transform: translateY(-50%) rotate(45deg);
+}
+.btn:hover .btn-arrow,
+.btn:focus-visible .btn-arrow { transform: translateX(6px); }
 
-/* Variante rosé (ação principal "Presentear") */
-.btn--rose {
-  border-color: var(--rose-metal);
-  background: linear-gradient(180deg, #fdf6f4, #f4dfda);
+/* Ação principal: um pouco maior e em rosé */
+.btn--feature {
+  font-size: 0.78rem;
+  letter-spacing: 0.34em;
   color: var(--rose-deep);
+  padding-top: 1.05rem;
+  padding-bottom: 1rem;
 }
-
-.btn-stack--social { margin-top: 1.8rem; max-width: 240px; }
 
 
 /* ----------------------------------------------------------------------------
-   11) CARTÕES — escolha do presente e lista física
+   11) FOLHA 4 — AS DUAS LÂMINAS DO PRESENTE
 ---------------------------------------------------------------------------- */
 .choice-stack {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
   width: 100%;
-  max-width: 320px;
+  max-width: 310px;
 }
 
-.choice-card {
+.choice {
   position: relative;
-  overflow: hidden;
-  /* padding lateral simétrico: abre espaço para a seta sem descentralizar */
-  padding: 1.5rem 1.9rem 1.4rem;
-  border: 1px solid var(--champagne-deep);
-  border-radius: 4px;
-  background:
-    var(--paper-noise),
-    linear-gradient(180deg, var(--paper-bright), #f3ebde);
+  width: 100%;
+  padding: 0.2rem 2.4rem 1.35rem 0;
+  background: none;
+  border: 0;
+  text-align: left;
   cursor: pointer;
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Cantos com fio rosé, como moldura de ateliê */
-.choice-card::before,
-.choice-card::after {
-  content: "";
-  position: absolute;
-  width: 22px;
-  height: 22px;
-  border: 1px solid rgba(183, 110, 121, 0.55);
-  transition: width 0.3s ease, height 0.3s ease;
+.choice-num {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 0.68rem;
+  letter-spacing: 0.34em;
+  color: var(--gold-matte);
+  margin-bottom: 0.55rem;
 }
-.choice-card::before { top: 7px; left: 7px; border-right: 0; border-bottom: 0; }
-.choice-card::after  { bottom: 7px; right: 7px; border-left: 0; border-top: 0; }
-
-.choice-card:hover, .choice-card:focus-visible {
-  transform: translateY(-2px);
-  border-color: var(--rose-metal);
-  box-shadow: 0 10px 26px rgba(183, 110, 121, 0.15);
-  outline: none;
-}
-
-.choice-card:hover::before, .choice-card:hover::after { width: 30px; height: 30px; }
 
 .choice-title {
   display: block;
   font-family: var(--font-serif);
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 1.3rem;
+  line-height: 1.2;
   color: var(--ink);
-  margin-bottom: 0.3rem;
+  transition: color 0.4s var(--lento);
 }
 
 .choice-sub {
   display: block;
   font-weight: 300;
-  font-size: 0.82rem;
+  font-size: 0.72rem;
+  line-height: 1.7;
+  letter-spacing: 0.03em;
   color: var(--ink-soft);
-  letter-spacing: 0.4px;
+  margin-top: 0.4rem;
+  max-width: 26ch;
 }
 
-/* Seta indicadora: sinaliza que o cartão é tocável (mesma linguagem
-   visual do indicador de virar folha). */
-.choice-arrow {
+.choice-rule {
   position: absolute;
-  top: 50%;
-  right: 13px;
-  width: 9px;
-  height: 9px;
-  border-top: 1.5px solid var(--rose-metal);
-  border-right: 1.5px solid var(--rose-metal);
-  transform: translateY(-50%) rotate(45deg);
-  opacity: 0.75;
-  animation: choicePulse 2.8s ease-in-out infinite;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: var(--hair);
+  overflow: hidden;
+}
+.choice-rule::after {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: linear-gradient(90deg, var(--gold-matte), var(--rose-tulip));
+  transition: width 0.65s var(--lento);
 }
 
-@keyframes choicePulse {
-  0%, 100% { opacity: 0.5;  transform: translateY(-50%) rotate(45deg) translate(0, 0); }
-  50%      { opacity: 0.95; transform: translateY(-50%) rotate(45deg) translate(2px, -2px); }
+.choice .btn-arrow {
+  position: absolute;
+  right: 2px;
+  top: 52%;
+  transform: translateY(-50%);
 }
 
-.choice-card:hover .choice-arrow,
-.choice-card:focus-visible .choice-arrow { opacity: 1; }
+.choice:hover .choice-title,
+.choice:focus-visible .choice-title { color: var(--rose-deep); }
+.choice:hover .choice-rule::after,
+.choice:focus-visible .choice-rule::after { width: 100%; }
+.choice:hover .btn-arrow,
+.choice:focus-visible .btn-arrow { transform: translateY(-50%) translateX(6px); }
+.choice:focus-visible { outline: none; }
 
-/* Lista de presentes físicos — cartões com foto */
+
+/* ----------------------------------------------------------------------------
+   12) FOLHA 5 — CATÁLOGO DE PRESENTES
+   Linhas de catálogo, não vitrine: retrato pequeno, marca em versalete,
+   nome em serifada e o filete separando um item do outro.
+---------------------------------------------------------------------------- */
 .gift-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.9rem;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  max-width: 360px;
-  padding-bottom: 1.5rem;
+  max-width: 340px;
+  margin: 0 auto;
+  padding-bottom: 2.5rem;
 }
 
 .gift-card {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  border: 1px solid rgba(194, 168, 127, 0.5);
-  border-radius: 6px;
-  overflow: hidden;
-  background: linear-gradient(180deg, var(--paper-bright), #f4ecdf);
+  position: relative;
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  align-items: center;
+  gap: 1.15rem;
+  padding: 1.25rem 0.1rem;
+  opacity: 0;
+  animation: entraFolha 0.9s var(--lento) both;
+  animation-delay: calc(var(--i, 0) * 65ms + 380ms);
 }
 
-/* Foto do item; sem foto (ou com link quebrado) mostra um fundo neutro
-   com uma tulipa em marca d'água. */
+/* filete entre os itens (o primeiro não tem) */
+.gift-card + .gift-card::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hair) 12%, var(--hair) 88%, transparent);
+}
+
 .gift-card__media {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
   background:
-    radial-gradient(60% 60% at 50% 42%, rgba(233, 207, 201, 0.35), transparent 75%),
-    linear-gradient(180deg, #f6f0e6, #efe6d7);
+    radial-gradient(70% 70% at 50% 40%, rgba(233, 207, 201, 0.32), transparent 74%),
+    linear-gradient(180deg, #fdfaf5, #f2ebdf);
+  box-shadow: inset 0 0 0 1px rgba(194, 168, 127, 0.34);
 }
 
+/* selo neutro enquanto não houver foto */
 .gift-card__media::before {
   content: "❀";
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  font-size: 1.6rem;
-  color: rgba(183, 110, 121, 0.35);
+  font-size: 1.15rem;
+  color: rgba(183, 110, 121, 0.3);
 }
 
 .gift-card__img {
@@ -1141,75 +1305,935 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.8s var(--lento);
+}
+.gift-card:hover .gift-card__img { transform: scale(1.05); }
+
+.gift-card__body { text-align: left; min-width: 0; }
+
+.gift-card__brand {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.56rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-matte);
+  margin-bottom: 0.3rem;
 }
 
 .gift-card__name {
   font-family: var(--font-serif);
-  font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 1.08rem;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
   color: var(--ink);
-  line-height: 1.3;
-  padding: 0.7rem 0.6rem 0.15rem;
-  flex: 1;
 }
 
+/* Etiqueta de quantidade, no espírito da etiqueta pendurada no envelope */
+/* Sem caixa: só itálico discreto, como uma anotação escrita à mão na
+   margem — a marca d'água de quantidade, não um selo. */
+.gift-tag {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.74rem;
+  letter-spacing: 0.02em;
+  color: var(--rose-deep);
+}
+
+/* "Reservar" é um link impresso, não um botão de loja */
 .btn--card {
-  margin: 0.6rem 0.7rem 0.75rem;
-  padding: 0.5rem 0.8rem;
-  font-size: 0.68rem;
-  letter-spacing: 2px;
+  width: auto;
+  justify-content: flex-start;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+  padding: 0.35rem 0 0.4rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.26em;
+  color: var(--rose-deep);
 }
+.btn--card::before { background: rgba(194, 168, 127, 0.34); }
+.btn--card .btn-arrow { width: 14px; }
 
-/* Folha final */
+
+/* ----------------------------------------------------------------------------
+   13) FOLHA 6 — FECHO
+---------------------------------------------------------------------------- */
 .final-script {
   font-family: var(--font-script);
-  font-size: clamp(2.6rem, 12vw, 3.4rem);
+  font-size: clamp(2.5rem, 12vw, 3.3rem);
   color: var(--rose-metal);
-  margin-bottom: 0.9rem;
+  line-height: 1.1;
+  padding: 0 0.06em 0.1em;
 }
+
+.final-body { margin-top: 1.4rem; }
 
 .final-text {
   font-family: var(--font-serif);
-  font-size: 1.06rem;
+  font-size: 1.04rem;
+  line-height: 1.75;
   color: var(--ink);
-  max-width: 28ch;
-  line-height: 1.65;
-  margin-bottom: 0.35rem;
+  max-width: 27ch;
+  margin: 0 auto 0.4rem;
 }
 
 .final-sign {
-  margin-top: 1.5rem;
   font-weight: 300;
-  font-size: 0.85rem;
-  letter-spacing: 1px;
+  font-size: 0.64rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
   color: var(--ink-soft);
+  padding-left: 0.34em;
 }
 
 .final-couple {
   font-family: var(--font-script);
-  font-size: clamp(1.9rem, 9vw, 2.5rem);
-  margin-top: 0.2rem;
+  font-size: clamp(1.85rem, 9vw, 2.4rem);
+  margin-top: 0.35rem;
+  padding: 0 0.06em 0.1em;
 }
 
 
 /* ----------------------------------------------------------------------------
-   12) RESPONSIVIDADE E ACESSIBILIDADE
+   14) RESPONSIVIDADE E ACESSIBILIDADE
 ---------------------------------------------------------------------------- */
 @media (min-width: 560px) {
   .gift-grid { max-width: 400px; }
+  .gift-card { grid-template-columns: 88px 1fr; gap: 1.4rem; }
 }
 
-/* Telas muito baixas (paisagem em celular): compacta os espaçamentos */
-@media (max-height: 560px) {
-  .sheet-inner { padding-top: 1.2rem; padding-bottom: 1.2rem; }
-  .opening-phrase { inset: auto 10% 5% 10%; }
+/* Telas baixas: comprime o respiro sem quebrar a hierarquia */
+@media (max-height: 680px) {
+  .sheet-inner { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+  .rule--thin, .rule--tiny { margin-top: 1.1rem; margin-bottom: 1.1rem; }
+  .rule--crest { margin-bottom: 1.5rem; }
+  .sheet-header { margin-bottom: 1.5rem; }
+  .cover-event { margin-top: 1.7rem; }
+  .manual-list { row-gap: 1.15rem; margin-bottom: 1.6rem; }
+  .opening-phrase { inset: auto 10% 6% 10%; }
 }
 
-/* Movimento reduzido: sem cinemática — tudo aparece de forma direta */
+/* Movimento reduzido: nada de cinemática — tudo entra direto */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  .anim, .gift-card { opacity: 1; }
+}
+
+/* ============================================================================
+   15) COMPOSIÇÃO EDITORIAL — os elementos que vieram dos layouts aprovados
+   Brasão, ornamento de miolo, manchete em dois pesos, linha de data,
+   medalhões, lacres de cera, bilhetes recortados, catálogo e fichas.
+   ========================================================================== */
+
+/* ---- BRASÃO ------------------------------------------------------------- */
+.crest {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 1.5rem;
+}
+
+.crest-letter {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 1.35rem;
+  letter-spacing: 0.08em;
+  color: var(--gold-matte);
+  line-height: 1;
+}
+
+.crest-bar {
+  width: 1px;
+  height: 22px;
+  background: linear-gradient(180deg, transparent, var(--gold-matte) 25%, var(--gold-matte) 75%, transparent);
+}
+
+/* Brasão em cartela oval, como o monograma lacrado do convite */
+.crest--oval {
+  padding: 0.75rem 1.15rem;
+  gap: 0.15rem;
+  flex-direction: column;
+  border: 1px solid rgba(179, 155, 118, 0.5);
+  border-radius: 50% / 42%;
+}
+.crest--oval .crest-letter { font-size: 1.1rem; }
+
+.crest--fecho { margin: 0.9rem 0 0; gap: 0.1rem; }
+.crest--fecho .crest-letter { font-size: 1.5rem; }
+
+/* ---- ORNAMENTO DE MIOLO ------------------------------------------------- */
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  width: 100%;
+  max-width: 210px;
+  margin: 1.15rem auto;
+}
+
+.ornament-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hair-strong));
+  animation: brilhoFilete 7s ease-in-out infinite;
+}
+.ornament-line:last-child { background: linear-gradient(90deg, var(--hair-strong), transparent); }
+
+.ornament-mark { flex: none; width: 40px; height: 15px; }
+.ornament-mark path,
+.ornament-mark circle {
+  fill: none;
+  stroke: var(--gold-matte);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+}
+.ornament-mark circle { fill: var(--gold-matte); stroke: none; }
+
+/* ---- MANCHETE EM DOIS PESOS (caixa alta + manuscrita) -------------------- */
+.display { display: block; }
+
+.display-caps {
+  display: block;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 7vw, 1.95rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  line-height: 1.2;
+  padding-left: 0.14em;
+}
+.display-caps--gold { color: var(--gold-matte); }
+.display-caps--soft {
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 7.6vw, 2.1rem);
+}
+
+.display-script {
+  display: block;
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 11vw, 3rem);
+  line-height: 1.1;
+  color: var(--rose-metal);
+  margin-top: -0.06em;
+  padding: 0 0.06em 0.1em;
+}
+.display-script--sm { font-size: clamp(1.7rem, 8.4vw, 2.3rem); }
+
+.display--left { text-align: left; }
+
+/* ---- LINHA DA DATA ------------------------------------------------------- */
+.date-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  margin-top: 2.2rem;
+}
+
+.date-weekday,
+.date-month {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.63rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-left: 0.28em;
+}
+
+.date-day {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(1.9rem, 9vw, 2.4rem);
+  line-height: 1;
+  color: var(--ink);
+}
+
+.date-bar {
+  width: 1px;
+  height: 30px;
+  background: linear-gradient(180deg, transparent, var(--hair-strong) 22%, var(--hair-strong) 78%, transparent);
+}
+
+.date-year {
+  margin-top: 0.5rem;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.63rem;
+  letter-spacing: 0.32em;
+  color: var(--gold-matte);
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.date-time {
+  margin-top: 0.7rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--rose-metal);
+}
+
+/* Raminho seco no topo da capa (identidade dos layouts) */
+.sprig {
+  display: block;
+  width: 74px;
+  height: 52px;
+  margin-bottom: 0.6rem;
+  background: url("assets/flowers.png") center/contain no-repeat;
+  opacity: 0.5;
+  filter: saturate(0.65);
+}
+
+/* ---- MEDALHÕES (manual do convidado) ------------------------------------ */
+.medal-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1.4rem;
+  row-gap: 1.5rem;
+  width: 100%;
+  max-width: 320px;
+  margin: 0.4rem auto 2rem;
+}
+
+.medal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  text-align: center;
+}
+
+.medal-ring {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: 1px solid rgba(179, 155, 118, 0.55);
+  background:
+    radial-gradient(70% 70% at 50% 34%, rgba(255, 253, 249, 0.9), transparent 72%),
+    linear-gradient(180deg, rgba(253, 250, 245, 0.6), rgba(240, 232, 220, 0.5));
+  transition: transform 0.5s var(--lento), box-shadow 0.5s var(--lento);
+}
+.medal:hover .medal-ring {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(179, 155, 118, 0.18);
+}
+
+.medal-ring svg { width: 27px; height: 27px; }
+.medal-ring .mi-line,
+.medal-ring .mi-rose {
+  fill: none;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.medal-ring .mi-line { stroke: var(--gold-matte); }
+.medal-ring .mi-rose { stroke: var(--rose-tulip); }
+
+.medal-text {
+  font-family: var(--font-serif);
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.32;
+  color: var(--ink);
+  max-width: 14ch;
+}
+
+.closing-script {
+  font-family: var(--font-script);
+  font-size: 1.5rem;
+  color: var(--rose-metal);
+  line-height: 1.2;
+}
+.closing-caps {
+  margin-top: 0.15rem;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-left: 0.3em;
+}
+
+/* ---- LACRES DE CERA (folha de interações) -------------------------------- */
+.wax-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1.5rem;
+  row-gap: 1.9rem;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 0.6rem;
+}
+
+.wax {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* O botão: um anel dourado fino, gravado no papel — sem preenchimento,
+   sem sombra pesada, como nas referências. Só a luz muda no toque. */
+.wax-seal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 1px solid rgba(179, 155, 118, 0.55);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 253, 249, 0.7),
+    inset 0 -1px 3px rgba(120, 98, 74, 0.1);
+  transition: transform 0.2s var(--lento), box-shadow 0.2s var(--lento), border-color 0.2s var(--lento);
+}
+
+.wax-seal svg { width: 32px; height: 32px; position: relative; }
+.wax-seal .wx {
+  fill: none;
+  stroke: var(--gold-matte);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.wax:hover .wax-seal,
+.wax:focus-visible .wax-seal {
+  transform: scale(1.03);
+  border-color: var(--rose-tulip);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 253, 249, 0.8),
+    0 4px 12px rgba(120, 98, 74, 0.12);
+}
+.wax:focus-visible { outline: none; }
+
+.wax-label {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  max-width: 13ch;
+  padding-left: 0.24em;
+  transition: color 0.2s var(--lento);
+}
+.wax:hover .wax-label { color: var(--rose-deep); }
+
+/* ---- BILHETES (folha presentear) ---------------------------------------- */
+.ticket-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+  width: 100%;
+  max-width: 330px;
+  margin-top: 0.4rem;
+}
+
+/* Sem card, sem painel: só o anel do ícone (igual ao .wax-seal) e o texto
+   flutuando por baixo, exatamente como as duas circunferências vazias das
+   referências. */
+.ticket {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.4rem;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.45s var(--lento);
+}
+
+.ticket:hover, .ticket:focus-visible {
+  transform: translateY(-3px);
+  outline: none;
+}
+
+.ticket-icon {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  margin-bottom: 0.7rem;
+  border-radius: 50%;
+  border: 1px solid rgba(179, 155, 118, 0.55);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 253, 249, 0.7),
+    inset 0 -1px 3px rgba(120, 98, 74, 0.1);
+  transition: border-color 0.3s var(--lento), box-shadow 0.3s var(--lento);
+}
+.ticket:hover .ticket-icon, .ticket:focus-visible .ticket-icon {
+  border-color: var(--rose-tulip);
+  box-shadow: inset 0 1px 2px rgba(255, 253, 249, 0.8), 0 4px 12px rgba(120, 98, 74, 0.12);
+}
+.ticket-icon svg { width: 30px; height: 30px; }
+.ticket-icon .wx {
+  fill: none;
+  stroke: var(--gold-matte);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ticket-kicker {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-left: 0.3em;
+}
+
+.ticket-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 1.32rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-matte);
+  line-height: 1.1;
+  padding-left: 0.1em;
+}
+
+.ticket-orn {
+  width: 34px;
+  height: 1px;
+  margin: 0.5rem 0 0.15rem;
+  background: linear-gradient(90deg, transparent, var(--hair-strong), transparent);
+}
+
+.ticket-text {
+  font-weight: 300;
+  font-size: 0.68rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+.ticket-cta {
+  margin-top: 0.7rem;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.53rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--rose-deep);
+  padding-left: 0.24em;
+}
+
+/* ---- CATÁLOGO NUMERADO --------------------------------------------------- */
+.sheet-inner--left { align-items: flex-start; text-align: left; }
+.sheet-header--left { text-align: left; }
+.sheet-text--left { margin-left: 0; }
+
+.rule--short {
+  width: 52px;
+  height: 1px;
+  margin: 1.1rem 0;
+  background: linear-gradient(90deg, var(--hair-strong), transparent);
+}
+
+/* Catálogo puramente tipográfico — sem foto, sem caixa, só o número, o
+   nome e um filete fino separando um item do outro (igual à referência). */
+.gift-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  align-items: baseline;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 1.05rem 0.1rem;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--hair);
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0;
+  animation: entraFolha 0.9s var(--lento) both;
+  animation-delay: calc(var(--i, 0) * 65ms + 380ms);
+  transition: padding-left 0.4s var(--lento), border-color 0.4s var(--lento);
+}
+.gift-card:last-child { border-bottom: 0; }
+.gift-card:hover { padding-left: 0.4rem; border-color: var(--hair-strong); }
+
+.gift-card__media { display: none; }
+
+.gift-card__num {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  color: var(--gold-matte);
+  align-self: start;
+  padding-top: 0.15rem;
+}
+
+.gift-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.6rem;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.58rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--rose-deep);
+  padding-left: 0.26em;
+}
+.gift-card__cta .btn-arrow { width: 14px; }
+.gift-card:hover .gift-card__cta .btn-arrow { transform: translateX(5px); }
+
+.list-footer { width: 100%; text-align: center; margin-top: 1.4rem; }
+.list-footer-names {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-matte);
+  padding-left: 0.22em;
+}
+.list-footer-date {
+  margin-top: 0.35rem;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.58rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-left: 0.28em;
+}
+
+/* ---- FICHAS (contagem regressiva e reserva) ------------------------------ */
+.card-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 1.6rem;
+  background: rgba(72, 60, 50, 0.28);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.45s var(--lento), visibility 0.45s;
+}
+.card-overlay.is-open { opacity: 1; visibility: visible; }
+
+.card {
+  position: relative;
+  width: min(100%, 320px);
+  max-height: 84dvh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: 2.1rem 1.7rem 1.9rem;
+  text-align: center;
+  background:
+    var(--paper-noise),
+    radial-gradient(120% 70% at 50% -10%, #fffdfa, transparent 62%),
+    linear-gradient(178deg, var(--ivory), var(--ivory-deep));
+  box-shadow: 0 22px 60px rgba(72, 60, 50, 0.3);
+  transform: translateY(14px) scale(0.985);
+  transition: transform 0.5s var(--lento);
+}
+.card::-webkit-scrollbar { width: 0; }
+.card-overlay.is-open .card { transform: none; }
+
+/* cantos chanfrados, como o bilhete */
+.card {
+  clip-path: polygon(
+    12px 0, calc(100% - 12px) 0, 100% 12px,
+    100% calc(100% - 12px), calc(100% - 12px) 100%,
+    12px 100%, 0 calc(100% - 12px), 0 12px);
+}
+
+.card-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.7rem;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  background: none;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--champagne-deep);
+  cursor: pointer;
+  transition: color 0.3s var(--lento);
+}
+.card-close:hover { color: var(--rose-deep); }
+
+.card-kicker {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.6rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--gold-matte);
+  padding-left: 0.34em;
+}
+
+.card-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 1.4rem;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-top: 0.35rem;
+}
+
+.card-text {
+  margin-top: 0.9rem;
+  font-weight: 300;
+  font-size: 0.76rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+  max-width: 30ch;
+  margin-inline: auto;
+}
+
+.card-foot {
+  margin-top: 1.3rem;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.58rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-left: 0.26em;
+}
+
+.card-media {
+  position: relative;
+  width: 116px;
+  height: 116px;
+  margin: 0 auto 1.1rem;
+  overflow: hidden;
+  background:
+    radial-gradient(70% 70% at 50% 40%, rgba(233, 207, 201, 0.3), transparent 74%),
+    linear-gradient(180deg, #fdfaf5, #f2ebdf);
+  box-shadow: inset 0 0 0 1px rgba(194, 168, 127, 0.34);
+}
+.card-media::before {
+  content: "❀";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  color: rgba(183, 110, 121, 0.28);
+}
+.card-media img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card .gift-tag { margin: 0.7rem auto 0; }
+
+.card .btn--feature {
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1.4rem;
+}
+
+/* ---- CONTAGEM REGRESSIVA ------------------------------------------------- */
+.count-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.count-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0 0.2rem;
+}
+.count-cell + .count-cell { border-left: 1px solid var(--hair); }
+
+.count-num {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.count-cap {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.55rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-left: 0.24em;
+}
+
+/* ---- VARIAÇÕES DE FUNDO -------------------------------------------------- */
+/* folhas mais floridas: manual e interações, como nos layouts */
+.paper-bg--rica::before {
+  background-position: -14% -10%, 114% 104%;
+  background-size: 62% auto, 54% auto;
+  opacity: 0.26;
+}
+/* fecho: um único ramo no alto à direita, o resto é respiro */
+.paper-bg--folha::before {
+  background-image: url("assets/flowers.png");
+  background-position: 118% -12%;
+  background-size: 62% auto;
+  opacity: 0.22;
+}
+
+/* ---- AJUSTES DE ALTURA --------------------------------------------------- */
+@media (max-height: 700px) {
+  .crest { margin-bottom: 1rem; }
+  .ornament { margin: 0.8rem auto; }
+  .medal-grid { row-gap: 1.05rem; margin-bottom: 1.2rem; }
+  .medal-ring { width: 54px; height: 54px; }
+  .medal-ring svg { width: 24px; height: 24px; }
+  .wax-grid { row-gap: 1.3rem; }
+  .wax-seal { width: 72px; height: 72px; }
+  .date-row { margin-top: 1.4rem; }
+  .sprig { display: none; }
+}
+
+/* ============================================================================
+   16) CORREÇÕES DE ACABAMENTO
+   ========================================================================== */
+
+/* Marca e nome do presente são spans (o cartão inteiro virou botão):
+   sem isso os dois se encavalam na mesma linha. */
+.gift-card__brand,
+.gift-card__name { display: block; }
+
+/* A nota das marcas é um sussurro, não um aviso */
+.sheet-note {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--champagne-deep);
+  margin-top: 0.7rem;
+}
+
+/* ---- A DOBRA PRECISA SE LER COMO PAPEL --------------------------------------
+   Sobre um fundo creme, papel dobrado sobre papel some. O que faz o olho
+   entender a dobra são três coisas: o vinco marcado, a sombra que a aba
+   projeta na página de baixo e a luz batendo diferente no verso. */
+.peel-flap {
+  background:
+    linear-gradient(135deg,
+      #fffdfa 0%,
+      #f9f3e9 22%,
+      #efe6d7 55%,
+      #e2d6c4 88%,
+      #d8cab5 100%);
+  box-shadow: none;
+  filter:
+    drop-shadow(-2px -2px 3px rgba(96, 78, 64, 0.22))
+    drop-shadow(-7px -7px 14px rgba(96, 78, 64, 0.16));
+}
+
+/* O vinco: um fio claro exatamente na diagonal onde o papel foi virado */
+.peel-flap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0) 14%);
+}
+
+/* Um respiro de sombra no papel que fica embaixo, junto ao corte */
+.sheet-shade {
+  background: linear-gradient(315deg,
+    rgba(96, 78, 64, 0.34) 0%,
+    rgba(96, 78, 64, 0.12) 22%,
+    transparent 46%);
+}
+
+/* A ficha fechada não pode continuar capturando o toque: a transição de
+   visibility a mantém "viva" por quase meio segundo, e nesse intervalo ela
+   engolia o primeiro gesto na dobra. */
+.card-overlay { pointer-events: none; }
+.card-overlay.is-open { pointer-events: auto; }
+
+/* ---- A LUZ DA DOBRA ---------------------------------------------------------
+   O verso do papel dobrado recebe luz NO VINCO e escurece em direção à ponta
+   — antes estava ao contrário, e por isso a aba lia como um vazio claro.
+   A sombra, por sua vez, cai sobre a página revelada (lado de baixo-direita
+   do vinco), que é o que faz o olho entender que há papel levantado. */
+.peel-flap {
+  background: linear-gradient(315deg,
+    #fffefb 0%,
+    #fbf6ee 6%,
+    #f2ebde 26%,
+    #e6dbc9 62%,
+    #dccfba 100%);
+  filter:
+    drop-shadow(3px 3px 5px rgba(96, 78, 64, 0.26))
+    drop-shadow(9px 9px 18px rgba(96, 78, 64, 0.14));
+}
+
+/* Fio de luz exatamente sobre o vinco */
+.peel-flap::after {
+  background: linear-gradient(315deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.35) 3%,
+    rgba(255, 255, 255, 0) 11%);
+}
+
+/* A sombra projetada pela aba sobre a página revelada. Ocupa o outro lado do
+   vinco (o triângulo de baixo-direita) e escurece só junto ao corte. */
+.peel-cast {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: none;
+  z-index: 19;
+  pointer-events: none;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  background: linear-gradient(315deg,
+    rgba(96, 78, 64, 0) 0%,
+    rgba(96, 78, 64, 0.1) 3%,
+    rgba(96, 78, 64, 0.22) 7%,
+    rgba(96, 78, 64, 0.1) 16%,
+    rgba(96, 78, 64, 0) 30%);
 }

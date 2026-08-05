@@ -102,7 +102,18 @@ const CONFIG = {
     dateLine:  "30 de Setembro de 2026",
     timeLine:  "às 16h30",
     venue:     "Espaço Aliança Casa Ribeira",
-    address:   "Av. Beira Mar, 419 - 1º andar - Ribeira, Salvador - BA, 41415-055"
+    address:   "Av. Beira Mar, 419 - 1º andar - Ribeira, Salvador - BA, 41415-055",
+
+    /* A mesma data em formato de máquina, para a contagem regressiva.
+       Formato: AAAA-MM-DDTHH:MM:SS-03:00  (o -03:00 é o fuso de Salvador) */
+    datetime:  "2026-09-30T16:30:00-03:00",
+
+    /* Linha da data desmembrada, no estilo do convite impresso:
+       SÁBADO | 30 | SETEMBRO  ·  2026 · */
+    weekday:   "Quarta-feira",
+    day:       "30",
+    month:     "Setembro",
+    year:      "2026"
   },
 
   /* ---------------------------------------------------------------------------
@@ -134,32 +145,34 @@ const CONFIG = {
      5) PRESENTES FÍSICOS
      >>> Cada item tem:
          - name  : nome exibido no cartão
+         - brand : SUGESTÃO de marca, para orientar quem for comprar. São marcas
+                   populares de bom custo-benefício no Brasil, não uma exigência
+                   — quem presenteia escolhe o que preferir. Deixe "" para ocultar.
+         - qty   : quantidade desejada. Só aparece no cartão quando for maior
+                   que 1, como a etiqueta "Quantidade 2". O item continua sendo
+                   UM presente só: a mesma pessoa leva as duas unidades.
          - image : FOTO DO ITEM. Está vazia ("") de propósito — assim o cartão
                    mostra um selo neutro elegante até você colocar a sua foto.
                    Para trocar, cole o link da imagem, por exemplo:
                      image: "assets/air-fryer.jpg"        (arquivo seu em /assets)
                      image: "https://site.com/foto.jpg"   (link direto da web)
          - reservationMessage : mensagem enviada no WhatsApp ao reservar.
-                   Se ficar vazio, é montada automaticamente:
-                   'Olá Rodrigo e Talia! Gostaria de reservar o presente "NOME"
-                    da lista de casamento. ❤️'
+                   Se ficar vazio, é montada automaticamente com o nome e,
+                   quando houver, a quantidade.
 
-     Para adicionar um presente novo, basta copiar um objeto { ... } abaixo.
+     Para adicionar um presente novo, basta copiar uma linha { ... } abaixo.
   --------------------------------------------------------------------------- */
   physicalGifts: [
-    { name: "Liquidificador",                  image: "", reservationMessage: "" },
-    { name: "Conjunto de Cama Casal (1)",      image: "", reservationMessage: "" },
-    { name: "Conjunto de Cama Casal (2)",      image: "", reservationMessage: "" },
-    { name: "Batedeira",                       image: "", reservationMessage: "" },
-    { name: "Conjunto de Toalhas de Banho (1)", image: "", reservationMessage: "" },
-    { name: "Conjunto de Toalhas de Banho (2)", image: "", reservationMessage: "" },
-    { name: "Aspirador de Pó Robô",            image: "", reservationMessage: "" },
-    { name: "Jogo de Panelas",                 image: "", reservationMessage: "" },
-    { name: "Jogo de Taças",                   image: "", reservationMessage: "" },
-    { name: "Air Fryer",                       image: "", reservationMessage: "" },
-    { name: "Conjunto de Assadeiras",          image: "", reservationMessage: "" },
-    { name: "Edredom (1)",                     image: "", reservationMessage: "" },
-    { name: "Edredom (2)",                     image: "", reservationMessage: "" },
-    { name: "Potes de Armazenamento de Vidro", image: "", reservationMessage: "" }
+    { name: "Liquidificador",                  brand: "Oster",            qty: 1, image: "", reservationMessage: "" },
+    { name: "Conjunto de Cama Casal",          brand: "Santista",         qty: 2, image: "", reservationMessage: "" },
+    { name: "Batedeira",                       brand: "Mondial",          qty: 1, image: "", reservationMessage: "" },
+    { name: "Conjunto de Toalhas de Banho",    brand: "Karsten",          qty: 2, image: "", reservationMessage: "" },
+    { name: "Aspirador de Pó Robô",            brand: "Multilaser",       qty: 1, image: "", reservationMessage: "" },
+    { name: "Jogo de Panelas",                 brand: "Tramontina",       qty: 1, image: "", reservationMessage: "" },
+    { name: "Jogo de Taças",                   brand: "Nadir Figueiredo", qty: 1, image: "", reservationMessage: "" },
+    { name: "Air Fryer",                       brand: "Philco",           qty: 1, image: "", reservationMessage: "" },
+    { name: "Conjunto de Assadeiras",          brand: "Marinex",          qty: 1, image: "", reservationMessage: "" },
+    { name: "Edredom",                         brand: "Buddemeyer",       qty: 2, image: "", reservationMessage: "" },
+    { name: "Potes de Armazenamento de Vidro", brand: "Invicta",          qty: 1, image: "", reservationMessage: "" }
   ]
 };
