@@ -557,8 +557,8 @@ body {
 .anim { opacity: 0; }
 
 .sheet.is-current .anim {
-  animation: entraFolha 0.95s var(--lento) both;
-  animation-delay: calc(var(--d, 0) * 95ms + 130ms);
+  animation: entraFolha 0.24s ease-out both;
+  animation-delay: 0s;
 }
 
 @keyframes entraFolha {
@@ -611,8 +611,8 @@ body {
   position: absolute;
   right: 0;
   bottom: 0;
-  width: 108px;
-  height: 108px;
+  width: 132px;
+  height: 132px;
   z-index: 24;
   border: 0;
   background: transparent;
@@ -620,53 +620,63 @@ body {
   -webkit-tap-highlight-color: transparent;
   touch-action: none;          /* o gesto aqui é sempre a dobra */
 }
+/* "PUXE" é um indicador permanente da dobra.
+   Fica FORA da .sheet para não ser cortado pelo clip-path da página.
+   A posição é relativa ao book e permanece sobre a área branca da orelha. */
 
-/* O convite discreto ao lado da dobra */
 .peel-label {
   position: absolute;
-  right: 74px;
-  bottom: 26px;
-  z-index: 22;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+
+  /* Dentro da área triangular da orelha */
+  right: 34px;
+  bottom: 30px;
+
+  z-index: 35;
+  display: none;
+
   font-family: var(--font-sans);
   font-weight: 300;
-  font-size: 0.62rem;
-  letter-spacing: 0.3em;
+  font-size: clamp(0.5rem, 1.5vw, 0.62rem);
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--gold-matte);
+  color: var(--ink);
+
   pointer-events: none;
   white-space: nowrap;
+
+  transform: rotate(-45deg);
+  transform-origin: center;
+
+  opacity: 0.72;
+  transition: opacity 0.18s ease;
+
   animation: puxeRespira 3.4s ease-in-out infinite;
 }
 
-.peel-label-arrow {
-  position: relative;
-  width: 15px;
-  height: 1px;
-  background: var(--gold-matte);
-}
-.peel-label-arrow::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 50%;
-  width: 5px;
-  height: 5px;
-  border-top: 1px solid var(--gold-matte);
-  border-right: 1px solid var(--gold-matte);
-  transform: translateY(-50%) rotate(45deg);
+.peel-label.is-hidden {
+  opacity: 0;
+  animation: none;
 }
 
 @keyframes puxeRespira {
-  0%, 100% { opacity: 0.5; transform: translateX(0); }
-  50%      { opacity: 0.95; transform: translateX(-4px); }
+  0%, 100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+
+@keyframes puxeRespira {
+  0%, 100% { opacity: 0.55; transform: rotate(-45deg) translateX(0); }
+  50%      { opacity: 1;    transform: rotate(-45deg) translateX(-3px); }
 }
 
 /* Na folha da fotografia o convite aparece junto com a frase, não antes */
 .sheet--photo .peel-label,
-.sheet--photo .peel-grab { opacity: 0; transition: opacity 1s ease 1.6s; }
+.sheet--photo .peel-grab { opacity: 0; transition: opacity 0.6s ease 0.45s; }
 body.phrase .sheet--photo .peel-label,
 body.phrase .sheet--photo .peel-grab { opacity: 1; }
 
@@ -676,7 +686,7 @@ body.phrase .sheet--photo .peel-grab { opacity: 1; }
   text-shadow: 0 0 12px rgba(247, 243, 236, 0.95), 0 0 5px rgba(247, 243, 236, 0.9);
 }
 .sheet--photo .peel-label-arrow,
-.sheet--photo .peel-label-arrow::after { background-color: var(--rose-metal); border-color: var(--rose-metal); }
+.sheet--photo { background-color: var(--rose-metal); border-color: var(--rose-metal); }
 
 /* Voltar: um filete discreto na lateral esquerda */
 .cue {
@@ -767,11 +777,11 @@ body.reveal .photo {
 .opening-phrase > * {
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 1.1s ease, transform 1.1s ease;
+  transition: opacity 0.55s ease-out, transform 0.55s ease-out;
 }
 
 body.phrase .opening-phrase > * { opacity: 1; transform: none; }
-body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
+body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
 
 .phrase-script {
   font-family: var(--font-script);
@@ -1016,7 +1026,8 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   font-weight: 300;
   font-size: 0.7rem;
   line-height: 1.7;
-  color: var(--champagne-deep);
+  /* dois tons mais escura: perdia contraste contra o papel do background */
+  color: #9c8355;
   max-width: 28ch;
   margin: 0.7rem auto 0;
   margin-top: 0.2rem;
@@ -1367,7 +1378,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
 ---------------------------------------------------------------------------- */
 .final-script {
   font-family: var(--font-script);
-  font-size: clamp(2rem, 10vw, 3rem);
+  font-size: clamp(1.4rem, 7vw, 2.1rem);
   color: var(--rose-metal);
   line-height: 1.1;
   padding: 0 0.06em 0.1em;
@@ -1614,10 +1625,10 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   list-style: none;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 1.4rem;
-  row-gap: 1.5rem;
+  column-gap: 1rem;
+  row-gap: 0.4rem;
   width: 100%;
-  max-width: 320px;
+  max-width: 274px;
   margin: 0.4rem auto 2rem;
 }
 
@@ -2219,8 +2230,8 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
     #e6dbc9 62%,
     #dccfba 100%);
   filter:
-    drop-shadow(3px 3px 5px rgba(96, 78, 64, 0.26))
-    drop-shadow(9px 9px 18px rgba(96, 78, 64, 0.14));
+    drop-shadow(3px 3px 6px rgba(96, 78, 64, 0.34))
+    drop-shadow(12px 12px 24px rgba(96, 78, 64, 0.2));
 }
 
 /* Fio de luz exatamente sobre o vinco */
@@ -2401,8 +2412,8 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
    fill:both sobrescreveria esse posicionamento ao terminar. */
 .wcv2-zone { opacity: 0; }
 .sheet.is-current .wcv2-zone {
-  animation: wcv2FadeIn 0.95s var(--lento) both;
-  animation-delay: calc(var(--d, 0) * 95ms + 130ms);
+  animation: wcv2FadeIn 0.22s ease-out both;
+  animation-delay: 0s;
 }
 @keyframes wcv2FadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -2534,8 +2545,11 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
 .sheet--art .orb { opacity: 0; }
 .sheet--art.is-current .anim,
 .sheet--art.is-current .orb {
-  animation: wcv2FadeIn 0.95s var(--lento) both;
-  animation-delay: calc(var(--d, 0) * 95ms + 130ms);
+  /* O fundo agora e fixo: a entrada so tira o pisca da troca, sem escalonar
+     item a item (o que fazia os botoes chegarem antes do texto e dava
+     sensacao de pagina carregando). */
+  animation: wcv2FadeIn 0.22s ease-out both;
+  animation-delay: 0s;
 }
 
 /* ---- BLOCOS DE CONTEÚDO --------------------------------------------------
@@ -2618,4 +2632,67 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
 
 @media (prefers-reduced-motion: reduce) {
   .sheet--art .anim, .sheet--art .orb { opacity: 1; }
+}
+
+/* Enquanto a folha vira, o conteúdo se dissolve em vez de ser recortado pela
+   diagonal — sem isso o texto parece um adesivo colado sendo arrastado.
+   --turn é definido por script.js (0 em repouso, 1 com a folha virada). */
+.art-layer,
+.wcv2-layer--copy,
+.opening-phrase {
+  opacity: calc(1 - var(--turn, 0) * 1.7);
+}
+
+/* ---- FOLHA 2 · AJUSTE SÓ NO MOBILE --------------------------------------
+   No celular a arte fica mais estreita e os textos encostam nas flores da
+   esquerda. Um empurrão de 2% para a direita resolve, mantendo o conjunto
+   centralizado. O local e o endereço ficam onde estão, a pedido. */
+@media (max-width: 560px) {
+  .wcv2-zone--a,
+  .wcv2-zone--b,
+  .wcv2-zone--c { transform: translateX(2vw); }
+}
+
+/* ---- FOLHA 3 · TEXTO CIRCULAR -------------------------------------------
+   Mesmo sistema visual dos botões da folha de ações: o texto acompanha a
+   circunferência. Aqui são apenas itens ilustrativos — não viram botões. */
+.medal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  width: 100%;
+}
+
+.medal-arc {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.medal-arc text {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  /* menor que o dos botoes: aqui as frases sao bem mais longas e, no mesmo
+     corpo, estouravam o comprimento do arco e apareciam cortadas */
+  font-size: 6.4px;
+  letter-spacing: 1.15px;
+  text-transform: uppercase;
+  fill: var(--ink-soft);
+}
+
+/* o anel fica no miolo, com o texto correndo por fora */
+.medal .medal-ring { width: 62%; height: 62%; }
+
+/* ---- FOLHAS 4 e 5 · SÓ NO MOBILE ----------------------------------------
+   No notebook as duas frases já estão bem; no celular a proporção muda e
+   uma fica longe demais dos botões, a outra colada neles. Meio-termo:
+   a da folha 4 sobe, a da folha 5 desce. */
+@media (max-width: 560px) {
+  /* "Confirmar presença até 12/09" — sobe, aproximando-se dos botões */
+  .art-copy-down  { bottom: 18%; }
+  /* "Clique no botão para interagir" — desce, afastando-se dos botões */
+  .art-copy-downt { bottom: 9%; }
 }

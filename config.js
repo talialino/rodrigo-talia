@@ -54,8 +54,8 @@ const GUESTS = {
   "beatriz-e-bruno":    { greeting: "Queridos", name: "Beatriz e Bruno",            text: TEXT_PLURAL },
   "cleude-e-gilson":    { greeting: "Queridos", name: "Cleude e Gilson",            text: TEXT_PLURAL },
   "conchita-e-roberto": { greeting: "Queridos", name: "Conchita e Roberto",         text: TEXT_PLURAL },
-  daiane:               { greeting: "Querida",  name: "Daiane",                     text: TEXT_SINGULAR },
-  "daniele-e-josimar":  { greeting: "Queridos", name: "Daniele e Josimar",          text: TEXT_PLURAL },
+  "daiane-e-sofia":     { greeting: "Queridas",  name: "Daiane e Sofia",            text: TEXT_PLURAL },
+  "daniele-josimar-e-jean":  { greeting: "Queridos", name: "Daniele, Josimar e Jean",          text: TEXT_PLURAL },
   "deize-e-matheus":    { greeting: "Queridos", name: "Deize e Matheus",            text: TEXT_PLURAL },
   "denise-e-ze":        { greeting: "Queridos", name: "Denise e Zé",                text: TEXT_PLURAL },
   "uedson-e-dilri":     { greeting: "Queridos", name: "Uedson e Dilri",             text: TEXT_PLURAL },
@@ -66,7 +66,6 @@ const GUESTS = {
   "fernando-e-idene":   { greeting: "Queridos", name: "Fernando e Idene",           text: TEXT_PLURAL },
   gabriel:              { greeting: "Querido",  name: "Gabriel",                    text: TEXT_SINGULAR },
   ilana:                { greeting: "Querida",  name: "Ilana",                      text: TEXT_SINGULAR },
-  jean:                 { greeting: "Querido",  name: "Jean",                       text: TEXT_SINGULAR },
   "joao-e-luna":        { greeting: "Queridos", name: "João e Luna",                text: TEXT_PLURAL },
   keila:                { greeting: "Querida",  name: "Keila",                      text: TEXT_SINGULAR },
   lana:                 { greeting: "Querida",  name: "Lana",                       text: TEXT_SINGULAR },
@@ -79,9 +78,7 @@ const GUESTS = {
   "patricia-e-renato":  { greeting: "Queridos", name: "Patricia e Renato",          text: TEXT_PLURAL },
   ramiro:               { greeting: "Querido",  name: "Ramiro",                     text: TEXT_SINGULAR },
   reinaldo:             { greeting: "Querido",  name: "Reinaldo",                   text: TEXT_SINGULAR },
-  renato:               { greeting: "Querido",  name: "Renato",                     text: TEXT_SINGULAR },
   roberto:              { greeting: "Querido",  name: "Roberto",                    text: TEXT_SINGULAR },
-  sofia:                { greeting: "Querida",  name: "Sofia",                      text: TEXT_SINGULAR },
   vanessa:              { greeting: "Querida",  name: "Vanessa",                    text: TEXT_SINGULAR }
 };
 

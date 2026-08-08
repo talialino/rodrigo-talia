@@ -289,7 +289,7 @@
        · a sombra que a aba projeta sobre a página de baixo.
   -------------------------------------------------------------------------- */
   var TURN_MS = 760;
-  var PEEL_REST = 56;        // tamanho da orelhinha em repouso (px)
+  var PEEL_REST = 66;        // tamanho da dobra em repouso (px)
   var SHADE_MAX = 0.4;       // opacidade máxima da sombra da dobra
   var peelFlap = null;
 
@@ -330,7 +330,11 @@
        e a varredura final acontece rápido. */
     var px = PEEL_REST + Math.pow(p, 1.55) * (peelMax() - PEEL_REST);
     sheet.style.setProperty("--peel", px + "px");
-
+    // o CSS usa isto para dissolver o conteudo enquanto a folha vira
+    sheet.style.setProperty("--turn", String(p));
+if (peelLabelGlobal) {
+  peelLabelGlobal.classList.toggle("is-hidden", p > 0.03);
+}
     var f = ensureFlap();
     f.style.display = "block";
     f.style.width = px + "px";
@@ -358,6 +362,9 @@
       return;
     }
     applyPeel(s, 0);
+    if (peelLabelGlobal) {
+  peelLabelGlobal.classList.remove("is-hidden");
+}
   }
 
   /* Deixa apenas a folha "i" visível e limpa qualquer resíduo de animação.
@@ -371,6 +378,7 @@
       s.style.visibility = (k === i) ? "visible" : "hidden";
       s.style.zIndex = (k === i) ? "2" : "1";
       s.style.removeProperty("--peel");
+      s.style.removeProperty("--turn");
       // marca a folha em cena: o CSS usa isso para as entradas em cascata
       s.classList.toggle("is-current", k === i);
       var sh = shadeOf(s);
@@ -443,18 +451,25 @@
   function goToSheet(name) {
     turnTo(indexOf(name), 1);
   }
+    var peelLabelGlobal = null;
 
   /* --------------------------------------------------------------------------
      3.1) INDICADORES LATERAIS + SOMBREADO — injetados em cada folha
   -------------------------------------------------------------------------- */
   function buildSheetChrome() {
+    // Um único "PUXE", fora das .sheet, para nunca ser cortado pelo clip-path.
+    var peelLabel = document.createElement("span");
+    peelLabel.className = "peel-label";
+    peelLabel.setAttribute("aria-hidden", "true");
+    peelLabel.textContent = "Puxe";
+    book.appendChild(peelLabel);
+
     SHEETS.forEach(function (sheet, i) {
       var shade = document.createElement("div");
       shade.className = "sheet-shade";
       sheet.appendChild(shade);
 
-      // O canto: área para pegar a dobra + o convite discreto "PUXE".
-      // Só existe onde o fluxo tem uma próxima folha.
+      // Área de pega continua pertencendo à folha atual.
       if (FLOW_NEXT[i] !== undefined) {
         var grab = document.createElement("button");
         grab.className = "peel-grab";
@@ -462,16 +477,9 @@
         grab.setAttribute("aria-label", "Virar a folha");
         grab.addEventListener("click", function () { turn(1); });
         sheet.appendChild(grab);
-
-        var label = document.createElement("span");
-        label.className = "peel-label";
-        label.setAttribute("aria-hidden", "true");
-        label.innerHTML = 'Puxe <span class="peel-label-arrow"></span>';
-        sheet.appendChild(label);
       }
 
-      // Voltar: um filete discreto na lateral esquerda. syncCues decide se
-      // aparece (depende de haver caminho de volta no histórico).
+      // Voltar: um filete discreto na lateral esquerda.
       if (i > 0) {
         var prev = document.createElement("button");
         prev.className = "cue cue--prev";
@@ -481,15 +489,25 @@
         sheet.appendChild(prev);
       }
     });
+
+    // Guarda a referência para controlar a visibilidade conforme a folha atual.
+    peelLabelGlobal = peelLabel;
   }
 
   /* Mostra o retorno apenas quando existe folha anterior no histórico. */
   function syncCues() {
-    var sheet = SHEETS[current];
-    if (!sheet) return;
-    var prev = sheet.querySelector(".cue--prev");
-    if (prev) prev.hidden = (history.length === 0);
+  var sheet = SHEETS[current];
+  if (!sheet) return;
+
+  var prev = sheet.querySelector(".cue--prev");
+  if (prev) prev.hidden = (history.length === 0);
+
+  // O "PUXE" fica visível enquanto a folha atual tiver uma próxima.
+  if (peelLabelGlobal) {
+    peelLabelGlobal.style.display =
+      FLOW_NEXT[current] !== undefined ? "block" : "none";
   }
+}
 
   /* --------------------------------------------------------------------------
      3.2) GESTO — deslizar horizontalmente com pré-visualização física.
