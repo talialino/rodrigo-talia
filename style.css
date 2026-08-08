@@ -2595,7 +2595,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
 .art-copy-downt {
   position: absolute;
   left: var(--bx, 50%);
-  bottom: 20%;
+  bottom: 15%;
   width: var(--bw, 76%);
   transform: translate(-50%, -50%);
   display: flex;
