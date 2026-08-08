@@ -775,7 +775,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
 
 .phrase-script {
   font-family: var(--font-script);
-  font-size: clamp(1.65rem, 7.4vw, 2.2rem);
+  font-size: clamp(1.65rem, 5.4vw, 1.8rem);
   color: var(--rose-metal);
   margin-bottom: 0.35rem;
 }
@@ -979,6 +979,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   color: var(--ink-soft);
   max-width: 29ch;
   margin: 0 auto;
+  margin-top: -1rem;
 }
 
 .cover-event { margin-top: 2.4rem; }
@@ -1008,6 +1009,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   text-transform: uppercase;
   color: var(--ink-soft);
   padding-left: 0.28em;
+  margin-top: 2.8rem;
 }
 
 .event-address {
@@ -1017,6 +1019,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   color: var(--champagne-deep);
   max-width: 28ch;
   margin: 0.7rem auto 0;
+  margin-top: 0.2rem;
 }
 
 
@@ -1368,6 +1371,8 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   color: var(--rose-metal);
   line-height: 1.1;
   padding: 0 0.06em 0.1em;
+  margin-top: 9rem;
+  margin-left: 1rem;
 }
 
 .final-body { margin-top: 1.4rem; }
@@ -1376,9 +1381,10 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   font-family: var(--font-serif);
   font-size: 1.04rem;
   line-height: 1.75;
-  color: var(--ink);
-  max-width: 27ch;
-  margin: 0 auto 0.4rem;
+  color: var(--ink-soft);
+  max-width: 25ch;
+  margin-top: 4rem;
+  margin-left: 1rem;
 }
 
 .final-sign {
@@ -1511,6 +1517,8 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   color: var(--ink);
   line-height: 1.2;
   padding-left: 0.14em;
+  margin-top: 1.9rem;
+
 }
 .display-caps--gold { color: var(--gold-matte); }
 .display-caps--soft {
@@ -1527,8 +1535,8 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   font-size: clamp(2.2rem, 11vw, 3rem);
   line-height: 1.1;
   color: var(--rose-metal);
-  margin-top: -0.06em;
-  padding: 0 0.06em 0.1em;
+  margin-top: -0.2em;
+  margin-bottom: -0.5em;
 }
 .display-script--sm { font-size: clamp(1.7rem, 8.4vw, 2.3rem); }
 
@@ -1569,23 +1577,25 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
 }
 
 .date-year {
-  margin-top: 0.5rem;
+  margin-top: 0.7rem;
   font-family: var(--font-sans);
   font-weight: 300;
-  font-size: 0.63rem;
+  font-size: 0.75rem;
   letter-spacing: 0.32em;
   color: var(--gold-matte);
   display: flex;
   justify-content: center;
   gap: 0.6rem;
+  margin-right: -1.8rem;
 }
 
 .date-time {
   margin-top: 0.7rem;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 1rem;
+  font-size: 1.4rem;
   color: var(--rose-metal);
+  margin-right: -1.4rem;
 }
 
 /* Raminho seco no topo da capa (identidade dos layouts) */
@@ -1662,6 +1672,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   color: var(--rose-metal);
   line-height: 1.2;
 }
+
 .closing-caps {
   margin-top: 0.15rem;
   font-family: var(--font-sans);
@@ -2128,7 +2139,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
   .medal-ring svg { width: 24px; height: 24px; }
   .wax-grid { row-gap: 1.3rem; }
   .wax-seal { width: 72px; height: 72px; }
-  .date-row { margin-top: 1.4rem; }
+  .date-row { margin-top: 1rem; }
   .sprig { display: none; }
 }
 
@@ -2236,4 +2247,375 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
     rgba(96, 78, 64, 0.22) 7%,
     rgba(96, 78, 64, 0.1) 16%,
     rgba(96, 78, 64, 0) 30%);
+}
+
+/* ============================================================================
+   FOLHA 2 (Welcome) — a arte background-welcome.png é a página
+   ----------------------------------------------------------------------------
+   O PNG nunca é animado: ele só define o palco. Tudo (fundo, overlays e
+   textos) compartilha o MESMO travamento de proporção, então cada bloco de
+   texto cai exatamente sobre a marcação da arte em qualquer aparelho.
+
+   Camadas:  PNG  →  overlays de efeito  →  textos HTML  →  "Puxe →"
+   ========================================================================== */
+
+.wcv2-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 2;              /* acima da sombra/lombada genéricas de .sheet--paper */
+  overflow: hidden;
+  background: var(--ivory);   /* só aparece se a imagem falhar */
+}
+
+/* Travamento comum: a arte cobre a ALTURA da tela e fica sempre centrada.
+   Em telas mais estreitas que a arte, o corte cai igualmente nas duas
+   extremidades — onde só há hastes decorativas, nunca no miolo do texto. */
+.wcv2-bg,
+.wcv2-layer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, calc(100dvh * 941 / 1672));
+  aspect-ratio: 941 / 1672;
+}
+
+.wcv2-bg {
+  height: auto;
+  max-width: none;
+  z-index: 0;
+}
+
+.wcv2-layer {
+  pointer-events: none;
+  z-index: 1;
+}
+/* ---- TEXTOS -------------------------------------------------------------
+   As marcações "Texto aqui" ficavam em 26,1% / 39,4% / 52,8% / 67,5% da
+   altura da arte — 4 pontos igualmente espaçados, um por linha. O conteúdo
+   real tem várias linhas por bloco (o texto do convite, o endereço), então
+   ancorar cada bloco no seu ponto faria um invadir o outro em telas mais
+   baixas. Em vez disso os 4 blocos ficam em coluna, centrados no MESMO
+   centro de gravidade da composição original (46,8% — o meio entre a
+   primeira e a última marcação). A composição é preservada e nenhum bloco
+   colide, seja qual for o nome do convidado ou a altura da tela. */
+.wcv2-layer--copy {
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* empurra o conteúdo 3,2% para cima: de 50% para os 46,8% da arte */
+  padding-bottom: 6.4%;
+  gap: clamp(0.9rem, 3.2dvh, 2.2rem);
+}
+.wcv2-layer--copy > * { pointer-events: auto; }
+
+.wcv2-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.wcv2-zone--a { width: 68%; gap: 0.25rem; }
+.wcv2-zone--b { width: 64%; }
+.wcv2-zone--c { width: 76%; gap: 0.1rem; }
+.wcv2-zone--d { width: 68%; gap: 0.15rem; }
+
+/* ---- OVERLAY 1 — reflexo do pôr do sol no mar ---------------------------
+   Sobre o ponto de luz medido na arte (~50% x, ~78% y). Só opacidade,
+   blur, escala e um translateX mínimo. 26s — quase imperceptível. */
+.wcv2-sun {
+  position: absolute;
+  left: 50%;
+  top: 78%;
+  width: 34%;
+  height: 15%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side,
+    rgba(255, 231, 186, 0.5),
+    rgba(255, 206, 156, 0.2) 55%,
+    transparent 80%);
+  filter: blur(7px);
+  mix-blend-mode: soft-light;
+  animation: wcv2Sun 26s ease-in-out infinite;
+}
+
+@keyframes wcv2Sun {
+  0%, 100% { opacity: 0.55; filter: blur(7px);   transform: translate(-50%, -50%) scale(1)    translateX(0); }
+  50%      { opacity: 0.9;  filter: blur(9.5px); transform: translate(-50%, -50%) scale(1.06) translateX(1.2%); }
+}
+
+/* ---- OVERLAY 2 — sombras de folhas ao vento -----------------------------
+   Silhuetas macias na diagonal superior esquerda, no mesmo espírito da
+   luz filtrada da arte. Só translate + rotate < 1° + opacidade. 22s. */
+.wcv2-leaves {
+  position: absolute;
+  inset: -6%;
+  background-image:
+    radial-gradient(10% 26% at 16% 12%, rgba(74, 62, 44, 0.15), transparent 72%),
+    radial-gradient(7% 19% at 27% 7%,  rgba(74, 62, 44, 0.12), transparent 72%),
+    radial-gradient(9% 23% at 10% 27%, rgba(74, 62, 44, 0.12), transparent 72%),
+    radial-gradient(6% 16% at 24% 38%, rgba(74, 62, 44, 0.09), transparent 72%);
+  filter: blur(10px);
+  mix-blend-mode: multiply;
+  transform-origin: 18% 18%;
+  animation: wcv2Leaves 22s ease-in-out infinite;
+}
+
+@keyframes wcv2Leaves {
+  0%, 100% { opacity: 0.8; transform: translate(0, 0)       rotate(0deg); }
+  50%      { opacity: 0.55; transform: translate(1%, 0.7%)  rotate(0.6deg); }
+}
+
+/* ---- OVERLAY 3 — luz incidindo no papel ---------------------------------
+   Só gradiente transparente variando de opacidade. Praticamente invisível. */
+.wcv2-light {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(128deg,
+    rgba(255, 250, 240, 0.3) 0%,
+    transparent 38%,
+    transparent 72%,
+    rgba(120, 90, 70, 0.05) 100%);
+  animation: wcv2Light 19s ease-in-out infinite;
+}
+
+@keyframes wcv2Light {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 1; }
+}
+
+/* Os textos herdam a tipografia já existente (cover-*, date-*, event-*).
+   Aqui só o halo que os sustenta sobre as áreas de fotografia. */
+.wcv2-zone .cover-invite,
+.wcv2-zone .event-venue,
+.wcv2-zone .event-address {
+  text-shadow: 0 1px 10px rgba(255, 252, 246, 0.75), 0 0 22px rgba(255, 252, 246, 0.5);
+}
+
+/* Entrada em cascata desta folha: anima SÓ opacidade. Os blocos usam
+   "transform" para se centralizar, e um transform no keyframe com
+   fill:both sobrescreveria esse posicionamento ao terminar. */
+.wcv2-zone { opacity: 0; }
+.sheet.is-current .wcv2-zone {
+  animation: wcv2FadeIn 0.95s var(--lento) both;
+  animation-delay: calc(var(--d, 0) * 95ms + 130ms);
+}
+@keyframes wcv2FadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .wcv2-sun, .wcv2-leaves, .wcv2-light { animation: none; }
+  .wcv2-zone { opacity: 1; }
+}
+
+
+/* ============================================================================
+   FOLHAS 3 a 7 — a arte exportada do Canva é a página
+   ----------------------------------------------------------------------------
+   Mesma estratégia validada na Folha 2: o PNG entra estático, travado na sua
+   proporção original e sempre centralizado; o HTML só posiciona textos e
+   elementos interativos por cima.
+
+   Para calibrar depois, tudo que é posição está em variáveis:
+     --art-w / --art-h   proporção da arte (px do arquivo)
+     --cx / --cy         centro de um botão circular, em % da arte
+     --orb               diâmetro do círculo desenhado na arte, em % da largura
+   ========================================================================== */
+
+.sheet--art { --art-w: 944; --art-h: 1680; }
+
+/* A arte cobre a ALTURA e fica centrada: em telas mais estreitas o corte cai
+   só nas laterais, onde há apenas decoração que já sai da moldura. */
+.art-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 2;                 /* acima da textura genérica de .sheet--paper */
+  overflow: hidden;
+  background: var(--ivory);   /* só aparece se a imagem falhar */
+}
+
+.art-bg,
+.art-layer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, calc(100dvh * var(--art-w) / var(--art-h)));
+  aspect-ratio: var(--art-w) / var(--art-h);
+}
+
+.art-bg { height: auto; max-width: none; z-index: 0; }
+
+.art-layer {
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.art-layer > * { pointer-events: auto; }
+
+/* A arte já traz papel, sombra e textura: as camadas genéricas da folha
+   sairiam por cima dela. */
+.sheet--art::before,
+.sheet--art::after { content: none; }
+
+/* ---- BOTÃO CIRCULAR ------------------------------------------------------
+   O anel é desenhado NA ARTE. Aqui só entram a área de toque, o ícone e o
+   texto curvo que acompanha a circunferência — nunca uma legenda embaixo. */
+.orb {
+  position: absolute;
+  left: var(--cx);
+  top: var(--cy);
+  width: calc(var(--orb, 20%) * 1.62);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s var(--lento), filter 0.2s var(--lento);
+}
+
+.orb:hover, .orb:focus-visible {
+  transform: translate(-50%, -50%) scale(1.03);
+  filter: drop-shadow(0 5px 14px rgba(120, 98, 74, 0.22));
+  outline: none;
+}
+
+/* texto curvo, acompanhando a circunferência por fora do anel */
+.orb-arc {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.orb-arc text {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 7.4px;
+  letter-spacing: 1.7px;
+  text-transform: uppercase;
+  fill: var(--ink-soft);
+  transition: fill 0.2s var(--lento);
+}
+.orb:hover .orb-arc text { fill: var(--rose-deep); }
+
+/* o ícone ocupa o miolo do anel que está na arte */
+.orb-icon {
+  display: grid;
+  place-items: center;
+  width: 34%;
+  height: 34%;
+}
+.orb-icon svg { width: 100%; height: 100%; }
+.orb-icon .wx {
+  fill: none;
+  stroke: var(--gold-matte);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---- ENTRADA EM CASCATA --------------------------------------------------
+   Anima só opacidade: os blocos usam "transform" para se posicionar, e um
+   transform no keyframe (com fill:both) apagaria esse posicionamento. */
+.sheet--art .anim,
+.sheet--art .orb { opacity: 0; }
+.sheet--art.is-current .anim,
+.sheet--art.is-current .orb {
+  animation: wcv2FadeIn 0.95s var(--lento) both;
+  animation-delay: calc(var(--d, 0) * 95ms + 130ms);
+}
+
+/* ---- BLOCOS DE CONTEÚDO --------------------------------------------------
+   Cada folha diz apenas onde o conteúdo mora dentro da arte. */
+.art-copy-copy{
+  position: absolute;
+  left: 30%;
+  top: var(--by, 50%);
+  width: var(--bw, 76%);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(0.7rem, 2.4dvh, 1.4rem);
+}
+
+.art-copy {
+  position: absolute;
+  left: var(--bx, 50%);
+  top: var(--by, 50%);
+  width: var(--bw, 76%);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(0.7rem, 2.4dvh, 1.4rem);
+}
+
+.art-copy-top {
+  position: absolute;
+  left: var(--bx, 50%);
+  top: 25%;
+  width: var(--bw, 76%);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(0.7rem, 2.4dvh, 1.4rem);
+}
+
+.art-copy-down {
+  position: absolute;
+  left: var(--bx, 50%);
+  bottom: 8%;
+  width: var(--bw, 76%);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(0.7rem, 2.4dvh, 1.4rem);
+}
+
+.art-copy-downt {
+  position: absolute;
+  left: var(--bx, 50%);
+  bottom: 20%;
+  width: var(--bw, 76%);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(0.7rem, 2.4dvh, 1.4rem);
+}
+/* A lista de presentes rola dentro da própria arte */
+.art-copy--scroll {
+  height: var(--bh, 66%);
+  overflow-y: auto;
+  justify-content: flex-start;
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+}
+.art-copy--scroll::-webkit-scrollbar { width: 0; }
+
+.art-copy--left { align-items: flex-start; text-align: left; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet--art .anim, .sheet--art .orb { opacity: 1; }
 }

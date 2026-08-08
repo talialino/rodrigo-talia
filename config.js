@@ -35,14 +35,14 @@
    Dica: prefira chaves sem espaços e sem acento (ex.: "ana-lucia").
 --------------------------------------------------------------------------- */
 // Textos padrão (singular = 1 pessoa, plural = casal/duas pessoas)
-const TEXT_SINGULAR = "É com muita alegria que convidamos você para celebrar conosco um dos dias mais especiais das nossas vidas: o nosso casamento.";
-const TEXT_PLURAL = "É com muita alegria que convidamos vocês para celebrar conosco um dos dias mais especiais das nossas vidas: o nosso casamento.";
+const TEXT_SINGULAR = "É com muita alegria que convidamos você para celebrar o nosso casamento.";
+const TEXT_PLURAL = "É com muita alegria que convidamos vocês para celebrar o nosso casamento.";
 
 const GUESTS = {
   // Convidado padrão (usado quando a URL não traz nenhum ?id= válido)
   default: {
     greeting: "Querida",
-    name: "Adriana",
+    name: "Talia",
     text: TEXT_SINGULAR
   },
 
@@ -101,7 +101,7 @@ const CONFIG = {
   event: {
     dateLine:  "30 de Setembro de 2026",
     timeLine:  "às 16h30",
-    venue:     "Espaço Aliança Casa Ribeira",
+    venue:     "Espaço Aliança Casa",
     address:   "Av. Beira Mar, 419 - 1º andar - Ribeira, Salvador - BA, 41415-055",
 
     /* A mesma data em formato de máquina, para a contagem regressiva.

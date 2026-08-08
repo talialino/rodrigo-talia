@@ -18,6 +18,7 @@
   <link rel="preload" as="image" href="assets/ribbon.png" />
   <link rel="preload" as="image" href="assets/flowers.png" />
   <link rel="preload" as="image" href="assets/foto.jpeg" />
+  <link rel="preload" as="image" href="assets/background-welcome.png" />
 
   <!-- Estilos -->
   <link rel="stylesheet" href="style.css" />
@@ -85,8 +86,8 @@
         </div>
 
         <div class="opening-phrase">
-          <p class="phrase-script">Se você chegou até aqui...</p>
-          <p class="phrase-body">...é porque faz parte da nossa história.</p>
+          <p class="phrase-script">"Por isso, o homem deixa pai e mãe e se une à sua mulher, tornando-se os dois uma só carne."</p>
+          <p class="phrase-body">Gênesis 2:24</p>
         </div>
       </section>
 
@@ -97,46 +98,63 @@
            de sempre, agora na composição do convite impresso.
            ================================================================== -->
       <section class="sheet sheet--paper" data-sheet="welcome">
-        <div class="paper-bg" aria-hidden="true"></div>
-        <div class="sheet-inner sheet-inner--cover">
+        <!-- ================================================================
+             TESTE DE CONCEITO — fundo é a arte background-welcome.png
+             (estática, nunca animada). Camadas, nesta ordem:
+               1) PNG de fundo, travado na proporção original (941×1672),
+                  sempre centralizado — cobre a altura da tela e corta só
+                  as bordas laterais quando a tela é mais estreita que a
+                  arte, nunca o conteúdo do meio.
+               2) 3 overlays de efeito (sol, sombra de folhas, luz do papel)
+               3) Textos reais em HTML, nas 4 posições marcadas "Texto aqui"
+               4) O indicador "Puxe →" (injetado por script.js, inalterado)
+             ================================================================ -->
+        <div class="wcv2-stage">
+          <!-- 1) A arte, estática e travada na proporção original -->
+          <img class="wcv2-bg" src="assets/background-welcome.png" alt="" />
 
-          <span class="sprig sprig--top anim" style="--d:0" aria-hidden="true"></span>
-
-          <div class="ornament anim" style="--d:1" aria-hidden="true">
-            <span class="ornament-line"></span>
-            <svg class="ornament-mark" viewBox="0 0 44 16" fill="none">
-              <path d="M3 8h10M31 8h10" />
-                <path d="M22 3.4 25 8 22 12.6 19 8Z" />
-                <path d="M15.4 8c1.5-1.8 2.3-1.8 3.1 0-.8 1.8-1.6 1.8-3.1 0Z" />
-                <path d="M28.6 8c-1.5-1.8-2.3-1.8-3.1 0 .8 1.8 1.6 1.8 3.1 0Z" />
-            </svg>
-            <span class="ornament-line"></span>
+          <!-- 2) Efeitos: cada um numa camada transparente sobre a arte,
+                  compartilhando o mesmo travamento de proporção -->
+          <div class="wcv2-layer" aria-hidden="true">
+            <span class="wcv2-sun"></span>
+            <span class="wcv2-leaves"></span>
+            <span class="wcv2-light"></span>
           </div>
 
-          <p class="cover-greeting anim" style="--d:2" id="welcome-greeting"></p>
-          <h1 class="cover-name name-rose anim" style="--d:3" id="welcome-name"></h1>
+          <!-- 3) Os textos, cada bloco centrado na marcação da arte -->
+          <div class="wcv2-layer wcv2-layer--copy">
+            <div class="wcv2-zone wcv2-zone--a" style="--d:0">
+              <p class="cover-greeting" id="welcome-greeting"></p>
+              <h1 class="cover-name name-rose" id="welcome-name"></h1>
+            </div>
 
-          <p class="cover-invite anim" style="--d:4" id="welcome-invite"></p>
+            <div class="wcv2-zone wcv2-zone--b" style="--d:1">
+              <p class="cover-invite" id="welcome-invite"></p>
+            </div>
 
-          <!-- Data no formato do convite: DIA | 30 | MÊS  ·  2026 · -->
-          <div class="date-row anim" style="--d:5">
-            <span class="date-weekday" data-config="event.weekday"></span>
-            <span class="date-bar" aria-hidden="true"></span>
-            <span class="date-day" data-config="event.day"></span>
-            <span class="date-bar" aria-hidden="true"></span>
-            <span class="date-month" data-config="event.month"></span>
+            <div class="wcv2-zone wcv2-zone--c" style="--d:2">
+              <!-- Data no formato do convite: DIA | 30 | MÊS  ·  2026 · -->
+              <div class="date-row">
+                <span class="date-weekday" data-config="event.weekday"></span>
+                <span class="date-bar" aria-hidden="true"></span>
+                <span class="date-day" data-config="event.day"></span>
+                <span class="date-bar" aria-hidden="true"></span>
+                <span class="date-month" data-config="event.month"></span>
+              </div>
+              <p class="date-year">
+                <span aria-hidden="true">·</span>
+                <span data-config="event.year"></span>
+                <span aria-hidden="true">·</span>
+              </p>
+              <p class="date-time" data-config="event.timeLine"></p>
+            </div>
+
+            <div class="wcv2-zone wcv2-zone--d" style="--d:3">
+              <p class="event-venue" data-config="event.venue"></p>
+              <p class="event-address" id="event-address" data-config="event.address"></p>
+            </div>
           </div>
-          <p class="date-year anim" style="--d:6">
-            <span aria-hidden="true">·</span>
-            <span data-config="event.year"></span>
-            <span aria-hidden="true">·</span>
-          </p>
-          <p class="date-time anim" style="--d:7" data-config="event.timeLine"></p>
-
-          <div class="rule rule--tiny anim" style="--d:8" aria-hidden="true"></div>
-
-          <p class="event-venue anim" style="--d:9" data-config="event.venue"></p>
-          <p class="event-address anim" style="--d:10" id="event-address" data-config="event.address"></p>
+          <!-- 4) O "Puxe →" é injetado por script.js, acima de tudo -->
         </div>
       </section>
 
@@ -145,13 +163,15 @@
            FOLHA 3 — MANUAL DO CONVIDADO
            Mesmos seis conselhos e os mesmos ícones, agora em medalhões.
            ================================================================== -->
-      <section class="sheet sheet--paper" data-sheet="manual">
-        <div class="paper-bg paper-bg--rica" aria-hidden="true"></div>
-        <div class="sheet-inner">
+      <section class="sheet sheet--paper sheet--art" data-sheet="manual">
+        <div class="art-stage">
+          <img class="art-bg" src="assets/background-manual.png" alt="" />
+          <div class="art-layer">
+        <div class="art-copy" style="--by:50%; --bw:78%">
 
           <header class="sheet-header anim" style="--d:0">
             <h1 class="display">
-              <span class="display-caps">Manual do</span>
+              <p class="eyebrow eyebrow--sub">Manual do</p>
               <span class="display-script">Convidado</span>
             </h1>
             <div class="ornament" aria-hidden="true">
@@ -164,7 +184,6 @@
               </svg>
               <span class="ornament-line"></span>
             </div>
-            <p class="eyebrow eyebrow--sub">Tudo o que você precisa saber<br />para curtir cada momento</p>
           </header>
 
           <ul class="medal-grid anim" style="--d:2">
@@ -205,9 +224,8 @@
               <span class="medal-text">Aproveite bastante</span>
             </li>
           </ul>
-
-          <p class="closing-script anim" style="--d:3">Estamos muito felizes</p>
-          <p class="closing-caps anim" style="--d:4">por ter você aqui</p>
+        </div>
+          </div>
         </div>
       </section>
 
@@ -216,56 +234,85 @@
            FOLHA 4 — INTERAÇÕES  (a folha principal do convite)
            Quatro lacres de cera: confirmar, chegar, presentear e contagem.
            ================================================================== -->
-      <section class="sheet sheet--paper" data-sheet="interacoes">
-        <div class="paper-bg paper-bg--rica" aria-hidden="true"></div>
-        <div class="sheet-inner sheet-inner--center">
+      <section class="sheet sheet--paper sheet--art" data-sheet="interacoes"
+               style="--orb:19.5%">
+        <div class="art-stage">
+          <img class="art-bg" src="assets/background-actions.png" alt="" />
+          <div class="art-layer">
 
-          <header class="sheet-header anim" style="--d:0">
-            <h1 class="display">
-              <span class="display-caps display-caps--soft">Clique nos botões</span>
-              <span class="display-script display-script--sm">para interagir</span>
-            </h1>
-            <div class="ornament" aria-hidden="true">
-              <span class="ornament-line"></span>
-              <svg class="ornament-mark" viewBox="0 0 44 16" fill="none">
-                <path d="M3 8h10M31 8h10" />
-                <path d="M22 3.4 25 8 22 12.6 19 8Z" />
-                <path d="M15.4 8c1.5-1.8 2.3-1.8 3.1 0-.8 1.8-1.6 1.8-3.1 0Z" />
-                <path d="M28.6 8c-1.5-1.8-2.3-1.8-3.1 0 .8 1.8 1.6 1.8 3.1 0Z" />
-              </svg>
-              <span class="ornament-line"></span>
+            
+            <div class="art-copy-top" style="--by:31%; --bw:84%">
+
+              <h1 class="display">
+                  <span class="eyebrow eyebrow--sub">Clique nos botões</span>
+                  <span class="display-script display-script--sm">para interagir</span>
+                </h1>
+
+                <header class="sheet-header anim" style="--d:0">
+                
+                <div class="ornament" aria-hidden="true">
+                  <span class="ornament-line"></span>
+                  <svg class="ornament-mark" viewBox="0 0 44 16" fill="none">
+                    <path d="M3 8h10M31 8h10" />
+                    <path d="M22 3.4 25 8 22 12.6 19 8Z" />
+                    <path d="M15.4 8c1.5-1.8 2.3-1.8 3.1 0-.8 1.8-1.6 1.8-3.1 0Z" />
+                    <path d="M28.6 8c-1.5-1.8-2.3-1.8-3.1 0 .8 1.8 1.6 1.8 3.1 0Z" />
+                  </svg>
+                  <span class="ornament-line"></span>
+                </div>
+              </header>       
             </div>
-          </header>
 
-          <div class="wax-grid anim" style="--d:2">
-            <button class="wax" type="button" data-action="link" data-link="rsvp">
-              <span class="wax-seal" aria-hidden="true">
+            <!-- Os quatro anéis já existem na arte: aqui vão só a área de
+                 toque, o ícone no miolo e o texto curvo em volta. -->
+            <button class="orb" type="button" data-action="link" data-link="rsvp"
+                    style="--cx:31%; --cy:39%; --d:1" aria-label="Confirmar presença">
+              <svg class="orb-arc" viewBox="0 0 100 100" aria-hidden="true">
+                <path id="arc-rsvp" d="M 10,50 A 40,40 0 0 1 90,50" fill="none" />
+                <text><textPath href="#arc-rsvp" startOffset="50%" text-anchor="middle">Confirmar presença</textPath></text>
+              </svg>
+              <span class="orb-icon" aria-hidden="true">
                 <svg viewBox="0 0 48 48"><path class="wx" d="M9 15h30v19H9z"/><path class="wx" d="M9 16l15 11 15-11"/></svg>
               </span>
-              <span class="wax-label">Confirmar presença</span>
             </button>
 
-            <button class="wax" type="button" data-action="link" data-link="maps">
-              <span class="wax-seal" aria-hidden="true">
+            <button class="orb" type="button" data-action="link" data-link="maps"
+                    style="--cx:68%; --cy:39%; --d:2" aria-label="Como chegar">
+              <svg class="orb-arc" viewBox="0 0 100 100" aria-hidden="true">
+                <path id="arc-maps" d="M 10,50 A 40,40 0 0 1 90,50" fill="none" />
+                <text><textPath href="#arc-maps" startOffset="50%" text-anchor="middle">Como chegar</textPath></text>
+              </svg>
+              <span class="orb-icon" aria-hidden="true">
                 <svg viewBox="0 0 48 48"><path class="wx" d="M24 42s13-11.4 13-21a13 13 0 10-26 0c0 9.6 13 21 13 21z"/><circle class="wx" cx="24" cy="21" r="4.6"/></svg>
               </span>
-              <span class="wax-label">Como chegar</span>
             </button>
 
-            <button class="wax" type="button" data-action="next">
-              <span class="wax-seal" aria-hidden="true">
+            <button class="orb" type="button" data-action="next"
+                    style="--cx:31%; --cy:60.5%; --d:3" aria-label="Presentear">
+              <svg class="orb-arc" viewBox="0 0 100 100" aria-hidden="true">
+                <path id="arc-gift" d="M 10,50 A 40,40 0 0 1 90,50" fill="none" />
+                <text><textPath href="#arc-gift" startOffset="50%" text-anchor="middle">Presentear</textPath></text>
+              </svg>
+              <span class="orb-icon" aria-hidden="true">
                 <svg viewBox="0 0 48 48"><path class="wx" d="M8 20h32v20H8z"/><path class="wx" d="M6 14h36v6H6zM24 14v26"/><path class="wx" d="M24 14c-4-6-12-5-12 0M24 14c4-6 12-5 12 0"/></svg>
               </span>
-              <span class="wax-label">Presentear</span>
             </button>
 
-            <button class="wax" type="button" data-action="countdown">
-              <span class="wax-seal" aria-hidden="true">
+            <button class="orb" type="button" data-action="countdown"
+                    style="--cx:68%; --cy:60.5%; --d:4" aria-label="Contagem regressiva">
+              <svg class="orb-arc" viewBox="0 0 100 100" aria-hidden="true">
+                <path id="arc-count" d="M 10,50 A 40,40 0 0 1 90,50" fill="none" />
+                <text><textPath href="#arc-count" startOffset="50%" text-anchor="middle">Contagem regressiva</textPath></text>
+              </svg>
+              <span class="orb-icon" aria-hidden="true">
                 <svg viewBox="0 0 48 48"><path class="wx" d="M14 6h20M14 42h20"/><path class="wx" d="M16 6c0 9 8 12 8 18s-8 9-8 18M32 6c0 9-8 12-8 18s8 9 8 18"/></svg>
               </span>
-              <span class="wax-label">Contagem regressiva</span>
             </button>
           </div>
+          <div class="art-copy-down" style="--by:31%; --bw:84%">
+              <p class="closing-script anim" style="--by:31%; --bw:84%">Confirmar presença até 12/09 </p>
+
+            </div>
         </div>
       </section>
 
@@ -274,55 +321,64 @@
            FOLHA 5 — PRESENTEAR (online x físico)
            Duas cartelas recortadas, como bilhetes de papel.
            ================================================================== -->
-      <section class="sheet sheet--paper" data-sheet="presente">
-        <div class="paper-bg" aria-hidden="true"></div>
-        <div class="sheet-inner sheet-inner--center">
+      <section class="sheet sheet--paper sheet--art" data-sheet="presente"
+               style="--orb:22.5%">
+        <div class="art-stage">
+          <img class="art-bg" src="assets/background-gifts1.png" alt="" />
+          <div class="art-layer">
 
-          <header class="sheet-header anim" style="--d:0">
-            <h1 class="display">
-              <span class="display-caps display-caps--gold">Nosso maior presente</span>
-              <span class="display-script display-script--sm">é ter você conosco</span>
-            </h1>
-            <div class="ornament" aria-hidden="true">
-              <span class="ornament-line"></span>
-              <svg class="ornament-mark" viewBox="0 0 44 16" fill="none">
-                <path d="M3 8h10M31 8h10" />
-                <path d="M22 3.4 25 8 22 12.6 19 8Z" />
-                <path d="M15.4 8c1.5-1.8 2.3-1.8 3.1 0-.8 1.8-1.6 1.8-3.1 0Z" />
-                <path d="M28.6 8c-1.5-1.8-2.3-1.8-3.1 0 .8 1.8 1.6 1.8 3.1 0Z" />
-              </svg>
-              <span class="ornament-line"></span>
+            <div class="art-copy" style="--by:28%; --bw:74%">
+              <header class="sheet-header anim" style="--d:0">
+                <h1 class="display">
+                  <span class="display-caps display-caps--gold">Sua presença</span>
+                  <span class="display-script display-script--sm">é o nosso maior presente</span>
+                </h1>
+                <div class="ornament" aria-hidden="true">
+                  <span class="ornament-line"></span>
+                  <svg class="ornament-mark" viewBox="0 0 44 16" fill="none">
+                    <path d="M3 8h10M31 8h10" />
+                    <path d="M22 3.4 25 8 22 12.6 19 8Z" />
+                    <path d="M15.4 8c1.5-1.8 2.3-1.8 3.1 0-.8 1.8-1.6 1.8-3.1 0Z" />
+                    <path d="M28.6 8c-1.5-1.8-2.3-1.8-3.1 0 .8 1.8 1.6 1.8 3.1 0Z" />
+                  </svg>
+                  <span class="ornament-line"></span>
+                </div>
+                <p class="sheet-text">
+                  Entretanto, se desejar, escolha como vai nos presentear
+                </p>
+              </header>
             </div>
-            <p class="sheet-text">
-              Se desejar nos presentear, escolha a opção que for mais
-              confortável para você. Será recebido com muito carinho.
-            </p>
-          </header>
 
-          <div class="ticket-row">
-            <button class="ticket anim" style="--d:2" type="button"
-                    data-action="link" data-link="onlineGiftList">
-              <span class="ticket-icon" aria-hidden="true">
+            <!-- Os dois anéis vêm da arte: aqui só o toque, o ícone e o rótulo curvo -->
+            <button class="orb" type="button" data-action="link" data-link="onlineGiftList"
+                    style="--cx:32%; --cy:49%; --d:1" aria-label="Presente online">
+              <svg class="orb-arc" viewBox="0 0 100 100" aria-hidden="true">
+                <path id="arc-online" d="M 10,50 A 40,40 0 0 1 90,50" fill="none" />
+                <text><textPath href="#arc-online" startOffset="50%" text-anchor="middle">Presente online</textPath></text>
+              </svg>
+              <span class="orb-icon" aria-hidden="true">
                 <svg viewBox="0 0 48 48"><path class="wx" d="M8 12h32v22H8z"/><path class="wx" d="M4 40h40"/></svg>
               </span>
-              <span class="ticket-kicker">Presente</span>
-              <span class="ticket-title">Online</span>
-              <span class="ticket-orn" aria-hidden="true"></span>
-              <span class="ticket-text">Escolha um presente na nossa lista, de forma rápida e segura.</span>
-              <span class="ticket-cta">Toque para acessar</span>
             </button>
 
-            <button class="ticket anim" style="--d:3" type="button"
-                    data-action="goto" data-target="lista">
-              <span class="ticket-icon" aria-hidden="true">
+            <button class="orb" type="button" data-action="goto" data-target="lista"
+                    style="--cx:67.5%; --cy:49%; --d:2" aria-label="Presente físico">
+              <svg class="orb-arc" viewBox="0 0 100 100" aria-hidden="true">
+                <path id="arc-fisico" d="M 10,50 A 40,40 0 0 1 90,50" fill="none" />
+                <text><textPath href="#arc-fisico" startOffset="50%" text-anchor="middle">Presente físico</textPath></text>
+              </svg>
+              <span class="orb-icon" aria-hidden="true">
                 <svg viewBox="0 0 48 48"><path class="wx" d="M9 21h30v19H9z"/><path class="wx" d="M7 15h34v6H7zM24 15v25"/><path class="wx" d="M24 15c-3.6-5.4-11-4.6-11 0M24 15c3.6-5.4 11-4.6 11 0"/></svg>
               </span>
-              <span class="ticket-kicker">Presente</span>
-              <span class="ticket-title">Físico</span>
-              <span class="ticket-orn" aria-hidden="true"></span>
-              <span class="ticket-text">Prefere entregar pessoalmente? Veja nossas sugestões.</span>
-              <span class="ticket-cta">Toque para acessar</span>
             </button>
+          <div class="art-copy-downt" style="--by:51%; --bw:94%">
+
+             <span class="ticket-kicker">Clique no botão para interagir</span>
+             <span class="ticket-orn" aria-hidden="true"></span>
+              <span class="ticket-title"></span>
+              <span class="ticket-text"></span>
+              <span class="ticket-cta"></span>
+          </div>
           </div>
         </div>
       </section>
@@ -333,9 +389,12 @@
            Catálogo numerado. Os cartões são gerados por script.js e cada um
            abre a ficha do presente para reservar.
            ================================================================== -->
-      <section class="sheet sheet--paper" data-sheet="lista">
-        <div class="paper-bg" aria-hidden="true"></div>
-        <div class="sheet-inner sheet-inner--scroll sheet-inner--left">
+      <section class="sheet sheet--paper sheet--art" data-sheet="lista">
+        <div class="art-stage">
+          <img class="art-bg" src="assets/background-gifts2.png" alt="" />
+          <div class="art-layer">
+        <div class="art-copy art-copy--scroll art-copy--left"
+             style="--bx:52%; --by:52%; --bw:74%; --bh:74%">
           <header class="sheet-header sheet-header--left anim" style="--d:0">
             <p class="eyebrow">Lista de presentes</p>
             <h1 class="display display--left">
@@ -344,8 +403,7 @@
             </h1>
             <div class="rule rule--short" aria-hidden="true"></div>
             <p class="sheet-text sheet-text--left">
-              Sua presença é o melhor presente. Se desejar nos presentear,
-              separamos algumas coisas que ajudam a montar o nosso lar.
+              Separamos algumas coisas que ajudam a montar o nosso lar. Sinta-se a vontade para escolher. É só clicar em RESERVAR 
             </p>
             <p class="sheet-note">As marcas são apenas sugestões de bom custo-benefício</p>
           </header>
@@ -367,22 +425,23 @@
             <p class="list-footer-date" data-config="event.dateLine"></p>
           </footer>
         </div>
+          </div>
+        </div>
       </section>
 
 
       <!-- ==================================================================
            FOLHA 7 — MENSAGEM FINAL
            ================================================================== -->
-      <section class="sheet sheet--paper" data-sheet="final">
-        <div class="paper-bg paper-bg--folha" aria-hidden="true"></div>
-        <div class="sheet-inner sheet-inner--center">
-
-          <p class="final-script anim" style="--d:0">Obrigado</p>
-
-          <div class="final-body anim" style="--d:1">
-            <p class="final-text">Sua presença já é o nosso presente mais precioso.</p>
+      <section class="sheet sheet--paper sheet--art" data-sheet="final">
+        <div class="art-stage">
+          <img class="art-bg" src="assets/background-thanks.png" alt="" />
+          <p class="final-script anim" style="--d:0">Até breve</p>
+           <div class="final-body anim" >
             <p class="final-text">Mal podemos esperar para viver esse dia ao seu lado.</p>
           </div>
+          <div class="art-layer">
+        <div class="art-copy-copy" style="--bx:52%; --by:72%; --bw:76%">
 
           <div class="rule rule--tiny anim" style="--d:2" aria-hidden="true"></div>
 
@@ -393,6 +452,8 @@
             <button class="btn" type="button" data-action="instagram" id="btn-instagram">
               Instagram<span class="btn-arrow" aria-hidden="true"></span>
             </button>
+          </div>
+        </div>
           </div>
         </div>
       </section>
