@@ -1367,7 +1367,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.8s; }
 ---------------------------------------------------------------------------- */
 .final-script {
   font-family: var(--font-script);
-  font-size: clamp(2.5rem, 12vw, 3.3rem);
+  font-size: clamp(2rem, 10vw, 3rem);
   color: var(--rose-metal);
   line-height: 1.1;
   padding: 0 0.06em 0.1em;
