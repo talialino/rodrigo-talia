@@ -639,7 +639,9 @@ body {
 
   font-family: var(--font-sans);
   font-weight: 300;
-  font-size: clamp(0.5rem, 1.5vw, 0.62rem);
+  /* acompanha a dobra, que cresceu para 76px: no corpo antigo o rótulo
+     travava em 8px e sumia dentro da orelha */
+  font-size: clamp(0.68rem, 2.8vw, 0.86rem);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ink);
@@ -2807,7 +2809,73 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
 }
 
 /* o anel fica no miolo, com o texto correndo por fora */
-.medal .medal-ring { width: 62%; height: 62%; }
+.medal .medal-ring { width: 62%; height: 62%; position: relative; }
+
+/* ---- FOLHA 3 · A LUZ QUE PERCORRE OS MEDALHÕES --------------------------
+   Quando a folha entra em cena, um halo rosa desfocado acende na BORDA de
+   um medalhão por vez — do primeiro, à esquerda, até o último, à direita —
+   e recomeça. É um convite à leitura: o olho segue a luz na ordem dos
+   conselhos.
+
+   São 6 medalhões e cada um fica aceso cerca de 2s, então o ciclo inteiro
+   dura 12s e cada um entra com 2s de atraso sobre o anterior. A janela
+   acesa vai de 0% a 17% do ciclo; no resto do tempo o halo fica zerado,
+   e é isso que garante um de cada vez.
+
+   O halo é só borda: um anel de 2px na cor rosa das tulipas (a mesma dos
+   ícones dentro dos medalhões), desfocado, sem preencher o miolo. */
+.medal-ring::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  /* O anel é o que acende; o desfoque grande fica por conta da sombra, que
+     se agarra à borda. Um blur alto no elemento inteiro espalhava a cor num
+     borrão redondo e perdia a leitura de "borda acesa".
+
+     Dourado, e não rosa: o rosa forte com brilho por dentro lia como aviso
+     de botão clicável. O tom aqui é o mesmo dos ornamentos da folha, com o
+     realce em champanhe — a luz passa como um reflexo, não como alerta. */
+  /* Fio claro no anel + halo dourado em volta: é o claro sobre o escuro que
+     faz ler como LUZ. Só o dourado escuro dava a impressão de sombra. */
+  border: 2px solid var(--champagne);
+  box-shadow:
+    0 0 3px 0 rgba(255, 251, 242, 0.9),
+    0 0 12px 3px rgba(179, 155, 118, 0.85),
+    0 0 5px 1px rgba(146, 119, 66, 0.4);
+  filter: blur(1.5px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Preso ao .is-current de propósito: as folhas todas existem no DOM desde o
+   início, e sem isto a sequência já estaria no meio do ciclo quando a
+   pessoa chegasse na folha 3. Assim ela começa do primeiro medalhão. */
+.sheet.is-current .medal-ring::after {
+  animation: medalHalo 4.2s ease-in-out infinite;
+}
+
+/* A janela acesa é curta — 0 a 19% de 4,2s, cerca de 0,8s por medalhão. */
+@keyframes medalHalo {
+  0%        { opacity: 0;   transform: scale(0.95); }
+  5%        { opacity: 0.9; transform: scale(1.03); }
+  11%       { opacity: 0.7; transform: scale(1.05); }
+  19%, 100% { opacity: 0;   transform: scale(1.08); }
+}
+
+/* Cascata: 0,1s de defasagem entre um medalhão e o seguinte. A onda inteira
+   atravessa os seis em ~1,3s — eles acendem quase juntos, mas na ordem —
+   e depois vem uma pausa até a próxima passagem. */
+.medal:nth-child(1) .medal-ring::after { animation-delay: 0s; }
+.medal:nth-child(2) .medal-ring::after { animation-delay: 0.1s; }
+.medal:nth-child(3) .medal-ring::after { animation-delay: 0.2s; }
+.medal:nth-child(4) .medal-ring::after { animation-delay: 0.3s; }
+.medal:nth-child(5) .medal-ring::after { animation-delay: 0.4s; }
+.medal:nth-child(6) .medal-ring::after { animation-delay: 0.5s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet.is-current .medal-ring::after { animation: none; }
+}
 
 /* ---- FOLHAS 4 e 5 · SÓ NO MOBILE ----------------------------------------
    No notebook as duas frases já estão bem; no celular a proporção muda e

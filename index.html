@@ -289,7 +289,7 @@
 
             <!-- Os quatro anéis já existem na arte: aqui vão só a área de
                  toque, o ícone no miolo e o texto curvo em volta. -->
-            <button class="orb" type="button" data-action="link" data-link="rsvp"
+            <button class="orb" type="button" data-action="rsvp"
                     style="--cx:31%; --cy:39%; --d:1" aria-label="Confirmar presença">
               <svg class="orb-arc" viewBox="0 0 100 100" aria-hidden="true">
                 <path id="arc-rsvp" d="M 10,50 A 40,40 0 0 1 90,50" fill="none" />
@@ -519,6 +519,68 @@
         <div class="count-cell"><span class="count-num" data-count="minutos">--</span><span class="count-cap">min</span></div>
       </div>
       <p class="card-foot" data-config="event.dateLine"></p>
+    </div>
+  </div>
+
+  <!-- Confirmação de presença -->
+  <div class="card-overlay" id="rsvp-card" aria-hidden="true">
+    <div class="card" role="dialog" aria-modal="true" aria-labelledby="rsvp-title">
+
+      <button class="card-close" type="button"
+              data-action="card-close"
+              aria-label="Fechar">×</button>
+
+      <div class="ornament" aria-hidden="true">
+        <span class="ornament-line"></span>
+
+        <svg class="ornament-mark" viewBox="0 0 44 16" fill="none">
+          <path d="M3 8h10M31 8h10" />
+          <path d="M22 3.4 25 8 22 12.6 19 8Z" />
+          <path d="M15.4 8c1.5-1.8 2.3-1.8 3.1 0-.8 1.8-1.6 1.8-3.1 0Z" />
+          <path d="M28.6 8c-1.5-1.8-2.3-1.8-3.1 0 .8 1.8 1.6 1.8 3.1 0Z" />
+        </svg>
+
+        <span class="ornament-line"></span>
+      </div>
+
+      <p class="card-kicker" id="rsvp-title">
+        Confirme sua presença
+      </p>
+
+      <div class="card-text">
+
+        <p>
+          Ao confirmar sua presença, você será direcionado ao nosso formulário.
+        </p>
+
+        <p>
+          <strong>Digite exatamente os nomes como aparecem no convite</strong>,
+          incluindo os nomes do casal ou da família.
+          <br>
+          <em>Ex.: “Maria e João”.</em>
+        </p>
+
+        <p>
+          <strong>Para casais e famílias:</strong>
+          na opção <strong>“Quantos acompanhantes?”</strong>,
+          informe apenas quantas outras pessoas do seu convite irão.
+        </p>
+
+        <p>
+          <em>
+            Ex.: se o convite está em nome de Maria e João
+            e os dois irão, informe 1 acompanhante.
+          </em>
+        </p>
+
+      </div>
+
+      <button class="btn btn--feature"
+              type="button"
+              data-action="rsvp-link">
+        Confirmar presença<span class="btn-arrow" aria-hidden="true"></span>
+      </button>
+
     </div>
   </div>
 

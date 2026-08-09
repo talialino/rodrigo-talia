@@ -419,13 +419,17 @@ if (peelLabelGlobal) {
     f.style.display = "block";
     f.style.width = px + "px";
     f.style.height = px + "px";
-    // a aba se desfaz cedo: crescida demais, vira um vazio chapado
-    f.style.opacity = String(p > 0.45 ? Math.max(0, 1 - (p - 0.45) / 0.35) : 1);
+    /* A aba fica bege opaca quase até o fim: é ela que faz a leitura de
+       "página passando". A hipotenusa da dobra é a reta x+y = W+H-px, então
+       em p=0,78 o bege já cobre ~80% da tela — só a partir daí ele começa a
+       se desfazer, e some junto com o fim do gesto. */
+    f.style.opacity = String(p > 0.78 ? Math.max(0, 1 - (p - 0.78) / 0.22) : 1);
 
     peelCast.style.display = "block";
     peelCast.style.width = px + "px";
     peelCast.style.height = px + "px";
-    peelCast.style.opacity = String(p > 0.65 ? Math.max(0, 1 - (p - 0.65) / 0.3) : 1);
+    // A sombra projetada acompanha a aba, senão o papel erguido perde o apoio
+    peelCast.style.opacity = String(p > 0.8 ? Math.max(0, 1 - (p - 0.8) / 0.2) : 1);
 
     var sh = shadeOf(sheet);
     if (sh) sh.style.opacity = String(Math.min(p * 1.5, 1) * SHADE_MAX);
@@ -723,6 +727,14 @@ if (peelLabelGlobal) {
         case "prev": turn(-1); break;
         case "goto": goToSheet(el.dataset.target); break;
         case "link": openExternal((CONFIG.links || {})[el.dataset.link]); break;
+        case "rsvp":
+          abrirFicha(document.getElementById("rsvp-card"));
+          break;
+
+        case "rsvp-link":
+          fecharFicha();
+          openExternal((CONFIG.links || {}).rsvp);
+          break;
         case "countdown": abrirFicha(document.getElementById("countdown-card")); break;
         case "card-close": fecharFicha(); break;
         case "instagram":
