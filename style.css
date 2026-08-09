@@ -2567,18 +2567,21 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 52%;
-  height: 34%;
+  width: 58%;
+  height: 30%;
   border-radius: 50%;
   background: radial-gradient(closest-side,
-    rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 72%);
+    rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0) 72%);
   filter: blur(4px);
   animation: seaGlint 13s ease-in-out infinite;
   will-change: transform, opacity;
 }
+/* Vai e volta ao longo da coluna em vez de só respirar no lugar: o
+   translateY é relativo à própria altura do clarão (30% da caixa), então
+   os 180% de curso equivalem a mais de metade da coluna do reflexo. */
 @keyframes seaGlint {
-  0%, 100% { transform: translate(-50%, -80%) scaleX(0.85); opacity: 0.3; }
-  50%      { transform: translate(-50%, -16%) scaleX(1.15); opacity: 0.8; }
+  0%, 100% { transform: translate(-50%, -120%) scaleX(0.85); opacity: 0.34; }
+  50%      { transform: translate(-50%, 60%) scaleX(1.18); opacity: 0.9; }
 }
 
 /* Folha fora de cena não precisa gastar bateria animando */
