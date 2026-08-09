@@ -33,7 +33,10 @@
   /* Metais e cetim */
   --champagne:       #dcc9ab;  /* cetim claro do laço                        */
   --champagne-deep:  #c2a87f;  /* cetim na sombra                            */
-  --gold-matte:      #b39b76;  /* dourado fosco (linhas, nunca amarelo)      */
+  --gold-matte:      #b39b76;  /* dourado fosco — TRACOS e ornamentos        */
+  --gold-text:       #927742;  /* dourado de TEXTO: mais escuro, porque no
+                                  celular o tom dos tracos sumia contra o
+                                  papel claro do background                  */
 
   /* Rosé — amostrado das tulipas e do lacre do convite */
   --rose-metal:  #b76e79;   /* rosé metálico do lacre                        */
@@ -46,7 +49,7 @@
 
   /* Tinta */
   --ink:      #55483f;      /* cinza quente escuro                           */
-  --ink-soft: #8b7d70;      /* cinza quente médio                            */
+  --ink-soft: #6e6154;      /* cinza quente médio (escurecido para contraste)*/
 
   /* Fontes */
   --font-serif:  "Cormorant Garamond", "Times New Roman", serif;
@@ -785,7 +788,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
 
 .phrase-script {
   font-family: var(--font-script);
-  font-size: clamp(1.65rem, 5.4vw, 1.8rem);
+  font-size: clamp(1.55rem, 4.4vw, 1.5rem);
   color: var(--rose-metal);
   margin-bottom: 0.35rem;
 }
@@ -883,10 +886,10 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
 .eyebrow {
   font-family: var(--font-sans);
   font-weight: 300;
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   letter-spacing: 0.44em;
   text-transform: uppercase;
-  color: var(--gold-matte);
+  color: var(--gold-text);
   margin-bottom: 1rem;
   padding-left: 0.44em;           /* compensa o tracking à direita */
 }
@@ -922,7 +925,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   font-size: 0.63rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--champagne-deep);
+  color: var(--gold-text);
 }
 
 .sheet-hint {
@@ -1200,7 +1203,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   font-family: var(--font-serif);
   font-size: 0.68rem;
   letter-spacing: 0.34em;
-  color: var(--gold-matte);
+  color: var(--gold-text);
   margin-bottom: 0.55rem;
 }
 
@@ -1328,10 +1331,10 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
 .gift-card__brand {
   font-family: var(--font-sans);
   font-weight: 300;
-  font-size: 0.56rem;
+  font-size: 0.66rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--gold-matte);
+  color: var(--gold-text);
   margin-bottom: 0.3rem;
 }
 
@@ -1463,7 +1466,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   font-weight: 400;
   font-size: 1.35rem;
   letter-spacing: 0.08em;
-  color: var(--gold-matte);
+  color: var(--gold-text);
   line-height: 1;
 }
 
@@ -1531,7 +1534,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   margin-top: 1.9rem;
 
 }
-.display-caps--gold { color: var(--gold-matte); }
+.display-caps--gold { color: var(--gold-text); }
 .display-caps--soft {
   text-transform: none;
   letter-spacing: 0.01em;
@@ -1593,7 +1596,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   font-weight: 300;
   font-size: 0.75rem;
   letter-spacing: 0.32em;
-  color: var(--gold-matte);
+  color: var(--gold-text);
   display: flex;
   justify-content: center;
   gap: 0.6rem;
@@ -1829,7 +1832,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
 .ticket-kicker {
   font-family: var(--font-sans);
   font-weight: 300;
-  font-size: 0.55rem;
+  font-size: 0.66rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--ink-soft);
@@ -1842,7 +1845,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   font-size: 1.32rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--gold-matte);
+  color: var(--gold-text);
   line-height: 1.1;
   padding-left: 0.1em;
 }
@@ -1914,7 +1917,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   font-family: var(--font-serif);
   font-size: 0.9rem;
   letter-spacing: 0.06em;
-  color: var(--gold-matte);
+  color: var(--gold-text);
   align-self: start;
   padding-top: 0.15rem;
 }
@@ -1941,14 +1944,14 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   font-size: 1rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--gold-matte);
+  color: var(--gold-text);
   padding-left: 0.22em;
 }
 .list-footer-date {
   margin-top: 0.35rem;
   font-family: var(--font-sans);
   font-weight: 300;
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--ink-soft);
@@ -2009,7 +2012,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   background: none;
   font-size: 1.3rem;
   line-height: 1;
-  color: var(--champagne-deep);
+  color: var(--gold-text);
   cursor: pointer;
   transition: color 0.3s var(--lento);
 }
@@ -2021,7 +2024,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   font-size: 0.6rem;
   letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: var(--gold-matte);
+  color: var(--gold-text);
   padding-left: 0.34em;
 }
 
@@ -2170,7 +2173,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   font-size: 0.75rem;
   letter-spacing: 0.01em;
   text-transform: none;
-  color: var(--champagne-deep);
+  color: var(--gold-text);
   margin-top: 0.7rem;
 }
 
@@ -2471,6 +2474,121 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
 }
 .art-layer > * { pointer-events: auto; }
 
+/* Camada só de efeito, travada na arte igual às outras, entre o PNG e os
+   textos. Serve para a folha 7; na folha 2 o papel é feito por .wcv2-layer. */
+.art-fx {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, calc(100dvh * var(--art-w) / var(--art-h)));
+  aspect-ratio: var(--art-w) / var(--art-h);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ============================================================================
+   REFLEXO DO SOL NA ÁGUA — folhas 2 e 7
+   ----------------------------------------------------------------------------
+   A arte é estática; este é o único elemento que se mexe sobre ela. São duas
+   faixas horizontais de luz branca, bem desfocadas, correndo em sentidos
+   opostos e em velocidades diferentes: onde se cruzam o brilho reforça e
+   desfaz sozinho, e é isso que faz a água parecer viva. Por cima delas um
+   clarão sobe e desce devagar pela coluna do reflexo.
+
+   Sem mix-blend-mode de propósito: a camada que hospeda o efeito abre
+   contexto de empilhamento próprio, então o blend não alcançaria o PNG — e
+   branco em "screen" dá quase o mesmo resultado que branco com alfa.
+
+   Posições medidas na própria arte:
+     folha 2 — sol em x 52,5% / y 74,5%, reflexo descendo até y 83%
+     folha 7 — sol em x 67%   / y 30,5%, reflexo descendo até y 57%
+   Cada folha passa --gx/--gy (centro) e --gw/--gh (tamanho) no HTML.
+============================================================================ */
+.sea-glow {
+  position: absolute;
+  left: var(--gx);
+  top: var(--gy);
+  width: var(--gw);
+  height: var(--gh);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  overflow: hidden;
+  /* O mar da folha 2 é quase branco e o da folha 7 é dourado forte: cada
+     folha calibra a força do efeito no HTML, pelo --gi. */
+  opacity: var(--gi, 1);
+  /* A luz só existe no miolo: as bordas somem para não sobrar um retângulo */
+  -webkit-mask-image: radial-gradient(ellipse at 50% 50%,
+    #000 24%, rgba(0, 0, 0, 0.5) 56%, transparent 78%);
+  mask-image: radial-gradient(ellipse at 50% 50%,
+    #000 24%, rgba(0, 0, 0, 0.5) 56%, transparent 78%);
+}
+
+.sea-glow__bands {
+  position: absolute;
+  left: -12%;
+  right: -12%;
+  top: -130%;
+  bottom: -130%;
+  /* Crista branca com um vale levemente quente: só o branco não aparece
+     sobre um mar quase branco, e o vale é a mesma cor de areia da arte,
+     então lê como ondulação da água e não como sujeira. */
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(198, 152, 106, 0.1)  0px,
+    rgba(255, 255, 255, 0)     6px,
+    rgba(255, 255, 255, 0.62) 12px,
+    rgba(255, 255, 255, 0.16) 15px,
+    rgba(255, 255, 255, 0)    19px,
+    rgba(198, 152, 106, 0.1)  28px);
+  filter: blur(2px);
+  animation: seaDrift 11s linear infinite;
+  will-change: transform;
+}
+
+.sea-glow__bands--slow {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(198, 152, 106, 0.07) 0px,
+    rgba(255, 255, 255, 0)   11px,
+    rgba(255, 255, 255, 0.4) 18px,
+    rgba(255, 255, 255, 0)   25px,
+    rgba(198, 152, 106, 0.07) 42px);
+  filter: blur(3.5px);
+  opacity: 0.8;
+  animation: seaDriftUp 17s linear infinite;
+}
+
+@keyframes seaDrift   { from { transform: translateY(0); }    to { transform: translateY(28px); } }
+@keyframes seaDriftUp { from { transform: translateY(42px); } to { transform: translateY(0); } }
+
+/* O clarão do próprio reflexo: percorre a coluna e respira junto */
+.sea-glow__glint {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 52%;
+  height: 34%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side,
+    rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 72%);
+  filter: blur(4px);
+  animation: seaGlint 13s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes seaGlint {
+  0%, 100% { transform: translate(-50%, -80%) scaleX(0.85); opacity: 0.3; }
+  50%      { transform: translate(-50%, -16%) scaleX(1.15); opacity: 0.8; }
+}
+
+/* Folha fora de cena não precisa gastar bateria animando */
+.sheet:not(.is-current) .sea-glow > * { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sea-glow > * { animation: none; }
+  .sea-glow__glint { transform: translate(-50%, -50%); opacity: 0.5; }
+}
+
 /* A arte já traz papel, sombra e textura: as camadas genéricas da folha
    sairiam por cima dela. */
 .sheet--art::before,
@@ -2556,6 +2674,8 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
    Cada folha diz apenas onde o conteúdo mora dentro da arte. */
 .art-copy-copy{
   position: absolute;
+  /* 30% e não o --bx:52% do HTML de propósito: é o que mantém o nome do
+     casal inteiro sobre o papel rasgado, sem invadir a pedra e as tulipas */
   left: 30%;
   top: var(--by, 50%);
   width: var(--bw, 76%);

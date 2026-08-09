@@ -55,7 +55,7 @@ const GUESTS = {
   "cleude-e-gilson":    { greeting: "Queridos", name: "Cleude e Gilson",            text: TEXT_PLURAL },
   "conchita-e-roberto": { greeting: "Queridos", name: "Conchita e Roberto",         text: TEXT_PLURAL },
   "daiane-e-sofia":     { greeting: "Queridas",  name: "Daiane e Sofia",            text: TEXT_PLURAL },
-  "daniele-josimar-e-jean":  { greeting: "Queridos", name: "Daniele, Josimar e Jean",          text: TEXT_PLURAL },
+  "daniele-josimar-jean-e-ruan":  { greeting: "Queridos", name: "Daniele, Josimar, Jean e Ruan",          text: TEXT_PLURAL },
   "deize-e-matheus":    { greeting: "Queridos", name: "Deize e Matheus",            text: TEXT_PLURAL },
   "denise-e-ze":        { greeting: "Queridos", name: "Denise e Zé",                text: TEXT_PLURAL },
   "uedson-e-dilri":     { greeting: "Queridos", name: "Uedson e Dilri",             text: TEXT_PLURAL },

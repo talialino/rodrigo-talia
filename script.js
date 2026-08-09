@@ -68,6 +68,86 @@
     document.getElementById("welcome-greeting").textContent = guest.greeting + " ";
     document.getElementById("welcome-name").textContent = guest.name + ",";
     document.getElementById("welcome-invite").textContent = guest.text;
+    fitGuestName();
+  }
+
+  /* --------------------------------------------------------------------------
+     1b) NOME DO CONVIDADO — encaixe no corredor limpo da arte (Folha 2)
+
+     Os nomes variam muito de comprimento: de "Lana" a "Daniele, Josimar,
+     Jean e Ruan". A arte background-welcome.png tem tulipas e hastes na
+     lateral esquerda e a borda rasgada na direita. Medindo a arte na faixa
+     vertical onde o nome cai (y 20%–33%), o corredor livre de decoração vai
+     de 30,1% a 80,9% da largura da arte.
+
+     O bloco de texto é centrado em 52% da arte, ou seja, fora do centro do
+     corredor. A metade aproveitável é então a menor das duas distâncias
+     (52% − 30,1% = 21,9%), o que dá 43,8% da largura da arte no total.
+
+     A fonte só encolhe o quanto for necessário: nomes de uma pessoa já
+     cabem e saem daqui sem nenhuma alteração.
+  -------------------------------------------------------------------------- */
+  var NAME_CORR_L = 0.301;     // borda esquerda do corredor limpo, na arte
+  var NAME_CORR_R = 0.809;     // borda direita
+  var NAME_ONE_LINE = 0.72;    // acima disto vale encolher e manter uma linha
+  var NAME_FLOOR = 0.815;      // rodapé da coluna não pode passar disto
+
+  function nameLines(el) {
+    var lh = parseFloat(getComputedStyle(el).lineHeight);
+    if (!lh) return 1;
+    return Math.max(1, Math.round(el.getBoundingClientRect().height / lh));
+  }
+
+  function fitGuestName() {
+    var el = document.getElementById("welcome-name");
+    var stage = document.querySelector(".wcv2-stage");
+    if (!el || !stage) return;
+
+    el.style.fontSize = "";
+    el.style.maxWidth = "";
+    el.style.whiteSpace = "";
+
+    // O bloco é centrado, mas não no meio do corredor — e o centro muda com
+    // a largura da tela (no mobile há um deslocamento de 2vw). Por isso o
+    // espaço útil é medido a partir do centro real, e não fixado no código:
+    // vale a menor das duas distâncias até as bordas do corredor.
+    var st = stage.getBoundingClientRect();
+    if (!st.width) return;
+    var box = el.getBoundingClientRect();
+    var center = ((box.left + box.right) / 2 - st.left) / st.width;
+    var half = Math.min(center - NAME_CORR_L, NAME_CORR_R - center);
+    var limit = Math.max(0.2, 2 * half) * st.width;
+    var base = parseFloat(getComputedStyle(el).fontSize);
+
+    // Largura que o nome teria numa linha só, no tamanho cheio
+    el.style.whiteSpace = "nowrap";
+    var oneLine = el.scrollWidth;
+    el.style.whiteSpace = "";
+    if (oneLine <= limit) return;          // nome curto: nada muda
+
+    var scale = limit / oneLine;
+    if (scale >= NAME_ONE_LINE) {
+      // Encolhe pouco e ganha uma linha só — fica mais elegante que quebrar
+      el.style.fontSize = (base * scale).toFixed(2) + "px";
+      return;
+    }
+
+    // Nome de casal ou de família: quebrar em duas linhas quase no tamanho
+    // cheio lê muito melhor do que espremer tudo numa linha minúscula.
+    // Procura o MAIOR corpo que ainda cabe no corredor e no teto de linhas.
+    var words = el.textContent.trim().split(/\s+/).length;
+    var maxLines = words > 4 ? 3 : 2;
+    var zoneD = document.querySelector(".wcv2-zone--d");
+    el.style.maxWidth = limit + "px";
+    for (var s = 1; s >= 0.5; s -= 0.04) {
+      el.style.fontSize = (base * s).toFixed(2) + "px";
+      if (nameLines(el) > maxLines || el.scrollWidth > limit + 1) continue;
+      // Cada linha extra empurra a coluna inteira para baixo. O rodapé não
+      // pode alcançar os raminhos do pé da arte (a partir de ~82% da altura).
+      if (zoneD &&
+          (zoneD.getBoundingClientRect().bottom - st.top) / st.height > NAME_FLOOR) continue;
+      return;
+    }
   }
 
   /* --------------------------------------------------------------------------
@@ -289,7 +369,7 @@
        · a sombra que a aba projeta sobre a página de baixo.
   -------------------------------------------------------------------------- */
   var TURN_MS = 760;
-  var PEEL_REST = 66;        // tamanho da dobra em repouso (px)
+  var PEEL_REST = 76;        // tamanho da dobra em repouso (px)
   var SHADE_MAX = 0.4;       // opacidade máxima da sombra da dobra
   var peelFlap = null;
 
@@ -340,12 +420,12 @@ if (peelLabelGlobal) {
     f.style.width = px + "px";
     f.style.height = px + "px";
     // a aba se desfaz cedo: crescida demais, vira um vazio chapado
-    f.style.opacity = String(p > 0.18 ? Math.max(0, 1 - (p - 0.18) / 0.3) : 1);
+    f.style.opacity = String(p > 0.45 ? Math.max(0, 1 - (p - 0.45) / 0.35) : 1);
 
     peelCast.style.display = "block";
     peelCast.style.width = px + "px";
     peelCast.style.height = px + "px";
-    peelCast.style.opacity = String(p > 0.5 ? Math.max(0, 1 - (p - 0.5) / 0.35) : 1);
+    peelCast.style.opacity = String(p > 0.65 ? Math.max(0, 1 - (p - 0.65) / 0.3) : 1);
 
     var sh = shadeOf(sheet);
     if (sh) sh.style.opacity = String(Math.min(p * 1.5, 1) * SHADE_MAX);
@@ -779,6 +859,13 @@ if (peelLabelGlobal) {
     setupGestures();
     setupActions();
     setupFichas();
+
+    // O encaixe do nome depende da métrica da fonte manuscrita e da largura
+    // da arte: refaz quando a fonte terminar de carregar e a cada resize.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(fitGuestName);
+    }
+    window.addEventListener("resize", fitGuestName);
 
     // Restaura folha e caminho de volta (ex.: recarregou depois de um link)
     var saved = 0;
