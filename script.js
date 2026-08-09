@@ -156,18 +156,30 @@
   -------------------------------------------------------------------------- */
 
   /* Monta a URL do WhatsApp com a mensagem de reserva já codificada. */
+  /* O coração vai por ponto de código, e não como caractere solto no arquivo.
+     O "❤️" que estava aqui é U+2764 seguido do seletor de variação U+FE0F, e
+     é esse seletor que alguns WhatsApp de Android descartam pelo caminho —
+     sobrava um coração em versão "texto", que não aparecia. U+1F496 é um
+     único ponto de código, sem seletor nenhum, e chega inteiro no aparelho. */
+  var HEART = String.fromCodePoint(0x1F496);
+
   function buildWhatsAppLink(gift) {
     var phone = (CONFIG.social && CONFIG.social.whatsapp && CONFIG.social.whatsapp.phone)
       ? CONFIG.social.whatsapp.phone.replace(/\D/g, "") : "";
 
-    // Itens com mais de uma unidade são UM presente só: a mensagem avisa
-    // a quantidade para não haver dúvida de quem leva o quê.
-    var quantas = (gift.qty && gift.qty > 1) ? " (" + gift.qty + " unidades)" : "";
+    /* Marca e quantidade saem no MESMO parêntese: em parênteses separados a
+       frase ficava com dois deles colados. A marca é a mesma que aparece no
+       cartão da lista; a quantidade avisa que itens com mais de uma unidade
+       são UM presente só, para não haver dúvida de quem leva o quê. */
+    var detalhes = [];
+    if (gift.brand && gift.brand.trim()) detalhes.push(gift.brand.trim());
+    if (gift.qty && gift.qty > 1) detalhes.push(gift.qty + " unidades");
+    var extra = detalhes.length ? " (" + detalhes.join(", ") + ")" : "";
 
     var message = (gift.reservationMessage && gift.reservationMessage.trim())
       ? gift.reservationMessage.trim()
       : 'Olá Rodrigo e Talia! Gostaria de reservar o presente "' + gift.name + '"' +
-        quantas + ' da lista de casamento. ❤️';
+        extra + ' da lista de casamento. ' + HEART;
 
     return "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
   }
@@ -224,13 +236,29 @@
         corpo.appendChild(qty);
       }
 
+      /* Item já reservado: continua na lista — faz parte da leitura ver o
+         que já foi escolhido —, mas sai de circulação. O <button> recebe
+         "disabled", o que barra o clique no próprio navegador, e a linha
+         perde a chamada "Reservar". */
       var pista = document.createElement("span");
       pista.className = "gift-card__cta";
-      pista.appendChild(document.createTextNode("Reservar"));
-      pista.appendChild(criarSeta());
-      corpo.appendChild(pista);
 
-      card.addEventListener("click", function () { abrirFichaPresente(gift); });
+      if (gift.reserved) {
+        card.classList.add("is-reserved");
+        card.disabled = true;
+        card.setAttribute("aria-label", gift.name + " — já reservado");
+        // O selo ocupa o lugar da chamada "Reservar": no catálogo da folha 6
+        // não há miniatura (ela é "display: none"), então o rótulo vive na
+        // coluna de texto, que é onde o olho já está.
+        pista.classList.add("gift-card__cta--reservado");
+        pista.textContent = "Reservado";
+      } else {
+        pista.appendChild(document.createTextNode("Reservar"));
+        pista.appendChild(criarSeta());
+        card.addEventListener("click", function () { abrirFichaPresente(gift); });
+      }
+
+      corpo.appendChild(pista);
 
       card.appendChild(media);
       card.appendChild(num);

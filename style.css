@@ -1931,7 +1931,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   margin-top: 0.6rem;
   font-family: var(--font-sans);
   font-weight: 300;
-  font-size: 0.58rem;
+  font-size: 0.66rem;
   letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--rose-deep);
@@ -1939,6 +1939,41 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
 }
 .gift-card__cta .btn-arrow { width: 14px; }
 .gift-card:hover .gift-card__cta .btn-arrow { transform: translateX(5px); }
+
+/* ---- PRESENTE JÁ RESERVADO ----------------------------------------------
+   Marcado com "reserved: true" no config.js. O item permanece na lista, mas
+   recua para o segundo plano: foto dessaturada, linha mais clara e o selo
+   "Reservado" atravessando a miniatura. O clique já está barrado pelo
+   atributo "disabled" do próprio botão. */
+/* Recua pouco: o risco no nome e o selo já dizem tudo, e apagar demais a
+   linha deixaria a marca e o selo fracos no celular. */
+.gift-card.is-reserved {
+  cursor: default;
+  opacity: 0.8;
+}
+
+/* O item some do jogo: nada de deslocar nem acender no toque */
+.gift-card.is-reserved:hover {
+  padding-left: 0.1rem;
+  border-color: var(--hair);
+}
+
+/* Nome riscado — é o sinal mais direto de "não está mais disponível" */
+.gift-card.is-reserved .gift-card__name {
+  text-decoration: line-through;
+  text-decoration-color: rgba(156, 85, 96, 0.45);
+  text-decoration-thickness: 1px;
+}
+
+/* O selo, no lugar onde antes estava "Reservar →" */
+.gift-card__cta--reservado {
+  align-self: start;
+  padding: 0.16rem 0.5rem;
+  color: var(--rose-deep);
+  letter-spacing: 0.16em;
+  border: 1px solid rgba(156, 85, 96, 0.42);
+  background: rgba(253, 250, 245, 0.6);
+}
 
 .list-footer { width: 100%; text-align: center; margin-top: 1.4rem; }
 .list-footer-names {
@@ -2053,7 +2088,7 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   margin-top: 1.3rem;
   font-family: var(--font-sans);
   font-weight: 300;
-  font-size: 0.58rem;
+  font-size: 0.66rem;
   letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--ink-soft);

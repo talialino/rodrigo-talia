@@ -154,13 +154,19 @@ const CONFIG = {
                      image: "assets/air-fryer.jpg"        (arquivo seu em /assets)
                      image: "https://site.com/foto.jpg"   (link direto da web)
          - reservationMessage : mensagem enviada no WhatsApp ao reservar.
-                   Se ficar vazio, é montada automaticamente com o nome e,
-                   quando houver, a quantidade.
+                   Se ficar vazio, é montada automaticamente com o nome, a
+                   marca e, quando houver, a quantidade.
+         - reserved : marque como "true" quando alguém já tiver reservado o
+                   item. Ele continua aparecendo na lista, mas com o selo
+                   "Reservado" sobre a foto e sem poder ser clicado. Para
+                   liberar de novo, é só voltar para "false" (ou apagar o
+                   campo). É a ÚNICA coisa que você precisa mexer aqui
+                   quando um presente for reservado.
 
      Para adicionar um presente novo, basta copiar uma linha { ... } abaixo.
   --------------------------------------------------------------------------- */
   physicalGifts: [
-    { name: "Liquidificador",                  brand: "Oster",            qty: 1, image: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSp0jmeOurAUfxKmpvEDGwBPw8MdnVq0MWjCexq4kcSEHBue-Goz5ETjp_oJpLLwI5wn2vL-UFx0vmm79XRCG70LrzVLcvEFxMmLtXA1g8j1kXPQnaeGDZhRudu9BN_s46e0bl75g&usqp=CAc", reservationMessage: "" },
+    { name: "Liquidificador",                  brand: "Oster",            qty: 1, image: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSp0jmeOurAUfxKmpvEDGwBPw8MdnVq0MWjCexq4kcSEHBue-Goz5ETjp_oJpLLwI5wn2vL-UFx0vmm79XRCG70LrzVLcvEFxMmLtXA1g8j1kXPQnaeGDZhRudu9BN_s46e0bl75g&usqp=CAc", reservationMessage: "", reserved: true },
     { name: "Conjunto de Cama Casal",          brand: "Santista",         qty: 2, image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcShoTfu-oFotrwzs5TxJN1sA4f8AamILmzlX3NQ_IlRh4p4rekOyKB2t4IRydN-93OEPd-pAOyCxHSW-8WtoSPYPj2PsOJa6Jj799QMLhCVDhntLp-YclQkEJOVlq0TeONiRoeDSHW3Qw&usqp=CAc", reservationMessage: "" },
     { name: "Batedeira",                       brand: "Mondial",          qty: 1, image: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQv7wXhNyqYGsPWkK78_Dbcaea6xDvRlDjrMdyiO3l7SEq3NOMyCzdccs7PXY2UnyIbWiE2Q6xwqvFjRh8tUhG0XrR3fMrSCoMoemMy2cioMI6_fhGAEsUMDkNmxsQ5CWADEApGD34&usqp=CAc", reservationMessage: "" },
     { name: "Conjunto de Toalhas de Banho Grandes",    brand: "Karsten",          qty: 2, image: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQSlb7kzWCyrsNo5XJK_ZbN6RQ8HQPym-jH7HJL6ce5vhJevutvH7IkMbK8yrcZVpT0QIiArJK6RORhokHgw5y3bDly3fYQoyu1C4xT74GJZVq2HnHx-N0jJTfVnLsHt9TEGrCBHz_NgQ&usqp=CAc", reservationMessage: "" },
