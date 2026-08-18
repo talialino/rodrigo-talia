@@ -68,7 +68,6 @@ const GUESTS = {
   ilana:                { greeting: "Querida",  name: "Ilana",                      text: TEXT_SINGULAR },
   "joao-e-luna":        { greeting: "Queridos", name: "João e Luna",                text: TEXT_PLURAL },
   keila:                { greeting: "Querida",  name: "Keila",                      text: TEXT_SINGULAR },
-  lana:                 { greeting: "Querida",  name: "Lana",                       text: TEXT_SINGULAR },
   "lavinia-e-thiago":   { greeting: "Queridos", name: "Lavinia e Thiago",           text: TEXT_PLURAL },
   lilia:                { greeting: "Querida",  name: "Lilia",                      text: TEXT_SINGULAR },
   mariane:              { greeting: "Querida",  name: "Mariane",                    text: TEXT_SINGULAR },
@@ -79,7 +78,12 @@ const GUESTS = {
   ramiro:               { greeting: "Querido",  name: "Ramiro",                     text: TEXT_SINGULAR },
   reinaldo:             { greeting: "Querido",  name: "Reinaldo",                   text: TEXT_SINGULAR },
   roberto:              { greeting: "Querido",  name: "Roberto",                    text: TEXT_SINGULAR },
-  vanessa:              { greeting: "Querida",  name: "Vanessa",                    text: TEXT_SINGULAR }
+  vanessa:              { greeting: "Querida",  name: "Vanessa",                    text: TEXT_SINGULAR },
+  vlad:              { greeting: "Querido",  name: "Vlad",                    text: TEXT_SINGULAR },
+  fernanda:              { greeting: "Querida",  name: "Fernanda",                    text: TEXT_SINGULAR },
+  lana:                 { greeting: "Querida",  name: "Lana",                       text: TEXT_SINGULAR },
+  // "gabriel-e-siane":   { greeting: "Queridos", name: "Gabriel e Siane",           text: TEXT_PLURAL },
+
 };
 
 
@@ -168,7 +172,7 @@ const CONFIG = {
   physicalGifts: [
     { name: "Liquidificador",                  brand: "Oster",            qty: 1, image: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSp0jmeOurAUfxKmpvEDGwBPw8MdnVq0MWjCexq4kcSEHBue-Goz5ETjp_oJpLLwI5wn2vL-UFx0vmm79XRCG70LrzVLcvEFxMmLtXA1g8j1kXPQnaeGDZhRudu9BN_s46e0bl75g&usqp=CAc", reservationMessage: "", reserved: true },
     { name: "Conjunto de Cama Casal",          brand: "Santista",         qty: 2, image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcShoTfu-oFotrwzs5TxJN1sA4f8AamILmzlX3NQ_IlRh4p4rekOyKB2t4IRydN-93OEPd-pAOyCxHSW-8WtoSPYPj2PsOJa6Jj799QMLhCVDhntLp-YclQkEJOVlq0TeONiRoeDSHW3Qw&usqp=CAc", reservationMessage: "" },
-    { name: "Batedeira",                       brand: "Mondial",          qty: 1, image: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQv7wXhNyqYGsPWkK78_Dbcaea6xDvRlDjrMdyiO3l7SEq3NOMyCzdccs7PXY2UnyIbWiE2Q6xwqvFjRh8tUhG0XrR3fMrSCoMoemMy2cioMI6_fhGAEsUMDkNmxsQ5CWADEApGD34&usqp=CAc", reservationMessage: "" },
+    { name: "Batedeira",                       brand: "Mondial",          qty: 1, image: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQv7wXhNyqYGsPWkK78_Dbcaea6xDvRlDjrMdyiO3l7SEq3NOMyCzdccs7PXY2UnyIbWiE2Q6xwqvFjRh8tUhG0XrR3fMrSCoMoemMy2cioMI6_fhGAEsUMDkNmxsQ5CWADEApGD34&usqp=CAc", reservationMessage: "", reserved: true },
     { name: "Conjunto de Toalhas de Banho Grandes",    brand: "Karsten",          qty: 2, image: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQSlb7kzWCyrsNo5XJK_ZbN6RQ8HQPym-jH7HJL6ce5vhJevutvH7IkMbK8yrcZVpT0QIiArJK6RORhokHgw5y3bDly3fYQoyu1C4xT74GJZVq2HnHx-N0jJTfVnLsHt9TEGrCBHz_NgQ&usqp=CAc", reservationMessage: "", reserved: true },
     { name: "Aspirador de Pó Robô",            brand: "Multilaser",       qty: 1, image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSLDuihIIgIlfj6Bju1LtD6JQW3E70GdUtYYeBJA8-AUQ7IPDZs_im-Q2BAw0Zyhddz6qNuVbH1k58idwb5BNI_vZtjxBs1ejXbIlp_mZrqg9Gf7IgdeoZ1zW25MhnsQmV1nV2QTrXzQ0U&usqp=CAc", reservationMessage: "" },
     { name: "Jogo de Panelas",                 brand: "Tramontina",       qty: 1, image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSOG391E2J1O5_W-pOB0NDrKYqn9bbdZfZjGvGkPITna4WzP03IC9wvyMVXYxmpmOYjycw_3h5cxYrGW4dFBcyU_0EVpuYt0oLex-BSLWxeMwrLeVoMi8yj&usqp=CAc", reservationMessage: "" },
