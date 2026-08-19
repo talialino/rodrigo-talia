@@ -982,8 +982,15 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
   font-weight: 400;
   font-size: clamp(2.5rem, 13vw, 3.5rem);
   line-height: 1.06;
-  margin-top: 0.55rem;
-  padding: 0 0.08em 0.12em;       /* respiro para as hastes da manuscrita */
+  /* margem menor porque o respiro agora vem do padding-top abaixo: sem isso
+     a coluna inteira descia e o rodape encostava nos raminhos do pe da arte */
+  margin-top: 0.05rem;
+  /* O respiro no TOPO nao e so estetico: .name-rose pinta com
+     background-clip:text e cor transparente, entao so existe tinta DENTRO da
+     caixa do elemento. Com line-height 1.06 e sem padding em cima, o laco das
+     maiusculas da manuscrita (o "V" de Vlad e o caso mais visivel) ficava fora
+     da caixa e saia cortado numa linha reta. */
+  padding: 0.22em 0.08em 0.12em;
 }
 
 .cover-invite {
@@ -1415,8 +1422,11 @@ body.phrase .opening-phrase > :nth-child(2) { transition-delay: 0.22s; }
 .final-couple {
   font-family: var(--font-script);
   font-size: clamp(1.85rem, 9vw, 2.4rem);
-  margin-top: 0.35rem;
-  padding: 0 0.06em 0.1em;
+  /* margem menor porque o respiro passou para o padding-top */
+  margin-top: 0.1rem;
+  /* Mesmo motivo do .cover-name: .name-rose pinta com background-clip:text,
+     entao o topo das maiusculas precisa caber DENTRO da caixa. */
+  padding: 0.24em 0.06em 0.1em;
 }
 
 
