@@ -82,7 +82,7 @@ const GUESTS = {
   vlad:              { greeting: "Querido",  name: "Vlad",                    text: TEXT_SINGULAR },
   fernanda:              { greeting: "Querida",  name: "Fernanda",                    text: TEXT_SINGULAR },
   lana:                 { greeting: "Querida",  name: "Lana",                       text: TEXT_SINGULAR },
-  // "gabriel-e-siane":   { greeting: "Queridos", name: "Gabriel e Siane",           text: TEXT_PLURAL },
+  "gabriel-e-siane":   { greeting: "Queridos", name: "Gabriel e Siane",           text: TEXT_PLURAL },
 
 };
 
