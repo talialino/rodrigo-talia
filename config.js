@@ -178,7 +178,7 @@ const CONFIG = {
     { name: "Jogo de Panelas",                 brand: "Tramontina",       qty: 1, image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSOG391E2J1O5_W-pOB0NDrKYqn9bbdZfZjGvGkPITna4WzP03IC9wvyMVXYxmpmOYjycw_3h5cxYrGW4dFBcyU_0EVpuYt0oLex-BSLWxeMwrLeVoMi8yj&usqp=CAc", reservationMessage: "" },
     { name: "Jogo de Taças",                   brand: "Nadir Figueiredo", qty: 1, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTO9jJlNzRhVi6UslVeAzhmNIE1vtiWdQG6XYRhU-_Pqw&s=10", reservationMessage: "", reserved: true },
     { name: "Air Fryer",                       brand: "Philco",           qty: 1, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzmr6gFSM2kIxP9onUVomqCIJ9z113uE2WS7Np6pUZyg&s=10", reservationMessage: "" },
-    { name: "Conjunto de Assadeiras",          brand: "Marinex",          qty: 1, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpQKsoAIZx3NUzPm25WWE3Q9X2RScT9a8in-0ybGQM1g&s=10", reservationMessage: "" },
+    { name: "Conjunto de Assadeiras",          brand: "Marinex",          qty: 1, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpQKsoAIZx3NUzPm25WWE3Q9X2RScT9a8in-0ybGQM1g&s=10", reservationMessage: "", reserved: true },
     { name: "Edredom casal",                   brand: "Buddemeyer",       qty: 2, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGtERBNsiG33_ths_3ve5GkETRHYm_mnSO64kMupjZxQ&s=10", reservationMessage: "" },
     { name: "Potes de Armazenamento de Vidro", brand: "Invicta",          qty: 1, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVQbLaiyPNqYSivz1ERoyD60-QOIu7vEx5Jb4Pviip1w&s=10", reservationMessage: "" }
   ]
