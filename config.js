@@ -64,26 +64,26 @@ const GUESTS = {
   "enzo-e-ingrid":      { greeting: "Queridos", name: "Enzo e Ingrid",              text: TEXT_PLURAL },
   "pastor-e-esposa":    { greeting: "Queridos", name: "Esposa do Pastor e Pastor",  text: TEXT_PLURAL },
   "fernando-e-idene":   { greeting: "Queridos", name: "Fernando e Idene",           text: TEXT_PLURAL },
-  gabriel:              { greeting: "Querido",  name: "Gabriel",                    text: TEXT_SINGULAR },
   ilana:                { greeting: "Querida",  name: "Ilana",                      text: TEXT_SINGULAR },
   "joao-e-luna":        { greeting: "Queridos", name: "João e Luna",                text: TEXT_PLURAL },
   keila:                { greeting: "Querida",  name: "Keila",                      text: TEXT_SINGULAR },
   "lavinia-e-thiago":   { greeting: "Queridos", name: "Lavinia e Thiago",           text: TEXT_PLURAL },
   lilia:                { greeting: "Querida",  name: "Lilia",                      text: TEXT_SINGULAR },
   mariane:              { greeting: "Querida",  name: "Mariane",                    text: TEXT_SINGULAR },
-  matheus:              { greeting: "Querido",  name: "Matheus",                    text: TEXT_SINGULAR },
   "monica-e-osvaldo":   { greeting: "Queridos", name: "Monica e Osvaldo",           text: TEXT_PLURAL },
   nanda:                { greeting: "Querida",  name: "Nanda",                      text: TEXT_SINGULAR },
   "patricia-e-renato":  { greeting: "Queridos", name: "Patricia e Renato",          text: TEXT_PLURAL },
   ramiro:               { greeting: "Querido",  name: "Ramiro",                     text: TEXT_SINGULAR },
   reinaldo:             { greeting: "Querido",  name: "Reinaldo",                   text: TEXT_SINGULAR },
   roberto:              { greeting: "Querido",  name: "Roberto",                    text: TEXT_SINGULAR },
-  vanessa:              { greeting: "Querida",  name: "Vanessa",                    text: TEXT_SINGULAR },
   vlad:              { greeting: "Querido",  name: "Vlad",                    text: TEXT_SINGULAR },
   fernanda:              { greeting: "Querida",  name: "Fernanda",                    text: TEXT_SINGULAR },
   lana:                 { greeting: "Querida",  name: "Lana",                       text: TEXT_SINGULAR },
   "gabriel-e-siane":   { greeting: "Queridos", name: "Gabriel e Siane",           text: TEXT_PLURAL },
-
+  "matheus-e-carolina":              { greeting: "Queridos",  name: "Matheus e Carolina",                    text: TEXT_PLURAL },
+ 
+  vanessa:              { greeting: "Querida",  name: "Vanessa",                    text: TEXT_SINGULAR },
+  gabriel:              { greeting: "Querido",  name: "Gabriel",                    text: TEXT_SINGULAR },
 };
 
 
