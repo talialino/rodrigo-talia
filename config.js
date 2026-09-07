@@ -54,36 +54,45 @@ const GUESTS = {
   "beatriz-e-bruno":    { greeting: "Queridos", name: "Beatriz e Bruno",            text: TEXT_PLURAL },
   "cleude-e-gilson":    { greeting: "Queridos", name: "Cleude e Gilson",            text: TEXT_PLURAL },
   "conchita-e-roberto": { greeting: "Queridos", name: "Conchita e Roberto",         text: TEXT_PLURAL },
-  "daiane-e-sofia":     { greeting: "Queridas",  name: "Daiane e Sofia",            text: TEXT_PLURAL },
   "daniele-josimar-jean-e-ruan":  { greeting: "Queridos", name: "Daniele, Josimar, Jean e Ruan",          text: TEXT_PLURAL },
   "deize-e-matheus":    { greeting: "Queridos", name: "Deize e Matheus",            text: TEXT_PLURAL },
-  "denise-e-ze":        { greeting: "Queridos", name: "Denise e Zé",                text: TEXT_PLURAL },
   "uedson-e-dilri":     { greeting: "Queridos", name: "Uedson e Dilri",             text: TEXT_PLURAL },
   elena:                { greeting: "Querida",  name: "Elena",                      text: TEXT_SINGULAR },
   eliane:               { greeting: "Querida",  name: "Eliane",                     text: TEXT_SINGULAR },
   "enzo-e-ingrid":      { greeting: "Queridos", name: "Enzo e Ingrid",              text: TEXT_PLURAL },
-  "pastor-e-esposa":    { greeting: "Queridos", name: "Esposa do Pastor e Pastor",  text: TEXT_PLURAL },
   "fernando-e-idene":   { greeting: "Queridos", name: "Fernando e Idene",           text: TEXT_PLURAL },
   ilana:                { greeting: "Querida",  name: "Ilana",                      text: TEXT_SINGULAR },
-  "joao-e-luna":        { greeting: "Queridos", name: "João e Luna",                text: TEXT_PLURAL },
   keila:                { greeting: "Querida",  name: "Keila",                      text: TEXT_SINGULAR },
   "lavinia-e-thiago":   { greeting: "Queridos", name: "Lavinia e Thiago",           text: TEXT_PLURAL },
   lilia:                { greeting: "Querida",  name: "Lilia",                      text: TEXT_SINGULAR },
   mariane:              { greeting: "Querida",  name: "Mariane",                    text: TEXT_SINGULAR },
-  "monica-e-osvaldo":   { greeting: "Queridos", name: "Monica e Osvaldo",           text: TEXT_PLURAL },
-  nanda:                { greeting: "Querida",  name: "Nanda",                      text: TEXT_SINGULAR },
   "patricia-e-renato":  { greeting: "Queridos", name: "Patricia e Renato",          text: TEXT_PLURAL },
   ramiro:               { greeting: "Querido",  name: "Ramiro",                     text: TEXT_SINGULAR },
   reinaldo:             { greeting: "Querido",  name: "Reinaldo",                   text: TEXT_SINGULAR },
   roberto:              { greeting: "Querido",  name: "Roberto",                    text: TEXT_SINGULAR },
-  vlad:              { greeting: "Querido",  name: "Vlad",                    text: TEXT_SINGULAR },
-  fernanda:              { greeting: "Querida",  name: "Fernanda",                    text: TEXT_SINGULAR },
-  lana:                 { greeting: "Querida",  name: "Lana",                       text: TEXT_SINGULAR },
+  "daiane-e-sofia":     { greeting: "Queridas",  name: "Daiane e Sofia",            text: TEXT_PLURAL },
+  fernanda:              { greeting: "Querida",  name: "Fernanda",                    text: TEXT_SINGULAR },  
   "gabriel-e-siane":   { greeting: "Queridos", name: "Gabriel e Siane",           text: TEXT_PLURAL },
+  
+  // Não confirmaram
+  "pastor-e-esposa":    { greeting: "Queridos", name: "Esposa do Pastor e Pastor",  text: TEXT_PLURAL },
+  "joao-e-luna":        { greeting: "Queridos", name: "João e Luna",                text: TEXT_PLURAL },
+  lana:                 { greeting: "Querida",  name: "Lana",                       text: TEXT_SINGULAR },
   "matheus-e-carolina":              { greeting: "Queridos",  name: "Matheus e Carolina",                    text: TEXT_PLURAL },
- 
-  vanessa:              { greeting: "Querida",  name: "Vanessa",                    text: TEXT_SINGULAR },
-  gabriel:              { greeting: "Querido",  name: "Gabriel",                    text: TEXT_SINGULAR },
+  "monica-e-osvaldo":   { greeting: "Queridos", name: "Monica e Osvaldo",           text: TEXT_PLURAL },
+  nanda:                { greeting: "Querida",  name: "Nanda",                      text: TEXT_SINGULAR },
+  
+  
+  // Não vão
+  vlad:              { greeting: "Querido",  name: "Vlad",                    text: TEXT_SINGULAR },
+  // vanessa:              { greeting: "Querida",  name: "Vanessa",                    text: TEXT_SINGULAR },
+  // "denise-e-ze":        { greeting: "Queridos", name: "Denise e Zé",                text: TEXT_PLURAL },
+
+  // Reserva
+  "daiane":     { greeting: "Querida",  name: "Daiane",            text: TEXT_SINGULAR },
+  "andreza":     { greeting: "Querida",  name: "Andreza",            text: TEXT_SINGULAR },
+  "mabel-e-Kauai":     { greeting: "Queridos",  name: "Mabel e Kauai",            text: TEXT_PLURAL },
+
 };
 
 
