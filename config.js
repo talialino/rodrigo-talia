@@ -91,8 +91,8 @@ const GUESTS = {
   "denise-e-ze":        { greeting: "Queridos", name: "Denise e Zé",                text: TEXT_PLURAL },
   
   // Reserva
+  "mabel-e-kauai":        { greeting: "Queridos", name: "Mabel e Kauai",                text: TEXT_PLURAL },
   aline:     { greeting: "Querida",  name: "Aline",            text: TEXT_SINGULAR },
-  "mabel-e-Kauai":     { greeting: "Queridos",  name: "Mabel e Kauai",            text: TEXT_PLURAL },
   
   geovani:     { greeting: "Querido",  name: "Geovani",            text: TEXT_SINGULAR },
 };
